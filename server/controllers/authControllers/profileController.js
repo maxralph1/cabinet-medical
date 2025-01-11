@@ -33,7 +33,11 @@ const updateProfile = asyncHandler(async (req, res) => {
         if (req?.files?.user_photo) {
             const userImage = req?.files?.user_photo;
 
+<<<<<<< HEAD
             userImageUpload = await cloudinaryImageUpload(userImage?.tempFilePath, 'cabinet_medical_user_images'); 
+=======
+            userImageUpload = await cloudinaryImageUpload(userImage?.tempFilePath, 'deezysdeals_user_images'); 
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
 
             if (!userImageUpload) return res.status(409).json({ message: "Image upload failed" })
         };

@@ -12,8 +12,13 @@ const diagnosisResultSchema = new Schema({
             default: 'blood-cell'
         }, 
         result: { String },
+<<<<<<< HEAD
         // result: { Number },
         notes: { type: String },
+=======
+        result: { Number },
+        comment: { type: String }
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
     }, 
     {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

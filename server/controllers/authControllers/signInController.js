@@ -1,6 +1,11 @@
 import asyncHandler from 'express-async-handler'; 
 import jwt from 'jsonwebtoken'; 
+<<<<<<< HEAD
 import User from '../../models/User.js'; 
+=======
+import User from '../../models/User.js';
+import SignInAttempt from '../../models/SignInAttempt.js';
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
 
 
 const signInUser = asyncHandler(async (req, res) => {
@@ -22,10 +27,26 @@ const signInUser = asyncHandler(async (req, res) => {
     if (userFound) {
         userFound.online = true;
         userFound.sign_in_count = userFound?.sign_in_count+1;
+<<<<<<< HEAD
         userFound.last_time_active = ''; 
         userFound.last_login_time = new Date().toISOString();
     }; 
 
+=======
+        userFound.last_time_active = '';
+    }; 
+
+    // Record the sign-in attempt
+    if (userFound?.role == 'individual' || userFound?.role == 'enterprise') {
+        await SignInAttempt.create({
+            user: userFound?._id, 
+            // ip_address: (req?.connection?.remoteAddress)?.slice(7) || req?.headers['x-forwarded-for']
+            ip_address: (req?.connection?.remoteAddress)?.replace(/^::ffff:/, '') || req?.headers['x-forwarded-for']
+        }); 
+    }
+    // End of Record the sign-in attempt
+
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
     const access = jwt.sign(
         {
             "user": {
@@ -35,13 +56,20 @@ const signInUser = asyncHandler(async (req, res) => {
                 "other_names": userFound.other_names, 
                 "last_name": userFound.last_name, 
                 "user_image": userFound.user_image_path.url, 
+<<<<<<< HEAD
+=======
+                "enterprise_name": userFound.enterprise_name, 
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
                 "email": userFound.email, 
                 "phone": userFound.phone, 
                 "address": userFound.address, 
                 "role": userFound.role, 
                 "verified": userFound.verified, 
+<<<<<<< HEAD
                 "email_verified": userFound.email_verified, 
                 "last_login_time": userFound.last_login_time,
+=======
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
             }
         }, 
         process.env.ACCESS_TOKEN_SECRET, 
@@ -62,7 +90,11 @@ const signInUser = asyncHandler(async (req, res) => {
                 httpOnly: true, 
                 secure: true, 
                 sameSite: 'Lax', 
+<<<<<<< HEAD
                 maxAge: 2 * 60 * 60 * 1000      // 2 hours
+=======
+                maxAge: 5 * 60 * 60 * 1000      // 1 hour
+>>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
                 // maxAge: 1 * 60 * 1000      // 1 minute
             }); 
             // res.cookie('jwt', refresh, { httpOnly: true, secure: true, sameSite: 'Strict' });
