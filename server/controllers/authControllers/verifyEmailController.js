@@ -19,10 +19,7 @@ const verifyMailLinkAuthenticate = asyncHandler(async (req, res) => {
         user.email_verify_token = ''; 
         user.online = true;
         user.last_time_active = ''; 
-<<<<<<< HEAD
         user.last_login_time = new Date().toISOString(); 
-=======
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
 
         const access = jwt.sign(
             {
@@ -33,20 +30,13 @@ const verifyMailLinkAuthenticate = asyncHandler(async (req, res) => {
                     "other_names": user.other_names, 
                     "last_name": user.last_name, 
                     "user_image": user.user_image_path.url, 
-<<<<<<< HEAD
-=======
-                    "enterprise_name": user.enterprise_name, 
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
                     "email": user.email, 
                     "phone": user.phone, 
                     "address": user.address, 
                     "role": user.role, 
                     "verified": user.verified, 
-<<<<<<< HEAD
                     "email_verified": user.email_verified, 
                     "last_login_time": user.last_login_time,
-=======
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
                 }
             }, 
             process.env.ACCESS_TOKEN_SECRET, 

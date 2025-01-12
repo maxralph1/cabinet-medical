@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const inventorySchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' }, 
         issued_to: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        disbursed: { type: Boolean, default: false }, 
         disbursed_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
         disbursed_on: { type: Date }, 
         notes: { type: String }, 

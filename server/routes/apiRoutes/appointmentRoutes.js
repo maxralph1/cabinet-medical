@@ -28,4 +28,4 @@ appointmentRouter.route('/:id')
 appointmentRouter.patch('/:id/restore', restoreAppointment); 
 
 
-export default appointmentRouter;
+export default appointmentRouter; 

@@ -2,14 +2,11 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const diagnosisSchema = new Schema({
+const patientChartSchema = new Schema({
         patient: { type: Schema.Types.ObjectId, ref: 'User' }, 
-        authorizing_professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
         notes: { type: String }, 
         comments: { type: String }, 
-        examiner: { type: Schema.Types.ObjectId, ref: 'User' }, 
-        retrieved_by_patient: { type: Boolean, default: false }, 
-        retrieved_on: { type: String }, 
         deleted_at: { type: String, default: null }, 
         deleted_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
     }, 
@@ -19,5 +16,5 @@ const diagnosisSchema = new Schema({
 );
 
 
-let Diagnosis = mongoose.model('Diagnosis', diagnosisSchema); 
-export default Diagnosis; 
+let PatientChart = mongoose.model('PatientChart', patientChartSchema); 
+export default PatientChart; 

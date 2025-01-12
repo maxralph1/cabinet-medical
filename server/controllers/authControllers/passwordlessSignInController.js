@@ -69,11 +69,8 @@ const passwordlessSignIn = asyncHandler(async (req, res) => {
                     "address": userFound.address, 
                     "role": userFound.role, 
                     "verified": userFound.verified, 
-<<<<<<< HEAD
                     "email_verified": userFound.email_verified, 
                     "last_login_time": userFound.last_login_time,
-=======
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
                 }
             }, 
             process.env.ACCESS_TOKEN_SECRET, 

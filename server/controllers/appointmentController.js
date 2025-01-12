@@ -10,23 +10,33 @@ const getAppointments = asyncHandler(async (req, res) => {
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
 
-    let appointments; 
-    if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse') || (req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
+    let appointments, total; 
+    if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
         appointments = await Appointment.find({ deleted_at: null })
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
                                         .lean(); 
+
+        total = await Appointment.countDocuments({ deleted_at: null });
+    } else if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse')) {
+        appointments = await Appointment.find({ professional: req?.user_id, deleted_at: null })
+                                        .sort('-created_at')
+                                        .skip(skip)
+                                        .limit(limit)
+                                        .lean(); 
+
+        total = await Appointment.countDocuments({ professional: req?.user_id, deleted_at: null }); 
     } else {
         appointments = await Appointment.find({ patient: req?.user_id, deleted_at: null })
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
-                                        .lean();
+                                        .lean(); 
+
+        total = await Appointment.countDocuments({ patient: req?.user_id, deleted_at: null }); 
     }
     if (!appointments?.length) return res.status(404).json({ message: "No appointments found!" }); 
-
-    const total = await Appointment.countDocuments({ deleted_at: null }); 
 
     res.json({ 
                 meta: {
@@ -173,4 +183,4 @@ export { getAppointments,
         updateAppointment, 
         deleteAppointment, 
         restoreAppointment, 
-        destroyAppointment };
+        destroyAppointment }; 

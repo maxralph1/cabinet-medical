@@ -56,11 +56,7 @@ const userSchema = new Schema({
         role: { 
             type: String, 
             required: true, 
-<<<<<<< HEAD
             enum: ['admin', 'doctor', 'nurse', 'laboratory-scientist', 'patient'], 
-=======
-            enum: ['admin', 'doctor', 'nurse', 'patient'], 
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
             default: 'patient' 
         }, 
         email_verify_token: String, 
@@ -72,11 +68,8 @@ const userSchema = new Schema({
         online: { type: Boolean, default: false }, 
         sign_in_count: { type: Number, default: 0 }, 
         show_online_status: { type: Boolean, default: true }, 
-<<<<<<< HEAD
         last_login_time: String, 
-=======
         last_time_active: String, 
->>>>>>> 2167b0382c47c97bb177e6f3f0eb7b59d6b73cae
         active: { type: Boolean, default: true }, 
         total_amount_spent: { type: Number },  
         total_appointments: { type: Number }, 
