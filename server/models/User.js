@@ -56,7 +56,7 @@ const userSchema = new Schema({
         role: { 
             type: String, 
             required: true, 
-            enum: ['admin', 'doctor', 'nurse', 'laboratory-scientist', 'patient'], 
+            enum: ['super-admin', 'admin', 'general-practitioner', 'gynaecologist', 'nurse', 'laboratory-scientist', 'patient'], 
             default: 'patient' 
         }, 
         email_verify_token: String, 
@@ -75,9 +75,9 @@ const userSchema = new Schema({
         total_appointments: { type: Number }, 
         receive_notifications: { type: Boolean, default: false }, 
         widget: {
-            type: String, 
-            enum: ['blood-cell', 'heart-rate', 'sugar-level', 'water-level'], 
-            default: 'blood-cell'
+            type: [String], 
+            enum: ['blood_cell', 'heart_rate', 'sugar_level', 'water_level'], 
+            default: ['blood_cell', 'heart_rate', 'sugar_level', 'water_level']
         }, 
         banned: { type: Boolean, default: false }, 
         banned_at: { type: String, default: null }, 

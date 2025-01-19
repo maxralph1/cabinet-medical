@@ -1,0 +1,11 @@
+version: 1
+services:
+  - type: web
+    name: cabinet-medical
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: serve -s dist
+    routes:
+      - src: /(.*)
+        dest: /index.html

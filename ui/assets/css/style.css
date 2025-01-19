@@ -27,6 +27,23 @@ a, Link {
     /* text-decoration: none; */
 } 
 
+.glass-effect {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    /* semi-transparent background */
+    backdrop-filter: blur(10px);
+    /* blur effect on the background */
+    border-radius: 10px;
+    /* rounded corners */
+    padding: 20px;
+    color: #fff;
+    /* white text for better contrast */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* subtle shadow for depth */
+    overflow: hidden;
+    /* ensures content doesn't overflow rounded corners */
+}
+
 /* .form-control, .form-select {  }  */
 
 .form-floating .form-control, .form-floating .form-select { 
@@ -103,62 +120,85 @@ main {
 
 .header .main-nav ul li {
 
+} 
+
+/*-------*/
+/** Auth */
+/*-------*/
+main.auth {
+    padding: 1rem; 
+    margin: 3rem;
+} 
+
+main.auth .auth-side-quotes .slide-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; 
+    justify-content: space-between;
+}
+
+main.auth .auth-side-quotes .slide-section h2 {
+    font-size:x-small;
+} 
+
+main.auth .auth-side-quotes .slide-section h2::after {
+    content: "";
 }
 
 /*------------*/
 /** Dashboard */
 /*------------*/
-main .dashboard-meters .admin-meters {
+main.dashboard .dashboard-meters .admin-meters {
     display: grid;
     grid-template-areas:
         "revenue appointments" 
         "doctors patients";
 }
 
-main .dashboard-meters .admin-meters .revenue {
+main.dashboard .dashboard-meters .admin-meters .revenue {
     grid-area: revenue
 }
 
-main .dashboard-meters .admin-meters .appointments {
+main.dashboard .dashboard-meters .admin-meters .appointments {
     grid-area: appointments
 }
 
-main .dashboard-meters .admin-meters .doctors {
+main.dashboard .dashboard-meters .admin-meters .doctors {
     grid-area: doctors
 }
 
-main .dashboard-meters .admin-meters .patients {
+main.dashboard .dashboard-meters .admin-meters .patients {
     grid-area: patients
 } 
 
-main .appointments {
+main.dashboard .appointments {
     display: grid; 
     grid-template-areas: 
         "upcoming" 
         "latest";
 }
 
-main .appointments .upcoming { grid-area: upcoming; } 
+main.dashboard .appointments .upcoming { grid-area: upcoming; } 
 
-main .appointments .latest { grid-area: latest; }
+main.dashboard .appointments .latest { grid-area: latest; }
 
-main .appointments .upcoming .doctor {
+main.dashboard .appointments .upcoming .doctor {
     display: flex; 
     flex-direction: row; 
     justify-content: space-between; 
     align-items: center
 }
 
-main .appointments .upcoming .doctor .info {
+main.dashboard .appointments .upcoming .doctor .info {
     
 }
 
-main .appointments .upcoming .doctor .image {
+main.dashboard .appointments .upcoming .doctor .image {
     min-width: 120px;
     max-width: 150px;
 }
 
-main .appointments .upcoming .doctor .image picture img {
+main.dashboard .appointments .upcoming .doctor .image picture img {
     min-width: 120px;
     max-width: 150px;
 }
@@ -171,7 +211,7 @@ main .appointments .upcoming .doctor .image picture img {
     /*------------*/
     /** Dashboard */
     /*------------*/
-    main .dashboard-meters .admin-meters {
+    main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
             "revenue appointments" 
@@ -189,19 +229,19 @@ main .appointments .upcoming .doctor .image picture img {
     /*------------*/
     /** Dashboard */
     /*------------*/
-    main .appointments {
+    main.dashboard .appointments {
         width: 100%;
         grid-template-areas: "latest upcoming"; 
         grid-template-columns: 2fr 1fr;
     } 
 
-    main .appointments .upcoming .doctor {
+    main.dashboard .appointments .upcoming .doctor {
         display: flex;
         flex-direction: column; 
         align-items: start;
     } 
 
-    main .appointments .upcoming .doctor .image picture img {
+    main.dashboard .appointments .upcoming .doctor .image picture img {
         min-width: 175px;
         max-width: 200px;
     }
@@ -211,13 +251,13 @@ main .appointments .upcoming .doctor .image picture img {
     /*------------*/
     /** Dashboard */
     /*------------*/
-    main .dashboard-meters .admin-meters {
+    main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
             "revenue appointments doctors patients";
     } 
 
-    main .appointments .upcoming .doctor .image picture img {
+    main.dashboard .appointments .upcoming .doctor .image picture img {
         min-width: 200px;
         max-width: 220px;
     }

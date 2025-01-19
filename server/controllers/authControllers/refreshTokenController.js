@@ -84,7 +84,6 @@ const refreshTokenHandler = async (req, res) => {
     //                     other_names: userFound.other_names,
     //                     last_name: userFound.last_name,
     //                     user_image: userFound.user_image_path.url,
-    //                     enterprise_name: userFound.enterprise_name,
     //                     email: userFound.email,
     //                     phone: userFound.phone,
     //                     address: userFound.address,

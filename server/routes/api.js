@@ -24,7 +24,7 @@ router.use('/chat-messages', chatMessageRouter);
 router.use('/chats', chatRouter); 
 router.use('/diagnoses', diagnosisRouter); 
 router.use('/diagnosis-segments', diagnosisSegmentRouter); 
-router.use('/inventories', inventoryRouter); 
+router.use('/inventory', inventoryRouter); 
 router.use('/medical-bills', medicalBillRouter); 
 // router.use('/notifications', notificationRouter); 
 router.use('/patient-charts', patientChartRouter); 

@@ -34,13 +34,14 @@ const signUpUser = asyncHandler(async (req, res) => {
         accountType = "patient";
     } else if (account_type && account_type == "patient") {
         accountType = "patient";
-    } else if (account_type && account_type == "doctor") {
-        accountType = "doctor";
-        accountType = "individual";
-    } else if (account_type && account_type == "individual") {
-        accountType = "individual";
-    } else if (account_type && account_type == "enterprise") {
-        accountType = "enterprise";
+    } else if (account_type && account_type == "general_practitioner") {
+        accountType = "general_practitioner";
+    } else if (account_type && account_type == "nurse") {
+        accountType = "nurse";
+    } else if (account_type && account_type == "gynaecologist") {
+        accountType = "gynaecologist";
+    } else if (account_type && account_type == "laboratory_scientist") {
+        accountType = "laboratory_scientist";
     }; 
 
     const user = new User({
@@ -48,12 +49,11 @@ const signUpUser = asyncHandler(async (req, res) => {
         first_name, 
         last_name, 
         last_name,
-        enterprise_name,
         email,
         phone,
         password,
         role: accountType,
-        email_verify_token: emailVerifyToken
+        email_verify_token: emailVerifyToken 
     }); 
 
     user.save()

@@ -26,16 +26,6 @@ const signInUser = asyncHandler(async (req, res) => {
         userFound.last_login_time = new Date().toISOString();
     }; 
 
-    // Record the sign-in attempt
-    if (userFound?.role == 'individual' || userFound?.role == 'enterprise') {
-        await SignInAttempt.create({
-            user: userFound?._id, 
-            // ip_address: (req?.connection?.remoteAddress)?.slice(7) || req?.headers['x-forwarded-for']
-            ip_address: (req?.connection?.remoteAddress)?.replace(/^::ffff:/, '') || req?.headers['x-forwarded-for']
-        }); 
-    }
-    // End of Record the sign-in attempt
-
     const access = jwt.sign(
         {
             "user": {

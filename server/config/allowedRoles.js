@@ -1,10 +1,11 @@
 const roles = {
     patient: 'patient', 
     nurse: 'nurse',
-    doctor: 'doctor', 
-    individual: 'individual', 
+    generalPractitioner: 'general_practitioner', 
+    gynaecologist: 'gynaecologist', 
+    laboratoryScientist: 'laboratory_scientist', 
     admin: 'admin', 
-    superAdmin: 'superadmin', 
+    superAdmin: 'super_admin', 
 }
 
 export default roles;
