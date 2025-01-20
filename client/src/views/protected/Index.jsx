@@ -1,14 +1,17 @@
+import { useContext } from 'react'; 
+import AuthContext from '@/context/AuthContext.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
 export default function Index() {
+    const { user } = useContext(AuthContext); 
     const date = new Date();
     const hour = date.getHours(); 
     
     return (
         <Layout>
             <div className="salutation d-flex flex-column">
-                <span className="text-secondary fs-5">Hi Somto Somzy,</span>
+                <span className="text-secondary fs-5">Hi { user?.user?.first_name + ' ' + user?.user?.last_name},</span>
                 <span className="fs-1 fw-light">Good&nbsp;
                     { hour < 12 
                         ? 'morning' 

@@ -136,7 +136,11 @@ export const AuthProvider = ({ children }) => {
 
     const signOut = async () => { 
         // localStorage.removeItem('cabinet_medical_last_visited_page');
-        await axios.post(`${ Constants?.serverURL }/api/v1/auth/sign-out`, { withCredentials: true })
+        await axios.post(`${ Constants?.serverURL }/api/v1/auth/sign-out`, {
+            headers: {
+                'Authorization': `Bearer ${ authTokens?.access }`, 
+                'Content-Type': 'multipart/form-data', 
+            }, withCredentials: true })
             .then(response => {
                 console.log(response);
             })
@@ -150,6 +154,39 @@ export const AuthProvider = ({ children }) => {
                 // navigate(route('sign-in'));
             })
     } 
+    // const signOut = async () => {
+    //     try {
+    //         // Make the API call to sign out
+    //         const response = await axios.post(
+    //             `${Constants?.serverURL}/api/v1/auth/sign-out`,
+    //             {}, // Empty body for sign-out
+    //             {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${authTokens?.access}`, // Pass the token in the Authorization header
+    //                     'Content-Type': 'application/json', // Change this to 'application/json' since you're sending a POST request (unless you're uploading a file)
+    //                 },
+    //                 withCredentials: true // Include credentials if required (e.g., cookies)
+    //             }
+    //         );
+
+    //         // Handle the response here
+    //         console.log(response);
+
+    //         // Optionally, handle any state updates
+    //         setAuthTokens(null);
+    //         setUser(null);
+    //         localStorage?.removeItem('cabinet_medical_auth_tokens');
+    //         // navigate(route('sign-in')); // Uncomment if you want to navigate after sign out
+
+    //     } catch (error) {
+    //         // Handle errors
+    //         console.error('Sign out failed:', error);
+    //         // Optionally show a user-friendly message or notify the user
+    //     } finally {
+    //         // Any cleanup or post-sign-out logic
+    //     }
+    // };
+
 
     const resetPasswordRequest = async (email) => {
         await axios.post(`${ Constants?.serverURL }/api/v1/auth/password-reset`, { email }, { withCredentials: true })

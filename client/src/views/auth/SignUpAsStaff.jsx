@@ -14,6 +14,8 @@ export default function SignUpAsStaff() {
     const [passwordRepeat, setPasswordRepeat] = useState(''); 
     const [accountType, setAccountType] = useState('');
 
+    console.log('account type:', accountType); 
+
     let { signUp } = useContext(AuthContext); 
 
     const handleSubmit = async e => {
@@ -107,12 +109,12 @@ export default function SignUpAsStaff() {
                                 onChange={ e => setAccountType(e.target.value) } 
                                 placeholder="Nurse">
                                     <option>Choose one ...</option>
-                                    <option value="general-practitioner">General Practitioner</option>
+                                    <option value="general_practitioner">General Practitioner</option>
                                     <option value="gynaecologist">Gynaecologist</option> 
                                     <option value="nurse">Nurse</option> 
-                                    <option value="laboratory-scientist">Laboratory Scientist</option> 
+                                    <option value="laboratory_scientist">Laboratory Scientist</option> 
                             </select>
-                            <label htmlFor="repeat_password">Account Type</label>
+                            <label htmlFor="account_type">Account Type</label>
                         </div>
                     </div>
                     <div className="d-flex justify-content-end pt-3">

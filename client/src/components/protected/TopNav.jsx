@@ -1,8 +1,12 @@
+import { useContext } from 'react'; 
+import AuthContext from '@/context/AuthContext.jsx';
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 
 
 export default function TopNav() {
+    const { signOut } = useContext(AuthContext); 
+
     return (
         <nav className="main-nav">
             <ul className="nav-list list-unstyled d-flex flex-column gap-2 align-items-end">
@@ -47,8 +51,8 @@ export default function TopNav() {
                     </Link>
                 </li>
                 <li 
-                    onClick={ () => {} }
-                    className="text-danger">Sign Out</li>
+                    onClick={ signOut }
+                    className="text-danger cursor-pointer">Sign Out</li>
             </ul>
         </nav>
     )

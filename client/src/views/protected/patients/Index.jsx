@@ -6,7 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
-import { useProfessionals } from '@/hooks/useProfessionals.jsx'; 
+import { usePatients } from '@/hooks/usePatients.jsx'; 
 import scrollToTop from '@/utils/ScrollToTop.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
@@ -20,14 +20,14 @@ export default function Index() {
         page: 1, 
         limit: 10, 
     }); 
-    const { professionals, getProfessionals, loading } = useProfessionals(userQuery); 
-    console.log(professionals); 
+    const { patients, getPatients, loading } = usePatients(userQuery); 
+    console.log(patients); 
     console.log(loading);
 
     return (
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
-                <h2 className="fs-3">Professionals</h2>
+                <h2 className="fs-3">Patients</h2>
                 <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
                     <span className="mb-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
@@ -43,12 +43,12 @@ export default function Index() {
             <div className="d-flex justify-content-end pt-4">
                 {/* <span>1 - 10 of 25 results</span> */}
                 <span>
-                    { (professionals?.data?.length > 0) 
+                    { (patients?.data?.length > 0) 
                         && <PaginationMeter 
-                                current_page={ professionals?.meta?.current_page } 
-                                limit={ professionals?.meta?.limit } 
-                                total_pages={ professionals?.meta?.total_pages } 
-                                total_results={ professionals?.meta?.total_results } /> } 
+                                current_page={ patients?.meta?.current_page } 
+                                limit={ patients?.meta?.limit } 
+                                total_pages={ patients?.meta?.total_pages } 
+                                total_results={ patients?.meta?.total_results } /> } 
                 </span> 
             </div> 
 
@@ -61,7 +61,7 @@ export default function Index() {
                             role: 'all', 
                             page: 1
                         })); 
-                        await getProfessionals(userQuery?.role); 
+                        await getPatients(userQuery?.role); 
                     } }
                     className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
                     <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
@@ -76,7 +76,7 @@ export default function Index() {
                             role: 'general_practitioner', 
                             page: 1
                         })); 
-                        await getProfessionals(userQuery?.role); 
+                        await getPatients(userQuery?.role); 
                     } }
                     className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
                     <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
@@ -91,7 +91,7 @@ export default function Index() {
                             role: 'gynaecologist', 
                             page: 1
                         })); 
-                        await getProfessionals(userQuery?.role); 
+                        await getPatients(userQuery?.role); 
                     } }
                     className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
                     <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
@@ -106,7 +106,7 @@ export default function Index() {
                             role: 'nurse', 
                             page: 1
                         })); 
-                        await getProfessionals(userQuery?.role); 
+                        await getPatients(userQuery?.role); 
                     } }
                     className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
                     <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
@@ -118,18 +118,18 @@ export default function Index() {
             <section className="pt-3">
                 { (loading == true) 
                     ? <></> 
-                        : ((loading == false) && (professionals?.data?.length == 0)) 
+                        : ((loading == false) && (patients?.data?.length == 0)) 
                             ? <></> 
-                                : ((loading == false) && (professionals?.data?.length > 0)) 
-                                    ?   <ul className="professionals list-unstyled d-flex flex-column align-items-start gap-3">
-                                            { (professionals?.data?.map((professional, index) => {
+                                : ((loading == false) && (patients?.data?.length > 0)) 
+                                    ?   <ul className="patients list-unstyled d-flex flex-column align-items-start gap-3">
+                                            { (patients?.data?.map((patient, index) => {
                                                 return (
-                                                    <li key={ professional?._id } className="professional w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
+                                                    <li key={ patient?._id } className="patient w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
                                                         {/* <span>#1</span>  */}
                                                         <span className="">#
-                                                            { (professionals?.meta?.current_page != 1) 
-                                                                ? (((professionals?.meta?.current_page - 1) * limit) + (index + 1))
-                                                                : professionals?.meta?.current_page * (index + 1) }
+                                                            { (patients?.meta?.current_page != 1) 
+                                                                ? (((patients?.meta?.current_page - 1) * limit) + (index + 1))
+                                                                : patients?.meta?.current_page * (index + 1) }
                                                         </span>
 
                                                         <section className="doctor-patient d-flex justify-content-start gap-4 flex-wrap pt-3">
@@ -139,22 +139,11 @@ export default function Index() {
                                                             </picture>
                                                             <div className="d-flex flex-column">
                                                                 <span className="fw-semibold">
-                                                                    { (((professional?.role == 'general_practitioner') || (professional?.role == 'gynaecologist')) 
-                                                                        ? 'Dr. ' : '') }
-                                                                    { professional.first_name + ' ' + professional?.last_name }</span>
-                                                                <span>{ ((professional?.role == 'general_practitioner')
-                                                                            ? 'General Practioner' 
-                                                                                : (professional?.role == 'gynaecologist') 
-                                                                                ? 'Gynaecologist' 
-                                                                                    : (professional?.role == 'laboratory_scientist') 
-                                                                                    ? 'Laboratory Scientist' 
-                                                                                        : (professional?.role == 'nurse')
-                                                                                        ? 'Nurse' 
-                                                                                            : '' ) }</span>
+                                                                    { patient.first_name + ' ' + patient?.last_name }</span>
                                                             </div>
                                                         </section>
                                                         <section className="schedule w-100 d-flex justify-content-end align-items-center gap-1 flex-wrap pt-3">
-                                                            <small className="text-secondary">Account created:&nbsp;</small><span>{ dayjs.utc(professional?.created_at).fromNow() }</span>
+                                                            <small className="text-secondary">Account created:&nbsp;</small><span>{ dayjs.utc(patient?.created_at).fromNow() }</span>
                                                         </section>
                                                     </li>
                                                 )

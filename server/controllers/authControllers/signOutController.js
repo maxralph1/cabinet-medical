@@ -5,6 +5,7 @@ import User from '../../models/User.js';
 
 const signOutUser = asyncHandler(async (req, res) => {
     const cookies = req.cookies; 
+    // console.log("cookies:", cookies); 
 
     console.log('decoded', jwt.verify(req?.cookies?.jwt, process.env.JWT_SECRET));
     console.log('Logged out')

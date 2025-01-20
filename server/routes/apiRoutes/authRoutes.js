@@ -17,6 +17,7 @@ authRouter.post('/sign-in', signInLimiter, signInUser);
 authRouter.post('/passwordless-signin-request', passwordlessSignInRequest); 
 authRouter.post('/passwordless-signin/:username/:token', passwordlessSignIn); 
 authRouter.post('/refresh-token', authenticated, refreshTokenHandler); 
+// authRouter.post('/sign-out', authenticated, signOutUser); 
 authRouter.post('/sign-out', signOutUser); 
 authRouter.post('/password-reset', mailPasswordResetLink); 
 authRouter.post('/password-reset/:username/:token', verifyMailedPasswordResetLink); 

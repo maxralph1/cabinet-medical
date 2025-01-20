@@ -1,11 +1,12 @@
 import { existsSync } from 'fs'; 
 import { promises as fsPromises } from 'fs'; 
-import { join } from 'path'; 
+import { join, dirname } from 'path'; 
 import { formatISO } from 'date-fns'; 
 
 const logEvents = async (message, logFileName) => {
     const dateTime = formatISO(new Date())
     const logItem = `[${dateTime}]\t${message}\n`
+    const __dirname = dirname(new URL(import.meta.url).pathname); 
 
     try {
         if (!existsSync(join(__dirname, '..', 'log', 'error'))) {

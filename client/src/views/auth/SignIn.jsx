@@ -19,23 +19,23 @@ export default function SignIn() {
 
     return (
         <Layout>
-            <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
+            <div className="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="d-flex">
+                    <div className="toast-body">
                     Hello, world! This is a toast message.
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
             <section className="auth-form col-sm-12 col-md-6 d-flex flex-column justify-content-center py-2 gap-3">
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <img src="..." class="rounded me-2" alt="..." />
-                        <strong class="me-auto">Bootstrap</strong>
+                <div className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="toast-header">
+                        <img src="..." className="rounded me-2" alt="..." />
+                        <strong className="me-auto">Bootstrap</strong>
                         <small>11 mins ago</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                    <div class="toast-body">
+                    <div className="toast-body">
                         Hello, world! This is a toast message.
                     </div>
                 </div>

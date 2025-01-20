@@ -56,7 +56,7 @@ const userSchema = new Schema({
         role: { 
             type: String, 
             required: true, 
-            enum: ['super-admin', 'admin', 'general-practitioner', 'gynaecologist', 'nurse', 'laboratory-scientist', 'patient'], 
+            enum: ['super-admin', 'admin', 'general_practitioner', 'gynaecologist', 'nurse', 'laboratory_scientist', 'patient'], 
             default: 'patient' 
         }, 
         email_verify_token: String, 
