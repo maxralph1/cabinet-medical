@@ -1,4 +1,6 @@
 const origins = [
+    'https://cabinet-medical-2aew.onrender.com',
+    'https://cabinet-medical-server.onrender.com',
     // 'https://maxralph.store', 
     // 'https://www.maxralph.store', 
     'http://localhost:5176', 
