@@ -7,6 +7,7 @@ import useAxios from '@/utils/useAxios.jsx';
 export function useAppointments(appointmentQuery) {
     const axiosInstance = useAxios(); 
     const [appointments, setAppointments] = useState([]); 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (appointmentQuery !== null) {
@@ -20,10 +21,21 @@ export function useAppointments(appointmentQuery) {
         // console.log(appointmentQuery);
 
         setAppointments([]); 
-        return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}&search=${appointmentQuery?.search}`, { signal })
-            .then(response => setAppointments(response?.data))
-            .catch(error => console.log(error));
+        setLoading(true); 
+        // return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}`, { signal })
+        return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}&search_key=${appointmentQuery?.search_key}&year=${appointmentQuery?.year}&month=${appointmentQuery?.month}&date=${appointmentQuery?.date}&time_start=${appointmentQuery?.time_start}&time_end=${appointmentQuery?.time_end}`, { signal })
+            .then(response => {
+                setAppointments(response?.data); 
+                // setLoading(false);
+            })
+            .catch(error => {
+                console.log(error) 
+                // setLoading(false); 
+            })
+            .finally(() => {
+                setLoading(false); 
+            });
     } 
 
-    return { appointments, getAppointments, setAppointments }; 
+    return { appointments, getAppointments, loading, setAppointments }; 
 } 

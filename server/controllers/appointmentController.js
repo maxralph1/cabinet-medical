@@ -10,28 +10,64 @@ const getAppointments = asyncHandler(async (req, res) => {
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
 
+    console.log(req?.query); 
+    console.log(req?.user_role); 
+
+    // const selectedYear = req?.query?.year;
+    // const selectedMonth = req?.query?.month;
+    // const selectedDate = req?.query?.date;
+    // const selectedTimeStart = req?.query?.time_start; 
+    // const selectedTimeEnd = req?.query?.time_end; 
+
     let appointments, total; 
     if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
         appointments = await Appointment.find({ deleted_at: null })
-                                        .sort('-created_at')
+                                        .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await Appointment.countDocuments({ deleted_at: null });
-    } else if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse')) {
+    } else if ((req?.user_role == 'general_practitioner') 
+            || (req?.user_role == 'gynaecologist') 
+            || (req?.user_role == 'nurse') 
+            || (req?.user_role == 'laboratory_scientist')) {
         appointments = await Appointment.find({ professional: req?.user_id, deleted_at: null })
-                                        .sort('-created_at')
+                                        .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await Appointment.countDocuments({ professional: req?.user_id, deleted_at: null }); 
     } else {
         appointments = await Appointment.find({ patient: req?.user_id, deleted_at: null })
-                                        .sort('-created_at')
+                                        .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await Appointment.countDocuments({ patient: req?.user_id, deleted_at: null }); 
@@ -53,21 +89,42 @@ const getAppointments = asyncHandler(async (req, res) => {
  * Create Appointment
  */
 const createAppointment = asyncHandler(async (req, res) => {
-    const { patient, professional, notes, date_start, time_start, date_end, time_end, status } = req?.body; 
+    const { patient, professional, notes, 
+            proposed_year_start, 
+            proposed_month_start, 
+            proposed_date_start, 
+            proposed_time_start, 
+            proposed_year_end, 
+            proposed_month_end, 
+            proposed_date_end, 
+            proposed_time_end, 
+            status } = req?.body; 
 
-    if (date_end < date_start) return res.status(400).json({ message: "End date cannot be less than start date" }); 
+    if (proposed_date_end < proposed_date_start) return res.status(400).json({ message: "End date cannot be less than start date" }); 
+
+    if (proposed_time_end < proposed_time_start) return res.status(400).json({ message: "End time cannot be less than start time" }); 
     
-    if ((date_end == date_start) && (time_end < time_start)) return res.status(400).json({ message: "End time cannot be less than start time" });
+    if ((proposed_date_end == proposed_date_start) && (proposed_time_end < proposed_time_start)) return res.status(400).json({ message: "End time cannot be less than start time" }); 
+
+    const alreadyExistingAppointment = await Appointment.find({ proposed_year_start: proposed_year_start, 
+                                                                proposed_month_start: proposed_month_start, 
+                                                                proposed_date_start: proposed_date_start, 
+
+                                                            }).lean();
 
     const appointment = new Appointment({
         user: req?.user_id, 
         patient, 
         professional: professional ? professional : req?.user_id, 
         notes, 
-        date_start, 
-        time_start, 
-        date_end: date_end ? date_end : date_start, 
-        time_end, 
+        proposed_year_start, 
+        proposed_month_start, 
+        proposed_date_start, 
+        proposed_time_start, 
+        proposed_year_end: proposed_year_end ? proposed_year_end : proposed_year_start, 
+        proposed_month_end: proposed_month_end ? proposed_month_end : proposed_month_start, 
+        proposed_date_end: proposed_date_end ? proposed_date_end : proposed_date_start,  
+        proposed_time_end: proposed_time_end ? proposed_time_end : proposed_time_start, 
         status
     }); 
 

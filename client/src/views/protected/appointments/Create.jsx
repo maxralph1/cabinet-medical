@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import { usePatients } from '@/hooks/usePatients.jsx'; 
+import { useAppointments } from '@/hooks/useAppointments.jsx'; 
+import { useAppointment } from '@/hooks/useAppointment.jsx'; 
 import { useVoiceToText } from '@/utils/useVoiceToText.jsx'; 
 import scrollToTop from '@/utils/ScrollToTop.jsx'; 
 import { getDayOfWeek, getDaysOfMonth, getAllDatesOfYear } from '@/utils/ScheduleManager.js';
@@ -9,14 +11,29 @@ import Layout from '@/components/protected/Layout.jsx';
 
 
 export default function Create() {
-    const [proposedTimeStart, setproposedTimeStart] = useState(''); 
-    const [proposedTimeEnd, setproposedTimeEnd] = useState(''); 
+    const { appointments, getAppointments } = useAppointments(); 
+    const { appointment, createAppointment } = useAppointment(); 
+
+    const [proposedTimeStart, setProposedTimeStart] = useState(''); 
+    const [proposedTimeEnd, setProposedTimeEnd] = useState(''); 
+    const [calendarSchedules, setCalendarSchedules] = useState(); 
+    const [dateSchedules, setDateSchedules] = useState();  
+    // console.log(dateSchedules); 
+
+    const [currentYear, setCurrentYear] = useState();
+    const [currentMonth, setCurrentMonth] = useState();
+    const [currentDate, setCurrentDate] = useState(); 
+
+    console.log(currentYear, currentMonth, currentDate); 
+
+    // let calendarSchedules; 
+    // console.log(calendarSchedules);
 
     const year = 2025;
     console.log(getAllDatesOfYear(2025));
 
-    const [selectedPatient, setSelectedPatient] = useState({}); 
-    const [showPatients, setShowPatients] = useState(true); 
+    const [selectedPatient, setSelectedPatient] = useState(); 
+    const [showPatients, setShowPatients] = useState(false); 
     console.log(selectedPatient); 
     const [searchKey, setSearchKey] = useState(''); 
 
@@ -36,20 +53,31 @@ export default function Create() {
     const { patients, getPatients, setPatients, loading } = usePatients(userQuery); 
     console.log(patients); 
 
+    const [retrievedPatients, setRetrievedPatients] = useState();
+
     const handleSubmit = async e => {
         e.preventDefault(); 
 
-        if (proposedTimeStart > proposedTimeEnd) {
-            swal.fire({
-                text: 'The end time must be higher than the start time.', 
-                color: "#900000",
-                width: 300,
-                position: 'top',
-                showConfirmButton: false,
-            });
-        } else if (proposedTimeStart < proposedTimeEnd) { 
-            /** Proceed */ 
-        }
+        // if (appointment?.data?.proposed_date_start > appointment?.data?.proposed_date_end) {
+        //     swal.fire({
+        //         text: 'The end time must be higher than the start time.', 
+        //         color: "#900000",
+        //         width: 300,
+        //         position: 'top',
+        //         showConfirmButton: false,
+        //     });
+        // } else if (appointment?.data?.proposed_date_start < appointment?.data?.proposed_date_end) { 
+            const formData = new FormData(); 
+            formData.append('patient', selectedPatient?._id); 
+            currentYear && formData.append('proposed_year_start', currentYear); 
+            currentMonth && formData.append('proposed_month_start', currentMonth); 
+            currentDate && formData.append('proposed_date_start', currentDate); 
+            appointment?.data?.proposed_time_start && formData.append('proposed_time_start', appointment?.data?.proposed_time_start); 
+            appointment?.data?.proposed_time_end && formData.append('proposed_time_end', appointment?.data?.proposed_time_end); 
+
+            await createAppointment(formData); 
+            await appointment?.setData({}); 
+        // }
     }
 
     return (
@@ -102,6 +130,7 @@ export default function Create() {
                                     search_key: searchKey
                                 })); 
                                 await getPatients(userQuery); 
+                                await setShowPatients(true);
                                 setIsListening(false); 
                             } }
                             className="search-icon">
@@ -162,7 +191,7 @@ export default function Create() {
                     </ul>
                 </section> 
 
-                { (showPatients==false) && selectedPatient && (
+                { ((showPatients==false) && selectedPatient) && (
                     <section className="selected-user pt-4">
                         <article className="patient-doctor d-flex justify-content-start align-items-center gap-3 pt-2">
                             <picture>
@@ -199,62 +228,99 @@ export default function Create() {
 
                     <section className="calendar pt-3">
                         <div className="years d-flex justify-content-start align-items-center flex-wrap gap-3">
-                            <article className="">2025</article>
-                            <article className="">2026</article>
+                            <article 
+                                onClick={ () => {
+                                    setCalendarSchedules(getAllDatesOfYear(new Date().getFullYear())); 
+                                    setCurrentYear(new Date().getFullYear()); 
+                                    console.log(calendarSchedules); 
+                                } }
+                                className={`cursor-pointer ${(currentYear == (new Date().getFullYear())) && 'bg-secondary text-white'}`}>
+                                    { new Date().getFullYear() }
+                            </article>
+                            <article 
+                                onClick={ () => {
+                                    setCalendarSchedules(getAllDatesOfYear(new Date().getFullYear() + 1)); 
+                                    setCurrentYear((new Date().getFullYear() + 1)); 
+                                    console.log(calendarSchedules); 
+                                } }
+                                className={`cursor-pointer ${(currentYear == (new Date().getFullYear() + 1)) && 'bg-secondary text-white'}`}>
+                                    { new Date().getFullYear() + 1 }
+                            </article>
                         </div>
                         <div className="months">
                             <div className="nav-scroller">
                                 <nav className="months nav justify-content-between gap-2 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
-                                    <article>January</article>
-                                    <article>February</article>
-                                    <article>March</article>
-                                    <article>April</article>
-                                    <article>May</article>
-                                    <article>June</article>
-                                    <article>July</article>
-                                    <article>August</article>
-                                    <article>September</article>
-                                    <article>October</article>
-                                    <article>November</article>
-                                    <article>December</article>
+                                    { (calendarSchedules?.length > 0) && calendarSchedules?.map((schedule, index) => {
+                                        console.log('schedule', schedule)
+                                        return (
+                                            <article 
+                                                key={ index } 
+                                                onClick={ () => {
+                                                    setDateSchedules(calendarSchedules[index]); 
+                                                    setCurrentMonth(schedule?.month); 
+                                                    getAppointments({
+                                                        page: '', 
+                                                        limit: '', 
+                                                        search_key: '', 
+                                                        year: currentYear, 
+                                                        month: currentMonth, 
+                                                        date: currentDate, 
+                                                        time_start: '', 
+                                                        time_end: '' 
+                                                    })
+                                                } } 
+                                                className={`cursor-pointer ${((schedule?.month) == currentMonth) && 'bg-secondary text-white'}`}>
+                                                { (schedule?.month == 1) 
+                                                    ?  'January' 
+                                                : (schedule?.month == 2) 
+                                                    ? 'February' 
+                                                : (schedule?.month == 3) 
+                                                    ? 'March' 
+                                                : (schedule?.month == 4) 
+                                                    ? 'April' 
+                                                : (schedule?.month == 5) 
+                                                    ? 'May' 
+                                                : (schedule?.month == 6) 
+                                                    ? 'June' 
+                                                : (schedule?.month == 7) 
+                                                    ? 'July' 
+                                                : (schedule?.month == 8) 
+                                                    ? 'August' 
+                                                : (schedule?.month == 9) 
+                                                    ? 'September' 
+                                                : (schedule?.month == 10) 
+                                                    ? 'October' 
+                                                : (schedule?.month == 11) 
+                                                    ? 'November'
+                                                : 'December'
+                                                }
+                                            </article>
+                                        )
+                                    }) }
                                 </nav>
                             </div> 
                         </div>
                         <div className="dates">
                             <div className="nav-scroller">
                                 <nav className="dates nav justify-content-between gap-2 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
-                                    <article>1</article>
-                                    <article>2</article>
-                                    <article>3</article>
-                                    <article>4</article>
-                                    <article>5</article>
-                                    <article>6</article>
-                                    <article>7</article>
-                                    <article>8</article>
-                                    <article>9</article>
-                                    <article>10</article>
-                                    <article>11</article>
-                                    <article>12</article>
-                                    <article>13</article>
-                                    <article>14</article>
-                                    <article>15</article>
-                                    <article>16</article>
-                                    <article>17</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
-                                    <article>18</article>
+                                    { (dateSchedules?.days?.length > 0) && dateSchedules?.days?.map((date, index) => {
+                                        return (
+                                            <article 
+                                                key={ index } 
+                                                onClick={ () => {
+                                                    setCurrentDate(date?.date)
+                                                } } 
+                                                className={`d-flex flex-column cursor-pointer ${((date?.date) == currentDate) && 'bg-secondary text-white'}`}>
+                                                <span>{ date?.date }</span>
+                                                <span className={`text-secondary ${((date?.date) == currentDate) && 'text-white'}`}><small>{ date?.dayOfWeek }</small></span>
+                                            </article>
+                                        )
+                                    })}
                                 </nav>
                             </div> 
                         </div>
-                        <div className="appointments d-flex flex-column gap-3 pt-3">
+                        <section className="existing-appointments d-flex flex-column gap-3 pt-5">
+                            <h4 className="fw-semibold border-bottom fs-5">Appointments On Your Schedule</h4>
                             <article className="border-radius-35 p-2 d-flex align-items-center gap-3" style={{ backgroundColor: '#f2f2f2', maxWidth: '500px' }}>
                                 <picture>
                                     <source srcSet="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain"
@@ -279,22 +345,29 @@ export default function Create() {
                                     <span>20:00 - 21:00</span>
                                 </div>
                             </article>
-                        </div>
+                        </section>
                     </section>
 
                     <section className="new-appointment pt-5" id="add-new-appointment">
                         <div className="time-range">
-                            <h4 className="border-bottom fw-semibold fs-6">Time Slot</h4>
-                            <div>
-                                <form onSubmit={ handleSubmit } id="auth-form" className="auth-form">
+                            <h4 className="border-bottom fw-semibold fs-6">
+                                Proposed Time Slot&nbsp;
+                                <span className='text-secondary'><small>(for new appointment)</small></span>
+                            </h4>
+                        
+                            <div className='pt-3'>
+                                <form onSubmit={ handleSubmit } id="appointment-form" className="appointment-form" encType="multipart/form-data">
                                     <div className="row">
                                         <div className="form-floating mb-3 col-sm-12 col-md-6">
                                             <input 
                                                 type="time" 
                                                 min="09:00" max="18:00" 
                                                 id="proposed_time_start" 
-                                                className="form-control" 
-                                                onChange={ e => setproposedTimeStart(e.target.value) } 
+                                                className="form-control"  
+                                                onChange={ e => appointment.setData({
+                                                    ...appointment?.data,
+                                                    proposed_time_start: e.target.value,
+                                                }) }
                                                 placeholder="09:00" />
                                             <label htmlFor="proposed_time_start">Proposed Start Time</label>
                                         </div>
@@ -304,7 +377,10 @@ export default function Create() {
                                                 min="09:00" max="18:00" 
                                                 id="proposed_time_end" 
                                                 className="form-control" 
-                                                onChange={ e => setproposedTimeEnd(e.target.value) } 
+                                                onChange={ e => appointment.setData({
+                                                    ...appointment?.data,
+                                                    proposed_time_end: e.target.value,
+                                                }) } 
                                                 placeholder="09:00" />
                                             <label htmlFor="proposed_time_end">Proposed End Time</label>
                                         </div>

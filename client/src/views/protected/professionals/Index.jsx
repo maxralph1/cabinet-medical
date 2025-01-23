@@ -1,15 +1,16 @@
 import { useState } from 'react'; 
-import { Link } from 'react-router-dom'; 
-import { route } from '@/routes'; 
+// import { Link } from 'react-router-dom'; 
+// import { route } from '@/routes'; 
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime"; 
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
 import { useProfessionals } from '@/hooks/useProfessionals.jsx'; 
-import scrollToTop from '@/utils/ScrollToTop.jsx'; 
+// import scrollToTop from '@/utils/ScrollToTop.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
+import UserComponent from '@/components/protected/nested-components/UserComponent.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
@@ -28,7 +29,7 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">Professionals</h2>
-                <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
+                {/* <Link to={ route('home.professionals.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
                     <span className="mb-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
                             className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -37,11 +38,10 @@ export default function Index() {
                         </svg>
                     </span>
                     <span>Add</span>
-                </Link>
+                </Link> */}
             </div>
 
-            <div className="d-flex justify-content-end pt-4">
-                {/* <span>1 - 10 of 25 results</span> */}
+            <div className="d-flex justify-content-end pt-3">
                 <span>
                     { (professionals?.data?.length > 0) 
                         && <PaginationMeter 
@@ -117,53 +117,35 @@ export default function Index() {
 
             <section className="pt-3">
                 { (loading == true) 
-                    ? <></> 
-                        : ((loading == false) && (professionals?.data?.length == 0)) 
-                            ? <></> 
-                                : ((loading == false) && (professionals?.data?.length > 0)) 
-                                    ?   <ul className="professionals list-unstyled d-flex flex-column align-items-start gap-3">
-                                            { (professionals?.data?.map((professional, index) => {
-                                                return (
-                                                    <li key={ professional?._id } className="professional w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
-                                                        {/* <span>#1</span>  */}
-                                                        <span className="">#
-                                                            { (professionals?.meta?.current_page != 1) 
-                                                                ? (((professionals?.meta?.current_page - 1) * limit) + (index + 1))
-                                                                : professionals?.meta?.current_page * (index + 1) }
-                                                        </span>
-
-                                                        <section className="doctor-patient d-flex justify-content-start gap-4 flex-wrap pt-3">
-                                                            <picture>
-                                                                <source srcSet="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" media="(orientation: portrait)" />
-                                                                <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-50" style={{ width: '50px', height: '50px' }} alt="" />
-                                                            </picture>
-                                                            <div className="d-flex flex-column">
-                                                                <span className="fw-semibold">
-                                                                    { (((professional?.role == 'general_practitioner') || (professional?.role == 'gynaecologist')) 
-                                                                        ? 'Dr. ' : '') }
-                                                                    { professional.first_name + ' ' + professional?.last_name }</span>
-                                                                <span>{ ((professional?.role == 'general_practitioner')
-                                                                            ? 'General Practioner' 
-                                                                                : (professional?.role == 'gynaecologist') 
-                                                                                ? 'Gynaecologist' 
-                                                                                    : (professional?.role == 'laboratory_scientist') 
-                                                                                    ? 'Laboratory Scientist' 
-                                                                                        : (professional?.role == 'nurse')
-                                                                                        ? 'Nurse' 
-                                                                                            : '' ) }</span>
-                                                            </div>
-                                                        </section>
-                                                        <section className="schedule w-100 d-flex justify-content-end align-items-center gap-1 flex-wrap pt-3">
-                                                            <small className="text-secondary">Account created:&nbsp;</small><span>{ dayjs.utc(professional?.created_at).fromNow() }</span>
-                                                        </section>
-                                                    </li>
-                                                )
-                                            })) }
-                                        </ul>
-                                        : <></> }
+                    ?   <div className="py-4 d-flex justify-content-center align-items-center">
+                            <div className="spinner-grow" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>  
+                        </div>
+                            : ((loading == false) && ((professionals?.data?.length < 1) || professionals?.length < 1)) 
+                                ?   <div className="py-4 d-flex justify-content-center align-items-center">
+                                        <span>There are no professionals for the specified criteria.</span>
+                                    </div> 
+                                        : ((loading == false) && (professionals?.data?.length > 0)) 
+                                            ?   <ul className="professionals list-unstyled d-flex flex-column align-items-start gap-3">
+                                                    { (professionals?.data?.map((professional, index) => {
+                                                        return (
+                                                            <UserComponent 
+                                                                index={ index } 
+                                                                key={ professional?._id } 
+                                                                users={ professionals } 
+                                                                user={ professional } /> 
+                                                        )
+                                                    })) }
+                                                </ul>
+                                                : <></> }
             </section>
 
-            <PaginationLinks />
+            { (professionals?.data?.length > 0) 
+                && <PaginationLinks 
+                    items={ professionals } 
+                    get_items={ getProfessionals } 
+                    set_query={ setUserQuery } /> } 
         </Layout>
     )
 }

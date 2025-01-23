@@ -46,9 +46,8 @@ const signUpUser = asyncHandler(async (req, res) => {
 
     const user = new User({
         username,
-        first_name, 
-        last_name, 
-        last_name,
+        first_name: first_name?.toLowerCase(), 
+        last_name: last_name?.toLowerCase(), 
         email,
         phone,
         password,

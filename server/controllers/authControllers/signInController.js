@@ -7,7 +7,7 @@ const signInUser = asyncHandler(async (req, res) => {
     const { email_username,  
 		    password } = req?.body;
 
-    const userFound = await User.findOne({ $or: [{ username: email_username }, { email: email_username }]}).exec(); 
+    const userFound = await User.findOne({ $or: [{ username: email_username }, { email: email_username }] }).exec(); 
 
     if (!userFound) return res.status(401).json({ message: "Unauthorized" }); 
 
@@ -45,14 +45,14 @@ const signInUser = asyncHandler(async (req, res) => {
             }
         }, 
         process.env.ACCESS_TOKEN_SECRET, 
-        { expiresIn: 60 * 60 }
+        { expiresIn: 12 * 60 * 60 }
         // { expiresIn: 1 * 60 }
     );
 
     const refresh = jwt.sign(
         { "user_id": userFound._id }, 
         process.env.REFRESH_TOKEN_SECRET, 
-        { expiresIn: 60 * 60 }
+        { expiresIn: 12 * 60 * 60 }
         // { expiresIn: 1 * 60 }
     );
 
@@ -62,7 +62,7 @@ const signInUser = asyncHandler(async (req, res) => {
                 httpOnly: true, 
                 secure: true, 
                 sameSite: 'Lax', 
-                maxAge: 2 * 60 * 60 * 1000      // 2 hours
+                maxAge: 24 * 60 * 60 * 1000      // 2 hours
                 // maxAge: 1 * 60 * 1000      // 1 minute
             }); 
             // res.cookie('jwt', refresh, { httpOnly: true, secure: true, sameSite: 'Strict' });

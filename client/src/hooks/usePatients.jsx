@@ -2,27 +2,27 @@ import { useState, useEffect } from 'react';
 import useAxios from '@/utils/useAxios.jsx'; 
 
 
-export function useProfessionals(userQuery) {
+export function usePatients(userQuery) {
     const axiosInstance = useAxios(); 
-    const [professionals, setProfessionals] = useState([]); 
+    const [patients, setPatients] = useState([]); 
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (userQuery !== null) {
             const controller = new AbortController(); 
-            getProfessionals(userQuery, { signal: controller.signal }); 
+            getPatients(userQuery, { signal: controller.signal }); 
             return () => { controller.abort() };
         }
     }, [userQuery]); 
 
-    async function getProfessionals(userQuery, { signal } = {}) { 
-        setProfessionals([]); 
+    async function getPatients(userQuery, { signal } = {}) { 
+        setPatients([]); 
         // console.log(userQuery);
         setLoading(true);
         console.log(loading);
-        return axiosInstance.get(`professionals?role=${userQuery?.role}&range=${userQuery?.range}&page=${userQuery?.page}&limit=${userQuery?.limit}`, { signal }) 
+        return axiosInstance.get(`patients?range=${userQuery?.range}&page=${userQuery?.page}&limit=${userQuery?.limit}&search_key=${userQuery?.search_key}`, { signal }) 
             .then(response => {
-                setProfessionals(response?.data);
+                setPatients(response?.data);
                 setLoading(false);
             })
             .catch(error => {
@@ -34,5 +34,5 @@ export function useProfessionals(userQuery) {
             });
     } 
 
-    return { professionals, getProfessionals, loading }; 
+    return { patients, getPatients, setPatients, loading }; 
 } 

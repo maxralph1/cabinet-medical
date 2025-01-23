@@ -67,6 +67,11 @@ import ProtectedPatientChartEdit from '@/views/protected/patient-charts/Edit.jsx
 import ProtectedPatientChartCreate from '@/views/protected/patient-charts/Create.jsx'; 
 import ProtectedPatientChartsIndex from '@/views/protected/patient-charts/Index.jsx'; 
 
+import ProtectedPatientShow from '@/views/protected/patients/Show.jsx'; 
+import ProtectedPatientEdit from '@/views/protected/patients/Edit.jsx'; 
+import ProtectedPatientCreate from '@/views/protected/patients/Create.jsx'; 
+import ProtectedPatientsIndex from '@/views/protected/patients/Index.jsx'; 
+
 import ProtectedProfessionalShow from '@/views/protected/professionals/Show.jsx'; 
 import ProtectedProfessionalEdit from '@/views/protected/professionals/Edit.jsx'; 
 import ProtectedProfessionalCreate from '@/views/protected/professionals/Create.jsx'; 
@@ -176,6 +181,11 @@ function App() {
               <Route path={ route('home.patient-charts.edit') } element={ <ProtectedPatientChartEdit /> } />
               <Route path={ route('home.patient-charts.create') } element={ <ProtectedPatientChartCreate /> } />
               <Route path={ route('home.patient-charts.index') } element={ <ProtectedPatientChartsIndex /> } /> 
+
+              <Route path={ route('home.patients.show') } element={ <ProtectedPatientShow /> } />
+              <Route path={ route('home.patients.edit') } element={ <ProtectedPatientEdit /> } />
+              <Route path={ route('home.patients.create') } element={ <ProtectedPatientCreate /> } />
+              <Route path={ route('home.patients.index') } element={ <ProtectedPatientsIndex /> } /> 
 
               <Route path={ route('home.professionals.show') } element={ <ProtectedProfessionalShow /> } />
               <Route path={ route('home.professionals.edit') } element={ <ProtectedProfessionalEdit /> } />

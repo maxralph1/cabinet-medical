@@ -52,6 +52,11 @@ const routeNames = {
     'home.patient-charts.create': '/home/patient-charts/create', 
     'home.patient-charts.index': '/home/patient-charts', 
 
+    'home.patients.show': '/home/patients/:id/show', 
+    'home.patients.edit': '/home/patients/:id/edit', 
+    'home.patients.create': '/home/patients/create', 
+    'home.patients.index': '/home/patients', 
+
     'home.professionals.show': '/home/professionals/:id/show', 
     'home.professionals.edit': '/home/professionals/:id/edit', 
     'home.professionals.create': '/home/professionals/create', 
