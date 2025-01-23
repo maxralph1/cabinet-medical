@@ -89,7 +89,68 @@ a, Link {
 
 .cursor-pointer { cursor: pointer; } 
 
-.transition-1 { transition: all 0.5s ease-in-out; }
+.transition-1 { transition: all 0.5s ease-in-out; } 
+
+/** Nav Scroll */
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    /* height: 2.75rem; */
+    overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+    display: flex;
+    width: 77.5vw;
+    margin: auto;
+    gap: 3rem;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav-scroller .nav .nav-item {
+    /* background-color: darkgrey;  */
+    height: 100%;
+    padding-block: 0;
+    padding-right: 0;
+    border-radius: 35px;
+}
+
+.nav-scroller .nav .nav-item .title {
+    font-weight: 700;
+}
+
+.nav-scroller .nav .nav-item span img {
+    border-radius: 35px;
+}
+/** End Nav Scroll */
+
+/* .month {
+    display: grid; 
+    grid-template-columns: repeat(7, 1fr); 
+} 
+
+.month span {
+    padding-top: 0; 
+    padding-bottom: 0; 
+    margin-bottom: 0; 
+} */ 
+
+.years article, .months article, .dates article {
+    border-radius: 35px; 
+    padding: 1rem;
+    background-color: #f2f2f2;
+}
+
+.years article:active, .months article:active, .dates article:active {
+    background-color: #1f1a1a; 
+    color: #f2f2f2;
+}
 
 
 /*-------*/
