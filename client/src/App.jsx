@@ -30,6 +30,8 @@ import ProtectedAppointmentEdit from '@/views/protected/appointments/Edit.jsx';
 import ProtectedAppointmentCreate from '@/views/protected/appointments/Create.jsx'; 
 import ProtectedAppointmentsIndex from '@/views/protected/appointments/Index.jsx'; 
 
+import ProtectedBlogIndex from '@/views/protected/blog/Index.jsx'; 
+
 import ProtectedBlogCategoryShow from '@/views/protected/blog/categories/Show.jsx'; 
 import ProtectedBlogCategoryEdit from '@/views/protected/blog/categories/Edit.jsx'; 
 import ProtectedBlogCategoryCreate from '@/views/protected/blog/categories/Create.jsx'; 
@@ -49,6 +51,11 @@ import ProtectedDiagnosisShow from '@/views/protected/diagnoses/Show.jsx';
 import ProtectedDiagnosisEdit from '@/views/protected/diagnoses/Edit.jsx'; 
 import ProtectedDiagnosisCreate from '@/views/protected/diagnoses/Create.jsx'; 
 import ProtectedDiagnosesIndex from '@/views/protected/diagnoses/Index.jsx'; 
+
+import ProtectedDiagnosisTypeShow from '@/views/protected/diagnosis-types/Show.jsx'; 
+import ProtectedDiagnosisTypeEdit from '@/views/protected/diagnosis-types/Edit.jsx'; 
+import ProtectedDiagnosisTypeCreate from '@/views/protected/diagnosis-types/Create.jsx'; 
+import ProtectedDiagnosisTypesIndex from '@/views/protected/diagnosis-types/Index.jsx'; 
 
 import ProtectedInventoryShow from '@/views/protected/inventory/Show.jsx'; 
 import ProtectedInventoryEdit from '@/views/protected/inventory/Edit.jsx'; 
@@ -145,6 +152,7 @@ function App() {
               <Route path={ route('home.appointments.create') } element={ <ProtectedAppointmentCreate /> } /> 
               <Route path={ route('home.appointments.index') } element={ <ProtectedAppointmentsIndex /> } /> 
 
+              <Route path={ route('home.blog.index') } element={ <ProtectedBlogIndex /> } /> 
               <Route path={ route('home.blog.categories.show') } element={ <ProtectedBlogCategoryShow /> } /> 
               <Route path={ route('home.blog.categories.edit') } element={ <ProtectedBlogCategoryEdit /> } /> 
               <Route path={ route('home.blog.categories.create') } element={ <ProtectedBlogCategoryCreate /> } /> 
@@ -164,6 +172,11 @@ function App() {
               <Route path={ route('home.diagnoses.edit') } element={ <ProtectedDiagnosisEdit /> } />
               <Route path={ route('home.diagnoses.create') } element={ <ProtectedDiagnosisCreate /> } />
               <Route path={ route('home.diagnoses.index') } element={ <ProtectedDiagnosesIndex /> } /> 
+
+              <Route path={ route('home.diagnosis-types.show') } element={ <ProtectedDiagnosisTypeShow /> } />
+              <Route path={ route('home.diagnosis-types.edit') } element={ <ProtectedDiagnosisTypeEdit /> } />
+              <Route path={ route('home.diagnosis-types.create') } element={ <ProtectedDiagnosisTypeCreate /> } />
+              <Route path={ route('home.diagnosis-types.index') } element={ <ProtectedDiagnosisTypesIndex /> } /> 
 
               <Route path={ route('home.inventory.show') } element={ <ProtectedInventoryShow /> } />
               <Route path={ route('home.inventory.edit') } element={ <ProtectedInventoryEdit /> } />

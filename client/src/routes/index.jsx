@@ -17,6 +17,7 @@ const routeNames = {
     'home.appointments.create': '/home/appointments/create', 
     'home.appointments.index': '/home/appointments', 
 
+    'home.blog.index': '/home/blog', 
     'home.blog.categories.show': '/home/blog/categories/:id/show', 
     'home.blog.categories.edit': '/home/blog/categories/:id/edit', 
     'home.blog.categories.create': '/home/blog/categories/create', 
@@ -31,6 +32,11 @@ const routeNames = {
     'home.chats.edit': '/home/chats/:id/edit', 
     'home.chats.create': '/home/chats/create', 
     'home.chats.index': '/home/chats', 
+
+    'home.diagnosis-types.show': '/home/diagnosis-types/:id/show', 
+    'home.diagnosis-types.edit': '/home/diagnosis-types/:id/edit', 
+    'home.diagnosis-types.create': '/home/diagnosis-types/create', 
+    'home.diagnosis-types.index': '/home/diagnosis-types', 
 
     'home.diagnoses.show': '/home/diagnoses/:id/show', 
     'home.diagnoses.edit': '/home/diagnoses/:id/edit', 

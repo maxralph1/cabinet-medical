@@ -380,7 +380,7 @@ export default function Create() {
                                                 onChange={ e => appointment.setData({
                                                     ...appointment?.data,
                                                     proposed_time_end: e.target.value,
-                                                }) } 
+                                                }) }  
                                                 placeholder="09:00" />
                                             <label htmlFor="proposed_time_end">Proposed End Time</label>
                                         </div>

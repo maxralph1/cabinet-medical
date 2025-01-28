@@ -13,11 +13,11 @@ export default function UserComponent({ index, users, user }) {
 
     return (
         <li key={ user?._id } className="user w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
-            <span className="">#
+            {/* <span className="">#
                 { (users?.meta?.current_page != 1) 
                     ? (((users?.meta?.current_page - 1) * results_limit) + (index + 1))
                     : users?.meta?.current_page * (index + 1) }
-            </span>
+            </span> */}
 
             <section className="doctor-patient d-flex justify-content-start gap-4 flex-wrap pt-3">
                 <picture>

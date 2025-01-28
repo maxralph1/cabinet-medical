@@ -17,7 +17,7 @@ const getPatients = asyncHandler(async (req, res) => {
 
     let users, usersCount;
 
-    if (searchQuery?.length) {
+    if (searchQuery) {
         // users = await User.find({ $or: [{ first_name: searchQuery }, { last_name: searchQuery }] })
         users = await User.find({ $and: [
                                 {

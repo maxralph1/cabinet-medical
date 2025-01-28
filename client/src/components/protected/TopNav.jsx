@@ -21,8 +21,23 @@ export default function TopNav() {
                     </Link>
                 </li>
                 <li className="fw-semibold">
+                    <Link to={ route('home.diagnosis-types.index') }>
+                        Diagnosis Types
+                    </Link>
+                </li>
+                <li className="fw-semibold">
+                    <Link to={ route('home.diagnoses.index') }>
+                        Diagnoses
+                    </Link>
+                </li>
+                <li className="fw-semibold">
                     <Link to={ route('home.regimens.index') }>
                         Regimens
+                    </Link>
+                </li>
+                <li className="fw-semibold">
+                    <Link to={ route('home.medical-bills.index') }>
+                        Medical Bills
                     </Link>
                 </li>
                 <li className="fw-semibold">
@@ -48,6 +63,11 @@ export default function TopNav() {
                 <li className="fw-semibold">
                     <Link to={ route('home.settings.index') }>
                         Settings
+                    </Link>
+                </li>
+                <li className="fw-semibold">
+                    <Link to={ route('home.blog.index') }>
+                        Blog
                     </Link>
                 </li>
                 <li 

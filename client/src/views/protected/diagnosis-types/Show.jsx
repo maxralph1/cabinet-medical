@@ -6,26 +6,26 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
-import { useAppointments } from '@/hooks/useAppointments.jsx'; 
+import { useDiagnosisTypes } from '@/hooks/useDiagnosisTypes.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
-export default function Index() {
-    const [appointmentQuery, setAppointmentQuery] = useState({
+export default function Show() {
+    const [diagnosisTypeQuery, setDiagnosisTypeQuery] = useState({
         range: 'all', 
         page: 1, 
         limit: 10, 
     }); 
-    const { appointments, getAppointments, loading } = useAppointments(appointmentQuery); 
-    console.log(appointments); 
+    const { diagnosisTypes, getDiagnosisTypes, loading } = useDiagnosisTypes(diagnosisTypeQuery); 
+    console.log(diagnosisTypes); 
 
     return (
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
-                <h2 className="fs-3">Appointments</h2>
-                <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
+                <h2 className="fs-3">Diagnosis Types</h2>
+                <Link to={ route('home.diagnosis-types.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
                     <span className="mb-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
                             className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -39,12 +39,12 @@ export default function Index() {
 
             <div className="d-flex justify-content-end pt-3">
                 <span>
-                    { (appointments?.data?.length > 0) 
+                    { (diagnosisTypes?.data?.length > 0) 
                         && <PaginationMeter 
-                                current_page={ appointments?.meta?.current_page } 
-                                limit={ appointments?.meta?.limit } 
-                                total_pages={ appointments?.meta?.total_pages } 
-                                total_results={ appointments?.meta?.total_results } /> } 
+                                current_page={ diagnosisTypes?.meta?.current_page } 
+                                limit={ diagnosisTypes?.meta?.limit } 
+                                total_pages={ diagnosisTypes?.meta?.total_pages } 
+                                total_results={ diagnosisTypes?.meta?.total_results } /> } 
                 </span> 
             </div> 
 
@@ -55,19 +55,19 @@ export default function Index() {
                                 <span className="visually-hidden">Loading...</span>
                             </div>  
                         </div>
-                            : ((loading == false) && ((appointments?.data?.length < 1) || appointments?.length < 1)) 
+                            : ((loading == false) && ((diagnosisTypes?.data?.length < 1) || diagnosisTypes?.length < 1)) 
                                 ?   <div className="py-4 d-flex justify-content-center align-items-center">
-                                        <span>There are no appointments for the specified criteria.</span>
+                                        <span>There are no diagnosis types yet.</span>
                                     </div> 
-                                        : ((loading == false) && (appointments?.data?.length > 0)) 
-                                            ?   <ul className="appointments list-unstyled d-flex flex-column align-items-start gap-3">
-                                                    { (appointments?.data?.map((appointment, index) => {
+                                        : ((loading == false) && (diagnosisTypes?.data?.length > 0)) 
+                                            ?   <ul className="diagnosis-types list-unstyled d-flex flex-column align-items-start gap-3">
+                                                    { (diagnosisTypes?.data?.map((diagnosisType, index) => {
                                                         return (
-                                                            <li key={ appointment?._id } className="appointment w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
+                                                            <li key={ diagnosisType?._id } className="diagnosis-type w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
                                                                 {/* <span className="">#
-                                                                    { (appointments?.meta?.current_page != 1) 
-                                                                        ? (((appointments?.meta?.current_page - 1) * results_limit) + (index + 1))
-                                                                        : appointments?.meta?.current_page * (index + 1) }
+                                                                    { (diagnosisTypes?.meta?.current_page != 1) 
+                                                                        ? (((diagnosisTypes?.meta?.current_page - 1) * results_limit) + (index + 1))
+                                                                        : diagnosisTypes?.meta?.current_page * (index + 1) }
                                                                 </span> */}
 
                                                                 <section className="doctor-patient d-flex justify-content-start gap-4 flex-wrap pt-3">
@@ -77,14 +77,14 @@ export default function Index() {
                                                                     </picture>
                                                                     <div className="d-flex flex-column">
                                                                         <span>
-                                                                            { (appointment?.user == appointment?.patient?._id) 
+                                                                            { (diagnosisType?.user == diagnosisType?.patient?._id) 
                                                                                 ?   <span className="d-flex flex-column">
-                                                                                        <span className="fw-semibold">{ appointment?.professional?.first_name + ' ' + appointment?.professional?.last_name }</span>
-                                                                                        <span>{ appointment?.professional?.role }</span>
+                                                                                        <span className="fw-semibold">{ diagnosisType?.professional?.first_name + ' ' + diagnosisType?.professional?.last_name }</span>
+                                                                                        <span>{ diagnosisType?.professional?.role }</span>
                                                                                     </span>
-                                                                                    : (appointment?.user == appointment?.professional?._id) 
+                                                                                    : (diagnosisType?.user == diagnosisType?.professional?._id) 
                                                                                         ?   <span className="d-flex flex-column">
-                                                                                                <span className="fw-semibold">{ appointment?.patient?.first_name + ' ' + appointment?.patient?.last_name }</span>
+                                                                                                <span className="fw-semibold">{ diagnosisType?.patient?.first_name + ' ' + diagnosisType?.patient?.last_name }</span>
                                                                                                 <span>Patient</span>
                                                                                                 <span className="pt-2">Purpose:&nbsp;<span className="fw-semibold">Pregnancy first trimester investigation</span></span>
                                                                                             </span> 
@@ -96,7 +96,7 @@ export default function Index() {
                                                                     </div>
                                                                 </section>
                                                                 <section className="schedule w-100 d-flex justify-content-end gap-4 flex-wrap pt-3">
-                                                                    <div className="appointment-date-time d-flex align-items-center gap-1">
+                                                                    <div className="diagnosis-type-date-time d-flex align-items-center gap-1">
                                                                         <span>
                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                                 className="bi bi-calendar-event" viewBox="0 0 16 16">
@@ -106,10 +106,10 @@ export default function Index() {
                                                                             </svg>
                                                                         </span>
                                                                         <span>
-                                                                            { dayjs(appointment?.proposed_year_start+'-'+appointment?.proposed_month_start+'-'+appointment?.proposed_date_start).format('MMM D, YYYY') }, { appointment?.proposed_time_start }
+                                                                            { dayjs(diagnosisType?.proposed_year_start+'-'+diagnosisType?.proposed_month_start+'-'+diagnosisType?.proposed_date_start).format('MMM D, YYYY') }, { diagnosisType?.proposed_time_start }
                                                                         </span>
                                                                     </div>
-                                                                    <div className="appointment-length d-flex align-items-center gap-1">
+                                                                    <div className="diagnosis-type-length d-flex align-items-center gap-1">
                                                                         <span>
                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                                 className="bi bi-stopwatch-fill" viewBox="0 0 16 16">
@@ -121,7 +121,7 @@ export default function Index() {
                                                                             {/* 30 minutes
                                                                             const date1 = dayjs('2019-01-25')
                                                                             date1.diff('2018-06-05', 'month', true) */}
-                                                                            { dayjs(appointment?.proposed_time_end)?.diff(appointment?.proposed_time_start, 'minute', true) || '30 minutes' }
+                                                                            { dayjs(diagnosisType?.proposed_time_end)?.diff(diagnosisType?.proposed_time_start, 'minute', true) || '30 minutes' }
                                                                         </span>
                                                                     </div>
                                                                 </section>
@@ -132,11 +132,11 @@ export default function Index() {
                                                 : <></> }
             </section>
 
-            { (appointments?.data?.length > 0) 
+            { (diagnosisTypes?.data?.length > 0) 
                 && <PaginationLinks 
-                    items={ appointments } 
-                    get_items={ getAppointments } 
-                    set_query={ setAppointmentQuery } /> } 
+                    items={ diagnosisTypes } 
+                    get_items={ getDiagnosisTypes } 
+                    set_query={ setDiagnosisTypeQuery } /> } 
         </Layout>
     )
 }

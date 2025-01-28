@@ -27,7 +27,7 @@ export default function Index() {
             <section className="pt-3">
                 <ul className="list-unstyled d-flex flex-column align-items-start gap-3">
                     <li className="border border-1 border-radius-25 d-flex flex-column px-3 py-4">
-                        <span>#1</span>
+                        {/* <span>#1</span> */}
                         <span><span className="text-secondary">Ref #:</span>&nbsp;<span>#123547QGV215484</span></span>
                         <span><span className="text-secondary">Product Code:</span>&nbsp;<span>#123547QGV215484</span></span>
                         <span className="fw-semibold fs-5">Griseofulvin</span>
