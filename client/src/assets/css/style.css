@@ -59,7 +59,7 @@ a, Link {
 
 .search {
     display: flex;
-    justify-content: end;
+    /* justify-content: end; */
 }
 
 .search-container {

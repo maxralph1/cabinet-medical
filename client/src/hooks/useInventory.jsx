@@ -7,7 +7,7 @@ import useAxios from '@/utils/useAxios.jsx';
 import swal from 'sweetalert2'; 
 
 
-export function useDiagnosis(id = null) {
+export function useInventory(id = null) {
     const [errors, setErrors] = useState({}); 
     const [loading, setLoading] = useState(false); 
     const [data, setData] = useState({}); 
@@ -18,23 +18,23 @@ export function useDiagnosis(id = null) {
     useEffect(() => {
         if (id !== null) {
             const controller = new AbortController();
-            getDiagnosis(id, { signal: controller.signal })
+            getInventory(id, { signal: controller.signal })
             return () => controller.abort();
         }
     }, [id]);
 
-    async function createDiagnosis(diagnosis) {
+    async function createInventory(inventory) {
         setLoading(true); 
         setErrors({}); 
 
-        console.log(diagnosis); 
-        return axiosInstance.post('diagnoses', diagnosis)
+        console.log(inventory); 
+        return axiosInstance.post('inventory', inventory)
             .then(response => {
                 setData(response?.data)
                 console.log(response); 
-                navigate(route('home.diagnoses.index'));
+                navigate(route('home.inventory.index'));
                 swal.fire({
-                    text: `Diagnosis (tests) created for patient.`, 
+                    text: `Inventory added.`, 
                     color: '#f2f2f20', 
                     width: 325, 
                     position: 'top', 
@@ -68,23 +68,23 @@ export function useDiagnosis(id = null) {
             });
     } 
 
-    async function getDiagnosis(id) {
+    async function getInventory(id, page, limit) {
         // setLoading(true); 
         // console.log(id, page, limit);
 
-        return axiosInstance.get(`diagnoses/${id}`)
+        return axiosInstance.get(`inventory/${id}?page=${page}&limit=${limit}`)
             .then(response => setData(response?.data?.data))
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false));
     } 
 
-    async function updateDiagnosis(diagnosis) {
+    async function updateInventory(inventory) {
         setLoading(true); 
         setErrors({}); 
-        console.log(diagnosis);
+        console.log(inventory);
 
-        return axiosInstance.put(`diagnoses/${id}`, diagnosis)
-            .then(() => navigate(route('home.diagnoses.index')))
+        return axiosInstance.put(`inventory/${id}`, inventory)
+            .then(() => navigate(route('home.inventorys.index')))
             .catch(error => setErrors(error?.response))
             .finally(() => {
                 setLoading(false); 
@@ -92,9 +92,9 @@ export function useDiagnosis(id = null) {
             });
     }
 
-    async function deleteDiagnosis(diagnosis) { 
-        console.log('diagnosis:', diagnosis); 
-        return axiosInstance.patch(`diagnoses/${diagnosis}`)
+    async function deleteInventory(inventory) { 
+        console.log('inventory:', inventory); 
+        return axiosInstance.patch(`inventory/${inventory}`)
             .then(() => {})
             .catch(error => {
                 // console.log(error?.response); 
@@ -103,15 +103,15 @@ export function useDiagnosis(id = null) {
             .finally(() => setLoading(false)); 
     } 
 
-    async function restoreDiagnosis(diagnosis) {
-        return axiosInstance.patch(`diagnoses/${diagnosis?._id}/restore`)
+    async function restoreInventory(inventory) {
+        return axiosInstance.patch(`inventory/${inventory?._id}/restore`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
     } 
 
-    async function destroyDiagnosis(diagnosis) {
-        return axiosInstance.delete(`diagnoses/${diagnosis?._id}`)
+    async function destroyInventory(inventory) {
+        return axiosInstance.delete(`inventory/${inventory?._id}`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
@@ -119,12 +119,12 @@ export function useDiagnosis(id = null) {
 
 
     return {
-        diagnosis: { data, setData, errors, loading }, 
-        createDiagnosis, 
-        getDiagnosis, 
-        updateDiagnosis, 
-        deleteDiagnosis, 
-        restoreDiagnosis, 
-        destroyDiagnosis
+        inventory: { data, setData, errors, loading }, 
+        createInventory, 
+        getInventory, 
+        updateInventory, 
+        deleteInventory, 
+        restoreInventory, 
+        destroyInventory
     }
 }

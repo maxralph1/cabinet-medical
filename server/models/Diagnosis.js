@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const diagnosisSchema = new Schema({
         patient: { type: Schema.Types.ObjectId, ref: 'User' }, 
         authorizing_professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        examiner: { type: Schema.Types.ObjectId, ref: 'User' }, 
         notes: { type: String }, 
         comments: { type: String }, 
-        examiner: { type: Schema.Types.ObjectId, ref: 'User' }, 
         retrieved_by_patient: { type: Boolean, default: false }, 
         retrieved_on: { type: String }, 
         deleted_at: { type: String, default: null }, 

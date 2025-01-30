@@ -10,20 +10,38 @@ const getMedicalBills = asyncHandler(async (req, res) => {
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
 
-    let medicalBills; 
+    let medicalBills, total; 
     if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
         medicalBills = await MedicalBill.find({ deleted_at: null })
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'authorizing_professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await MedicalBill.countDocuments({ deleted_at: null });
-    } else if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse')) {
+    } else if ((req?.user_role == 'general_practitioner') 
+            || (req?.user_role == 'laboratory_scientist') 
+            || (req?.user_role == 'nurse')) {
         medicalBills = await MedicalBill.find({ authorizing_professional: req?.user_id, deleted_at: null })
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'authorizing_professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await MedicalBill.countDocuments({ authorizing_professional: req?.user_id, deleted_at: null }); 
@@ -32,6 +50,14 @@ const getMedicalBills = asyncHandler(async (req, res) => {
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'authorizing_professional',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean(); 
 
         total = await MedicalBill.countDocuments({ patient: req?.user_id, deleted_at: null }); 
@@ -53,12 +79,12 @@ const getMedicalBills = asyncHandler(async (req, res) => {
  * Create Medical Bill
  */
 const createMedicalBill = asyncHandler(async (req, res) => {
-    const { patient, authorizing_professional, purpose, notes, comments, amount } = req?.body; 
+    const { patient, purpose, notes, comments, amount } = req?.body; 
 
     const medicalBill = new MedicalBill({
         user: req?.user_id, 
         patient, 
-        authorizing_professional: authorizing_professional ? authorizing_professional : req?.user_id, 
+        authorizing_professional: req?.user_id, 
         purpose, 
         notes, 
         comments, 
@@ -78,7 +104,16 @@ const createMedicalBill = asyncHandler(async (req, res) => {
  * Get Medical Bill
  */
 const getMedicalBill = asyncHandler(async (req, res) => {
-    const medicalBill = await MedicalBill.findOne({ _id: req?.params?.id, deleted_at: null }).lean(); 
+    const medicalBill = await MedicalBill.findOne({ _id: req?.params?.id, deleted_at: null })
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'authorizing_professional',
+                                            select: 'first_name last_name username role'
+                                        })
+                                        .lean(); 
 
     if (!medicalBill) return res.status(404).json({ message: "Medical Bill not found!" }); 
 

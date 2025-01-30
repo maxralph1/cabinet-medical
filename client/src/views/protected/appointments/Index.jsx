@@ -79,12 +79,12 @@ export default function Index() {
                                                                         <span>
                                                                             { (appointment?.user == appointment?.patient?._id) 
                                                                                 ?   <span className="d-flex flex-column">
-                                                                                        <span className="fw-semibold">{ appointment?.professional?.first_name + ' ' + appointment?.professional?.last_name }</span>
+                                                                                        <span className="fw-semibold">{ ((appointment?.professional?.first_name)?.slice(0,1)?.toUpperCase()+(appointment?.professional?.first_name)?.slice(1)) + ' ' + ((appointment?.professional?.last_name)?.slice(0,1)?.toUpperCase()+(appointment?.professional?.last_name)?.slice(1)) }</span>
                                                                                         <span>{ appointment?.professional?.role }</span>
                                                                                     </span>
                                                                                     : (appointment?.user == appointment?.professional?._id) 
                                                                                         ?   <span className="d-flex flex-column">
-                                                                                                <span className="fw-semibold">{ appointment?.patient?.first_name + ' ' + appointment?.patient?.last_name }</span>
+                                                                                                <span className="fw-semibold">{ ((appointment?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointment?.patient?.first_name)?.slice(1)) + ' ' + ((appointment?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointment?.patient?.last_name)?.slice(1)) }</span>
                                                                                                 <span>Patient</span>
                                                                                                 <span className="pt-2">Purpose:&nbsp;<span className="fw-semibold">Pregnancy first trimester investigation</span></span>
                                                                                             </span> 
@@ -136,6 +136,7 @@ export default function Index() {
                 && <PaginationLinks 
                     items={ appointments } 
                     get_items={ getAppointments } 
+                    query={ appointmentQuery } 
                     set_query={ setAppointmentQuery } /> } 
         </Layout>
     )

@@ -11,20 +11,38 @@ const getRegimens = asyncHandler(async (req, res) => {
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
 
-    let regimens; 
+    let regimens, total; 
     if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
         regimens = await Regimen.find({ deleted_at: null })
                                 .sort('-created_at')
                                 .skip(skip)
                                 .limit(limit)
+                                .populate({
+                                    path: 'patient',
+                                    select: 'first_name last_name username'
+                                })
+                                .populate({
+                                    path: 'authorizing_professional',
+                                    select: 'first_name last_name username role'
+                                })
                                 .lean(); 
 
         total = await Regimen.countDocuments({ deleted_at: null }); 
-    } else if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse')) {
+    } else if ((req?.user_role == 'general_practitioner') 
+            || (req?.user_role == 'laboratory_scientist')
+            || (req?.user_role == 'nurse')) {
         regimens = await Regimen.find({ authorizing_professional: req?.user_id, deleted_at: null })
                                 .sort('-created_at')
                                 .skip(skip)
                                 .limit(limit)
+                                .populate({
+                                    path: 'patient',
+                                    select: 'first_name last_name username'
+                                })
+                                .populate({
+                                    path: 'authorizing_professional',
+                                    select: 'first_name last_name username role'
+                                })
                                 .lean(); 
 
         total = await Regimen.countDocuments({ authorizing_professional: req?.user_id, deleted_at: null }); 
@@ -33,6 +51,14 @@ const getRegimens = asyncHandler(async (req, res) => {
                                 .sort('-created_at')
                                 .skip(skip)
                                 .limit(limit)
+                                .populate({
+                                    path: 'patient',
+                                    select: 'first_name last_name username'
+                                })
+                                .populate({
+                                    path: 'authorizing_professional',
+                                    select: 'first_name last_name username role'
+                                })
                                 .lean(); 
 
         total = await Regimen.countDocuments({ patient: req?.user_id, deleted_at: null }); 
@@ -54,13 +80,16 @@ const getRegimens = asyncHandler(async (req, res) => {
  * Create Regimen
  */ 
 const createRegimen = asyncHandler(async (req, res) => {
-    const { patient, notes, comments, date_start, time_start, date_end, time_end, 
+    const { patient, notes, comments, 
+            date_start, time_start, 
+            date_end, time_end, 
         proposed_administration_date_times } = req?.body; 
 
     // proposed_administration_date_times is an array
 
     const regimen = new Regimen({
         patient, 
+        authorizing_professional: req?.user_id, 
         notes, 
         comments, 
         date_start, 
@@ -95,7 +124,16 @@ const createRegimen = asyncHandler(async (req, res) => {
  * Get Regimen
  */
 const getRegimen = asyncHandler(async (req, res) => {
-    const regimen = await Regimen.findOne({ _id: req?.params?.id, deleted_at: null }).lean(); 
+    const regimen = await Regimen.findOne({ _id: req?.params?.id, deleted_at: null })
+                                .populate({
+                                    path: 'patient',
+                                    select: 'first_name last_name username'
+                                })
+                                .populate({
+                                    path: 'authorizing_professional',
+                                    select: 'first_name last_name username role'
+                                })
+                                .lean(); 
 
     if (!regimen) return res.status(404).json({ message: "Regimen not found!" }); 
 

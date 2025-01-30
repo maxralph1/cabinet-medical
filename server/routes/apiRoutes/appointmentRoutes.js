@@ -9,7 +9,8 @@ import { getAppointments,
         updateAppointment, 
         deleteAppointment, 
         restoreAppointment, 
-        destroyAppointment
+        destroyAppointment, 
+        getAppointmentsSpecificDate
 } from '../../controllers/appointmentController.js'; 
 
 
@@ -18,6 +19,8 @@ appointmentRouter.use(authenticated);
 appointmentRouter.route('/')
                 .get(getAppointments,)
                 .post(createAppointment); 
+
+appointmentRouter.get('/specific-date', getAppointmentsSpecificDate); 
 
 appointmentRouter.route('/:id')
                 .get(getAppointment)

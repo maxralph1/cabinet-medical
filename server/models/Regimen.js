@@ -5,6 +5,9 @@ const Schema = mongoose.Schema;
 const regimenSchema = new Schema({
         patient: { type: Schema.Types.ObjectId, ref: 'User' }, 
         authorizing_professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        appointment: { type: Schema.Types.ObjectId, ref: 'Appointment' }, 
+        diagnosis: { type: Schema.Types.ObjectId, ref: 'Diagnosis' }, 
+        inventory: { type: Schema.Types.ObjectId, ref: 'Inventory' }, 
         notes: { type: String }, 
         comments: { type: String }, 
         date_start: { type: Date, required: true }, 

@@ -23,7 +23,7 @@ export default function Index() {
     }); 
     const { professionals, getProfessionals, loading } = useProfessionals(userQuery); 
     console.log(professionals); 
-    console.log(loading);
+    // console.log(loading);
 
     return (
         <Layout>
@@ -145,6 +145,7 @@ export default function Index() {
                 && <PaginationLinks 
                     items={ professionals } 
                     get_items={ getProfessionals } 
+                    query={ userQuery } 
                     set_query={ setUserQuery } /> } 
         </Layout>
     )

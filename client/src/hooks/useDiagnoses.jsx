@@ -5,7 +5,7 @@ import useAxios from '@/utils/useAxios.jsx';
 export function useDiagnoses(diagnosisQuery) {
     const axiosInstance = useAxios(); 
     const [diagnoses, setDiagnoses] = useState([]); 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (diagnosisQuery !== null) {

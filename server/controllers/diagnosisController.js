@@ -17,14 +17,32 @@ const getDiagnoses = asyncHandler(async (req, res) => {
                                     .sort('-created_at')
                                     .skip(skip)
                                     .limit(limit)
+                                    .populate({
+                                        path: 'patient',
+                                        select: 'first_name last_name username'
+                                    })
+                                    .populate({
+                                        path: 'authorizing_professional',
+                                        select: 'first_name last_name username role'
+                                    })
                                     .lean(); 
 
         total = await Diagnosis.countDocuments({ deleted_at: null }); 
-    } else if ((req?.user_role == 'doctor') || (req?.user_role == 'nurse')) {
+    } else if ((req?.user_role == 'general_practitioner') 
+            || (req?.user_role == 'laboratory_scientist') 
+            || (req?.user_role == 'nurse')) {
         diagnoses = await Diagnosis.find({ $or: [{ authorizing_professional: req?.user_id }, { examiner: req?.user_id }], deleted_at: null })
                                     .sort('-created_at')
                                     .skip(skip)
                                     .limit(limit)
+                                    .populate({
+                                        path: 'patient',
+                                        select: 'first_name last_name username'
+                                    })
+                                    .populate({
+                                        path: 'authorizing_professional',
+                                        select: 'first_name last_name username role'
+                                    })
                                     .lean(); 
 
         total = await Diagnosis.countDocuments({ $or: [{ authorizing_professional: req?.user_id }, { examiner: req?.user_id }], deleted_at: null }); 
@@ -33,11 +51,48 @@ const getDiagnoses = asyncHandler(async (req, res) => {
                                     .sort('-created_at')
                                     .skip(skip)
                                     .limit(limit)
+                                    .populate({
+                                        path: 'patient',
+                                        select: 'first_name last_name username'
+                                    })
+                                    .populate({
+                                        path: 'authorizing_professional',
+                                        select: 'first_name last_name username role'
+                                    })
                                     .lean(); 
 
         total = await Diagnosis.countDocuments({ patient: req?.user_id, deleted_at: null }); 
     }
     if (!diagnoses?.length) return res.status(404).json({ message: "No diagnosis found!" }); 
+
+    /** Diagnosis Segments */
+    let diagnosisList = []; 
+
+    const updateDiagnosisPromises = diagnoses?.map(async diagnosisItem => { 
+        let foundDiagnosisSegments = await DiagnosisSegment.find({ diagnosis: diagnosisItem?._id })
+                                                            .populate({
+                                                                path: 'patient',
+                                                                select: 'first_name last_name username'
+                                                            })
+                                                            .populate({
+                                                                path: 'authorizing_professional',
+                                                                select: 'first_name last_name username role'
+                                                            })
+                                                            .populate({
+                                                                path: 'diagnosis', 
+                                                            })
+                                                            .populate({
+                                                                path: 'diagnosis_type', 
+                                                            })
+                                                            .lean()
+
+        diagnosisItem['diagnosis_segments'] = foundDiagnosisSegments; 
+
+        diagnosisList.push(diagnosisItem); 
+    }); 
+
+    await Promise.all(updateDiagnosisPromises); 
+    /** End of Diagnosis Segments */
 
     res.json({ 
                 meta: {
@@ -46,7 +101,7 @@ const getDiagnoses = asyncHandler(async (req, res) => {
                     total_pages: Math.ceil(total / limit), 
                     total_results: total
                 }, 
-                data: diagnoses 
+                data: diagnosisList 
             });
 }); 
 
@@ -54,63 +109,83 @@ const getDiagnoses = asyncHandler(async (req, res) => {
  * Create Diagnosis
  */
 const createDiagnosis = asyncHandler(async (req, res) => {
-    const { patient, notes, comments, examiner, 
-            diagnosis_type_1, 
-            diagnosis_type_2, 
-            diagnosis_type_3, 
-            diagnosis_type_4, 
-            diagnosis_type_5, 
-            diagnosis_type_6, 
-            diagnosis_type_7 } = req?.body; 
+    const { patient, notes, diagnosis_types } = req?.body; 
+
+    console.log('req?.body:', req?.body);
 
     const diagnosis = new Diagnosis({
         patient, 
         authorizing_professional: req?.user_id, 
-        notes, 
-        comments, 
-        examiner
+        notes
     }); 
 
-    const diagnosis_types = [
-        diagnosis_type_1, 
-        diagnosis_type_2, 
-        diagnosis_type_3, 
-        diagnosis_type_4, 
-        diagnosis_type_5, 
-        diagnosis_type_6, 
-        diagnosis_type_7, 
-    ]; 
+    const diagnosis_types_array = diagnosis_types.split(',');
 
-    const valid_diagnosis_types = diagnosis_types.filter(diagnosis_type => diagnosis_type != null);
+    if (diagnosis_types && diagnosis_types?.length === 0) { 
 
-    for (let i = 0; i < valid_diagnosis_types.length; i++) {
-        const diagnosis_type = valid_diagnosis_types[i];
+        return res.status(400).json({ message: 'No tests (diagnosis types). You must add at least one test item!' }); 
 
-        await DiagnosisSegment.create({
-            user: req?.user_id,
-            diagnosis: diagnosis._id, 
-            diagnosis_type: diagnosis_type, 
-        });
+    } else if (diagnosis_types && diagnosis_types?.length > 0) { 
+        const diagnosisTypesResolve = diagnosis_types_array?.map(async (diagnosis_type, index) => { 
+            await DiagnosisSegment.create({
+                patient: patient, 
+                authorizing_professional: req?.user_id, 
+                diagnosis: diagnosis?._id, 
+                diagnosis_type: diagnosis_type, 
+            });
+        }); 
+
+        await Promise.all(diagnosisTypesResolve); 
     }
 
     diagnosis.save()
-                .then(() => {
-                    res.status(201).json({ success: `Diagnosis ${diagnosis?._id} created` });
-                })
-                .catch(error => {
-                    return res.status(400).json({ message: "An error occured", details: `${error}` });
-                });
+            .then(() => {
+                res.status(201).json({ success: `Diagnosis ${diagnosis?._id} created` });
+            })
+            .catch(error => {
+                return res.status(400).json({ message: "An error occured", details: `${error}` });
+            });
 }); 
 
 /**
  * Get Diagnosis 
  */ 
 const getDiagnosis = asyncHandler(async (req, res) => {
-    const diagnosis = await Diagnosis.findOne({ _id: req?.params?.id, deleted_at: null }).lean(); 
+    const diagnosis = await Diagnosis.findOne({ _id: req?.params?.id, deleted_at: null })
+                                    .populate({
+                                        path: 'patient',
+                                        select: 'first_name last_name username'
+                                    })
+                                    .populate({
+                                        path: 'authorizing_professional',
+                                        select: 'first_name last_name username role'
+                                    })
+                                    .lean(); 
 
     if (!diagnosis) return res.status(404).json({ message: "Diagnosis not found!" }); 
 
-    res.json({ data: diagnosis });
+    let diagnosisObj = diagnosis; 
+ 
+    let diagnosisSegments = await DiagnosisSegment.find({ diagnosis: diagnosis?._id })
+                                                .populate({
+                                                    path: 'patient',
+                                                    select: 'first_name last_name username'
+                                                })
+                                                .populate({
+                                                    path: 'authorizing_professional',
+                                                    select: 'first_name last_name username role'
+                                                })
+                                                .populate({
+                                                    path: 'diagnosis', 
+                                                })
+                                                .populate({
+                                                    path: 'diagnosis_type', 
+                                                })
+                                                .lean()
+
+    diagnosisObj.diagnosis_segments = diagnosisSegments; 
+
+	res.status(200).json({ data: diagnosisObj });
 }); 
 
 /**

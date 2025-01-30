@@ -9,6 +9,9 @@ const getAppointments = asyncHandler(async (req, res) => {
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
+    const yearQuery = req?.query?.year; 
+    const monthQuery = req?.query?.month; 
+    const dateQuery = req?.query?.date; 
 
     console.log(req?.query); 
     console.log(req?.user_role); 
@@ -20,6 +23,7 @@ const getAppointments = asyncHandler(async (req, res) => {
     // const selectedTimeEnd = req?.query?.time_end; 
 
     let appointments, total; 
+
     if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
         appointments = await Appointment.find({ deleted_at: null })
                                         .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
@@ -234,10 +238,54 @@ const destroyAppointment = asyncHandler(async (req, res) => {
 }); 
 
 
+/**
+ * ADDITIONAL METHODS
+ */
+/**
+ * Get Appointments
+ */
+const getAppointmentsSpecificDate = asyncHandler(async (req, res) => {
+    const yearQuery = req?.query?.year; 
+    const monthQuery = req?.query?.month; 
+    const dateQuery = req?.query?.date; 
+
+    console.log(req?.query); 
+    console.log(req?.user_role); 
+
+    // const selectedYear = req?.query?.year;
+    // const selectedMonth = req?.query?.month;
+    // const selectedDate = req?.query?.date;
+    // const selectedTimeStart = req?.query?.time_start; 
+    // const selectedTimeEnd = req?.query?.time_end; 
+
+    let appointments; 
+
+    if (yearQuery && monthQuery && dateQuery) {
+        appointments = await Appointment.find({ proposed_year_start: yearQuery, 
+                                                proposed_month_start: monthQuery, 
+                                                proposed_date_start: dateQuery, 
+                                                deleted_at: null })
+                                        .sort({ proposed_time_start: -1 })
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role'
+                                        })
+                                        .lean(); 
+    }
+
+    res.json({ data: appointments });
+}); 
+
+
 export { getAppointments, 
         createAppointment, 
         getAppointment, 
         updateAppointment, 
         deleteAppointment, 
         restoreAppointment, 
-        destroyAppointment }; 
+        destroyAppointment, 
+        getAppointmentsSpecificDate, }; 

@@ -76,6 +76,7 @@ export default function Index() {
                 && <PaginationLinks 
                     items={ patients } 
                     get_items={ getPatients } 
+                    query={ userQuery } 
                     set_query={ setUserQuery } /> } 
         </Layout>
     )

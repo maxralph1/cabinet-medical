@@ -11,38 +11,51 @@ const getUsers = asyncHandler(async (req, res) => {
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
     const roleQuery = req?.query?.role; 
+    const searchQuery = req?.query?.search; 
     const skip = (current_page - 1) * limit; 
 
     console.log(current_page, limit, roleQuery); 
 
+    console.log(searchQuery);
 
-    let users, usersCount;
 
-    if ((roleQuery != 'all')) {
-        users = await User.find({ role: roleQuery, 
-                                deleted_at: null })
+    let users, usersCount; 
+
+    if (searchQuery) {
+        users = await User.find({ $or: [
+                            { first_name: new RegExp(searchQuery, 'i') },
+                            { last_name: new RegExp(searchQuery, 'i') }
+                        // ], role: 'patient' })
+                        ] })
                         .select(['-password', '-password_reset_token', '-updated_at'])
                         .sort('-created_at')
-                        .skip(skip)
-                        .limit(limit)
                         .lean();   
-        if (!users?.length) return res.status(404).json({ message: "No users found!" }); 
+        if (!users?.length) return res.status(404).json({ message: "No users found here!" }); 
+    } else if (!searchQuery) {
+        if ((roleQuery != 'all')) {
+            users = await User.find({ role: roleQuery, 
+                                    deleted_at: null })
+                            .select(['-password', '-password_reset_token', '-updated_at'])
+                            .sort('-created_at')
+                            .skip(skip)
+                            .limit(limit)
+                            .lean();   
+            if (!users?.length) return res.status(404).json({ message: "No users found!" }); 
 
-        usersCount = await User.find({ role: roleQuery, deleted_at: null }).countDocuments(); 
+            usersCount = await User.find({ role: roleQuery, deleted_at: null }).countDocuments(); 
 
-        
+        } else if ((roleQuery == 'all' || !roleQuery)) {
+            users = await User.find({ deleted_at: null })
+                            .select(['-password', '-password_reset_token', '-updated_at'])
+                            .sort('-created_at')
+                            .skip(skip)
+                            .limit(limit)
+                            .lean(); 
+            if (!users?.length) return res.status(404).json({ message: "No users found!" }); 
 
-    } else if ((roleQuery == 'all' || !roleQuery)) {
-        users = await User.find({ deleted_at: null })
-                        .select(['-password', '-password_reset_token', '-updated_at'])
-                        .sort('-created_at')
-                        .skip(skip)
-                        .limit(limit)
-                        .lean(); 
-        if (!users?.length) return res.status(404).json({ message: "No users found!" }); 
-
-        usersCount = await User.find({ deleted_at: null }).countDocuments(); 
-    } 
+            usersCount = await User.find({ deleted_at: null }).countDocuments(); 
+        } 
+    }
 
     res.json({ 
                 meta: {

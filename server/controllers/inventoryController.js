@@ -37,8 +37,8 @@ const getInventories = asyncHandler (async (req, res) => {
  * Create Inventory
  */
 const createInventory = asyncHandler(async (req, res) => {
-    const { user, 
-            notes, 
+    const { // notes, 
+            product_type, 
             product_code, 
             product_name, 
             product_description, 
@@ -50,20 +50,34 @@ const createInventory = asyncHandler(async (req, res) => {
             expiration_date } = req?.body; 
 
     if (expiration_date < manufacture_date) return res.status(400).json({ message: "Expiration date cannot be less than manufacture date" }); 
+
+    let inventoryImageUpload = {};
+    if (!req?.files?.image_path) {
+        inventoryImageUpload.public_id = ''
+        inventoryImageUpload.secure_url = ''
+    } else if (req?.files?.image_path) {
+        inventoryImageUpload = await cloudinaryImageUpload(req?.files?.image_path.tempFilePath, "cabinet_medical_inventory_images"); 
+        if (!inventoryImageUpload) return res.status(400).json({ message: "Image upload failed" }); 
+    }
     
     const inventory = new Inventory({
-        user, 
-        disbursed_by: disbursed_by ? disbursed_by : req?.user_id, 
-        notes, 
+        image_path: { 
+            public_id: inventoryImageUpload.public_id,
+            url: inventoryImageUpload.secure_url
+        }, 
+        user: req?.user_id,  
+        // disbursed_by: disbursed_by ? disbursed_by : req?.user_id, 
+        // notes, 
+        product_type, 
         product_code, 
         product_name, 
         product_description, 
-        purchase_date, 
         amount_purchased, 
         manufacturer, 
         make_country, 
         manufacture_date, 
-        expiration_date
+        expiration_date, 
+        purchase_date, 
     }); 
 
     inventory.save()

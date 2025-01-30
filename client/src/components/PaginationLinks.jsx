@@ -3,6 +3,7 @@ import scrollToTop from '@/utils/ScrollToTop.jsx';
 
 export default function PaginationLinks({   items, 
                                             get_items, 
+                                            query,
                                             set_query
                                         }) {
     return (
@@ -16,7 +17,7 @@ export default function PaginationLinks({   items,
                             ...prevState, 
                             page: firstPage 
                         })); 
-                        await get_items();  
+                        await get_items(query);  
                     } }
                 className="btn btn-sm btn-outline-secondary border-radius-25">
                 1
@@ -32,7 +33,7 @@ export default function PaginationLinks({   items,
                                 ...prevState, 
                                 page: previousPage
                             })); 
-                            await get_items(); 
+                            await get_items(query); 
                         } }
                         className="btn btn-sm btn-outline-secondary border-radius-25">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -49,7 +50,7 @@ export default function PaginationLinks({   items,
                                 ...prevState, 
                                 page: nextPage
                             })); 
-                            await get_items(); 
+                            await get_items(query); 
                         } } 
                         className="btn btn-sm btn-outline-secondary border-radius-25">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -66,7 +67,7 @@ export default function PaginationLinks({   items,
                                 ...prevState, 
                                 page: lastPage
                             })); 
-                            await get_items(); 
+                            await get_items(query); 
                         } } 
                         className="btn btn-sm btn-outline-secondary border-radius-25">
                         { items?.meta?.total_pages }

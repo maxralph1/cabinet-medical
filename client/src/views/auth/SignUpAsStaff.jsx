@@ -122,7 +122,7 @@ export default function SignUpAsStaff() {
                     </div>
                 </form>
 
-                <section className="auth-options px-5 pt-3 gap-3 d-flex flex-column align-items-center gap-3"> 
+                <section className="auth-options px-1 pt-3 gap-3 d-flex flex-column align-items-sm-start align-items-md-center gap-3"> 
                     <span className="">
                         <Link to={ route('sign-in')} className="text-dark fw-bold">Sign in</Link>&nbsp;if you already have an account
                     </span> 
