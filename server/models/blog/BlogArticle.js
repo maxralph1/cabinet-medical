@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const blogPostSchema = new Schema({
+const blogArticleSchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' }, 
-        topic: { type: String }, 
+        blog_category: { type: Schema.Types.ObjectId, ref: 'BlogCategory' }, 
+        title: { type: String }, 
         content: { type: String }, 
         deleted_at: { type: String, default: null }, 
         deleted_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
@@ -15,5 +16,5 @@ const blogPostSchema = new Schema({
 );
 
 
-let BlogPost = mongoose.model('BlogPost', blogPostSchema); 
-export default BlogPost; 
+let BlogArticle = mongoose.model('BlogArticle', blogArticleSchema); 
+export default BlogArticle; 

@@ -136,7 +136,7 @@ const createDiagnosis = asyncHandler(async (req, res) => {
         }); 
 
         await Promise.all(diagnosisTypesResolve); 
-    }
+    };
 
     diagnosis.save()
             .then(() => {
