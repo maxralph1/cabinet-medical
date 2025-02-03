@@ -174,7 +174,11 @@ const updateInventoryProduct = asyncHandler(async (req, res) => {
     
     inventoryProduct.save()
                     .then(() => {
+<<<<<<< HEAD
                         res.json({ success: `Inventory Product ${inventoryProduct?._id} updated` });
+=======
+                        res.json({ success: `inventory Product ${inventoryProduct?._id} updated` });
+>>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
                     })
                     .catch(error => {
                         return res.status(400).json({ message: "An error occured", details: `${error}` });
@@ -229,11 +233,19 @@ const restoreInventoryProduct = asyncHandler(async (req, res) => {
 const destroyInventoryProduct = asyncHandler(async (req, res) => {
     const inventoryProduct = await InventoryProduct.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
+<<<<<<< HEAD
     if (!inventoryProduct) return res.status(404).json({ message: "Inventory Product not found!" }); 
 
     inventoryProduct.deleteOne()
                     .then(() => {
                         res.json({ success: `Inventory Product ${inventoryProduct?._id} deleted permanently` });
+=======
+    if (!inventoryProduct) return res.status(404).json({ message: "inventory Product not found!" }); 
+
+    inventoryProduct.deleteOne()
+                    .then(() => {
+                        res.json({ success: `inventory Product ${inventoryProduct?._id} deleted permanently` });
+>>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
                     })
                     .catch(error => {
                         return res.status(400).json({ message: "An error occured", details: `${error}` });
