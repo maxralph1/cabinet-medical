@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 import authRouter from './apiRoutes/authRoutes.js'; 
 import appointmentRouter from './apiRoutes/appointmentRoutes.js'; 
-import blogPostRouter from './apiRoutes/blogPostRoutes.js'; 
+import blogRouter from './apiRoutes/blogRoutes.js'; 
 import chatMessageRouter from './apiRoutes/chatMessageRoutes.js'; 
 import chatRouter from './apiRoutes/chatRoutes.js'; 
 import diagnosisRouter from './apiRoutes/diagnosisRoutes.js'; 
@@ -22,7 +22,7 @@ import userRouter from './apiRoutes/userRoutes.js';
 
 router.use('/auth', authRouter); 
 router.use('/appointments', appointmentRouter); 
-router.use('/blog-posts', blogPostRouter); 
+router.use('/blog', blogRouter); 
 router.use('/chat-messages', chatMessageRouter); 
 router.use('/chats', chatRouter); 
 router.use('/diagnoses', diagnosisRouter); 

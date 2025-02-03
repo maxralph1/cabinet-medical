@@ -126,12 +126,12 @@ const updateDiagnosisSegment = asyncHandler(async (req, res) => {
     diagnosisSegment.result = req?.body?.result || diagnosisSegment?.result; 
 
     diagnosisSegment.save()
-                .then(() => {
-                    res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} updated` });
-                })
-                .catch(error => {
-                    return res.status(400).json({ message: "An error occured", details: `${error}` });
-                }); 
+                    .then(() => {
+                        res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} updated` });
+                    })
+                    .catch(error => {
+                        return res.status(400).json({ message: "An error occured", details: `${error}` });
+                    }); 
 }); 
 
 /**
@@ -148,12 +148,12 @@ const deleteDiagnosisSegment = asyncHandler(async (req, res) => {
     }
 
     diagnosisSegment.save()
-                .then(() => {
-                    res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} deleted` });
-                })
-                .catch(error => {
-                    return res.status(400).json({ message: "An error occured", details: `${error}` });
-                }); 
+                    .then(() => {
+                        res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} deleted` });
+                    })
+                    .catch(error => {
+                        return res.status(400).json({ message: "An error occured", details: `${error}` });
+                    }); 
 }); 
 
 /**
@@ -168,16 +168,16 @@ const restoreDiagnosisSegment = asyncHandler(async (req, res) => {
     diagnosisSegment.deleted_by = null;
 
     diagnosisSegment.save()
-                .then(() => {
-                    res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} restored` });
-                })
-                .catch(error => {
-                    return res.status(400).json({ message: "An error occured", details: `${error}` });
-                }); 
+                    .then(() => {
+                        res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} restored` });
+                    })
+                    .catch(error => {
+                        return res.status(400).json({ message: "An error occured", details: `${error}` });
+                    }); 
 }); 
 
 /**
- * Permanent-delete an Diagnosis Segment
+ * Permanent-delete a Diagnosis Segment
  */
 const destroyDiagnosisSegment = asyncHandler(async (req, res) => {
     const diagnosisSegment = await DiagnosisSegment.findOne({ _id: req?.params?.id, deleted_at: null }); 
@@ -185,12 +185,12 @@ const destroyDiagnosisSegment = asyncHandler(async (req, res) => {
     if (!diagnosisSegment) return res.status(404).json({ message: "Diagnosis Segment not found!" }); 
 
     diagnosisSegment.deleteOne()
-                .then(() => {
-                    res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} deleted permanently` });
-                })
-                .catch(error => {
-                    return res.status(400).json({ message: "An error occured", details: `${error}` });
-                });
+                    .then(() => {
+                        res.json({ success: `Diagnosis Segment ${diagnosisSegment?._id} deleted permanently` });
+                    })
+                    .catch(error => {
+                        return res.status(400).json({ message: "An error occured", details: `${error}` });
+                    });
 }); 
 
 
