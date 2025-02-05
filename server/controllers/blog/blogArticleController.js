@@ -1,12 +1,9 @@
 import cloudinaryImageUpload from '../../config/imageUpload/cloudinary.js'; 
 import asyncHandler from 'express-async-handler'; 
 import BlogArticle from '../../models/blog/BlogArticle.js';
-import BlogArticleCategory from '../../models/blog/BlogArticleCategory.js';
-<<<<<<< HEAD
+import BlogArticleCategory from '../../models/blog/BlogArticleCategory.js'; 
 import BlogComment from '../../models/blog/BlogComment.js';
 import BlogLike from '../../models/blog/BlogLike.js';
-=======
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
 
 
 /**
@@ -41,7 +38,6 @@ const getBlogArticles = asyncHandler(async (req, res) => {
                                                                 .populate({
                                                                     path: 'blog_article', 
                                                                 })
-<<<<<<< HEAD
                                                                 .lean(); 
         blogArticleItem['categories'] = foundBlogArticleCategories; 
 
@@ -61,12 +57,6 @@ const getBlogArticles = asyncHandler(async (req, res) => {
                                                 .lean(); 
         blogArticleItem['likes'] = foundBlogArticleLikes; 
 
-=======
-                                                                .lean()
-
-        blogArticleItem['categories'] = foundBlogArticleCategories; 
-
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
         blogArticleList.push(blogArticleItem); 
     }); 
 

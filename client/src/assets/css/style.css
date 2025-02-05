@@ -211,6 +211,15 @@ main {
 } 
 
 /*-------*/
+/** Public */
+/*-------*/
+/* header nav .public-top-nav {
+    display: flex; 
+    flex-direction: column;
+} */
+
+
+/*-------*/
 /** Auth */
 /*-------*/
 main.auth {

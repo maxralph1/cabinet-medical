@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'; 
+import cloudinaryImageUpload from '../../config/imageUpload/cloudinary.js'; 
 import InventoryProductUnit from '../../models/inventory/InventoryProductUnit.js'; 
 
 
@@ -46,21 +47,12 @@ const createInventoryProductUnit = asyncHandler(async (req, res) => {
     }); 
 
     inventoryProductUnit.save()
-<<<<<<< HEAD
                         .then(() => {
                             res.status(201).json({ success: `Inventory Product ${inventoryProductUnit?._id} created` });
                         })
                         .catch(error => {
                             return res.status(400).json({ message: "An error occured", details: `${error}` });
                         }); 
-=======
-                    .then(() => {
-                        res.status(201).json({ success: `Inventory Product ${inventoryProductUnit?._id} created` });
-                    })
-                    .catch(error => {
-                        return res.status(400).json({ message: "An error occured", details: `${error}` });
-                    }); 
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
 }); 
 
 /**
@@ -74,12 +66,9 @@ const getInventoryProductUnit = asyncHandler(async (req, res) => {
     res.json({ data: inventoryProductUnit }); 
 }); 
 
-<<<<<<< HEAD
 /**
  * Update Inventory Product Unit
  */
-=======
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
 const updateInventoryProductUnit = asyncHandler(async (req, res) => {
     const inventoryProductUnit = await InventoryProductUnit.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
@@ -95,7 +84,6 @@ const updateInventoryProductUnit = asyncHandler(async (req, res) => {
 
         inventoryProductUnit.image_path.public_id = inventoryProductUnitImageUpload.public_id
         inventoryProductUnit.image_path.url = inventoryProductUnitImageUpload.secure_url
-<<<<<<< HEAD
     }; 
 
     inventoryProductUnit.user = req?.body?.user || inventoryProductUnit?.user;
@@ -116,9 +104,6 @@ const updateInventoryProductUnit = asyncHandler(async (req, res) => {
                         .catch(error => {
                             return res.status(400).json({ message: "An error occured", details: `${error}` });
                         }); 
-=======
-    };
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
 }); 
 
 /**
@@ -127,7 +112,7 @@ const updateInventoryProductUnit = asyncHandler(async (req, res) => {
 const deleteInventoryProductUnit = asyncHandler(async (req, res) => {
     const inventoryProductUnit = await InventoryProductUnit.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
-    if (!inventoryProductUnit) return res.status(404).json({ message: "Inventory Product not found!" }); 
+    if (!inventoryProductUnit) return res.status(404).json({ message: "Inventory Product Unit not found!" }); 
 
     if (inventoryProductUnit.deleted_at == '' || inventoryProductUnit.deleted_at == null) {
         inventoryProductUnit.deleted_at = new Date().toISOString();
@@ -169,23 +154,15 @@ const restoreInventoryProductUnit = asyncHandler(async (req, res) => {
 const destroyInventoryProductUnit = asyncHandler(async (req, res) => {
     const inventoryProductUnit = await InventoryProductUnit.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
-<<<<<<< HEAD
     if (!inventoryProductUnit) return res.status(404).json({ message: "Inventory Product Unit not found!" }); 
 
     inventoryProductUnit.deleteOne()
-                    .then(() => {
-                        res.json({ success: `Inventory Product Unit ${inventoryProductUnit?._id} deleted permanently` });
-=======
-    if (!inventoryProductUnit) return res.status(404).json({ message: "inventory Product Unit not found!" }); 
-
-    inventoryProductUnit.deleteOne()
-                    .then(() => {
-                        res.json({ success: `inventory Product Unit ${inventoryProductUnit?._id} deleted permanently` });
->>>>>>> 343b6d2dd910b4843d9f81e632cfe4014aafa064
-                    })
-                    .catch(error => {
-                        return res.status(400).json({ message: "An error occured", details: `${error}` });
-                    });
+                        .then(() => {
+                            res.json({ success: `inventory Product Unit ${inventoryProductUnit?._id} deleted permanently` });
+                        })
+                        .catch(error => {
+                            return res.status(400).json({ message: "An error occured", details: `${error}` });
+                        });
 }); 
 
 
