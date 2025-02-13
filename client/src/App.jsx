@@ -18,6 +18,7 @@ import BlogCategories from '@/views/public/blog/Categories.jsx';
 import BlogCategory from '@/views/public/blog/Category.jsx'; 
 import BlogPublications from '@/views/public/blog/Publications.jsx'; 
 import BlogPublication from '@/views/public/blog/Publication.jsx'; 
+import BlogIndex from '@/views/public/blog/Index.jsx'; 
 import Paid from '@/views/public/Paid.jsx'; 
 import Pay from '@/views/public/Pay.jsx'; 
 import About from '@/views/public/About.jsx'; 
@@ -137,6 +138,7 @@ function App() {
             <Route path={ route('blog.categories.index') } element={ <BlogCategories /> } /> 
             <Route path={ route('blog.publications.show') } element={ <BlogPublication /> } /> 
             <Route path={ route('blog.publications.index') } element={ <BlogPublications /> } /> 
+            <Route path={ route('blog.index') } element={ <BlogIndex /> } /> 
             <Route path={ route('paid') } element={ <Paid /> } /> 
             <Route path={ route('pay') } element={ <Pay /> } /> 
             <Route path={ route('about') } element={ <About /> } /> 

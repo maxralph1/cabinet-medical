@@ -102,6 +102,8 @@ const routeNames = {
     'blog.publications.show': '/blog/publications/:id/show', 
     'blog.publications.index': '/blog/publications', 
 
+    'blog.index': '/blog',
+
     'paid': '/paid', 
     'pay': '/pay', 
 
