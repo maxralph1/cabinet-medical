@@ -5,6 +5,8 @@ import { route } from '@/routes';
 
 
 export default function Layout({ children }) {
+    const location = useLocation(); 
+
     const tabletBreakpoint = 768; 
     const [toggleNav, setToggleNav] = useState((window.innerWidth >= tabletBreakpoint) ? true : false); 
 
@@ -29,13 +31,13 @@ export default function Layout({ children }) {
                     <a href="mailto:drnazim.subrottee@gmail.com?subject=Hello%20there&body=I%20would%20like%20to%20&nbsp;...">drnazim.subrottee@gmail.com</a>
                 </span>
                 <div className="d-flex gap-3">
-                    <a href="#" className="text-uppercase">
+                    <Link to={ route('sign-in') } className="text-uppercase">
                         Sign In
-                    </a>
+                    </Link>
                     <span>|</span>
-                    <a href="#" className="text-uppercase">
+                    <Link to={ route('sign-up') } className="text-uppercase">
                         Sign Up
-                    </a>
+                    </Link>
                 </div>
             </section>
             <header className="d-flex justify-content-between align-items-center bg-white sticky-top py-2">
@@ -73,20 +75,40 @@ export default function Layout({ children }) {
                                 </Link>
                             </li>
                             <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
-                                <a href="#doctors" className="nav-link">Doctors</a>
-                            </li>
-                            <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
                                 <Link 
-                                    to={ route('blog.index') }
+                                    to={ route('home.index') }
                                     className="nav-link">
-                                        Blog
+                                        Dashboard
                                 </Link>
                             </li>
-                            <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
-                                <a href="#contact-us" className="nav-link">Contact</a>
-                            </li>
-                            <li className="nav-item text-end text-md-start btn btn-outline-info border-radius-35 p-0">
-                                <a href="#book-appointment" className="nav-link">Book Appointment</a>
+
+                            { !(location?.pathname)?.startsWith('/blog') && (
+                                <>
+                                    <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
+                                        <a href="#doctors" className="nav-link">Doctors</a>
+                                    </li>
+                                    <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
+                                        <Link 
+                                            to={ route('blog.index') }
+                                            className="nav-link">
+                                                Blog
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
+                                        <a href="#contact-us" className="nav-link">Contact</a>
+                                    </li>
+                                    <li className="nav-item text-end text-md-start btn btn-outline-info border-radius-35 p-0">
+                                        <a href="#book-appointment" className="nav-link">Book Appointment</a>
+                                    </li>
+                                </>
+                            ) }
+                            
+                            <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0 d-block d-md-none">
+                                <Link 
+                                    to={ route('sign-in') }
+                                    className="nav-link">
+                                        Sign In
+                                </Link>
                             </li>
                         </ul>
                     )}

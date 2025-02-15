@@ -65,16 +65,10 @@ export default function Index() {
                                                         return (
                                                             <li key={ diagnosisType?._id } className="diagnosis-type w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
 
-                                                                <section className="doctor-patient d-flex justify-content-start gap-4 flex-wrap pt-3">
+                                                                <section className="d-flex justify-content-start gap-4 flex-wrap pt-3">
                                                                     <div className="d-flex flex-column">
-                                                                        <span>
-                                                                            <span className="d-flex flex-column">
-                                                                                <span className="fw-semibold">{ diagnosisType?.title }</span>
-                                                                                <span>{ diagnosisType?.description }</span>
-                                                                            </span>
-                                                                        </span>
-                                                                        
-                                                                        
+                                                                        <span className="fw-semibold">{ diagnosisType?.title }</span>
+                                                                        <span>{ diagnosisType?.description }</span>
                                                                     </div>
                                                                 </section>
                                                             </li> 

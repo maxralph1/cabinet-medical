@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import { useDiagnosisType } from '@/hooks/useDiagnosisType.jsx'; 
-import { useVoiceToText } from '@/utils/useVoiceToText.jsx'; 
-import scrollToTop from '@/utils/ScrollToTop.jsx'; 
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
@@ -19,7 +16,7 @@ export default function Create() {
 
         await createDiagnosisType(formData); 
         await diagnosisType?.setData({}); 
-    }
+    };
 
     return (
         <Layout>

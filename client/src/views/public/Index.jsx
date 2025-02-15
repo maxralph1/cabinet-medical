@@ -49,7 +49,7 @@ export default function Index() {
                         <p className="text-center text-md-start">Experience compassionate, top-tier care at Cabinet Médical, where your well-being comes first. Under the expert guidance of <a href="#">Dr. Nazim Subrottee</a>, a committed and dynamic General Practitioner, we provide personalized medical services for all
                         ages. From consultations and home visits to specialized care, we are dedicated to delivering exceptional treatment
                         tailored to your needs.</p>
-                        <p className="text-center text-md-start">
+                        <p className="justify-content-center justify-content-md-start align-items-center d-flex flex-wrap gap-3">
                             <a href="#" className="btn btn-outline-info border-radius-35">Book an appointment</a>
                             <a href="#" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
                         </p>

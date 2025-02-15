@@ -63,8 +63,15 @@ export default function Layout({ children }) {
                         <li 
                             onClick={ () => setToggleNav(!toggleNav) } 
                             className="fw-semibold">
-                                <Link to={ route('home.index') }>
+                                <Link to={ route('index') }>
                                     Home
+                                </Link>
+                        </li>
+                        <li 
+                            onClick={ () => setToggleNav(!toggleNav) } 
+                            className="fw-semibold">
+                                <Link to={ route('home.index') }>
+                                    Dashboard
                                 </Link>
                         </li>
                         <li 
