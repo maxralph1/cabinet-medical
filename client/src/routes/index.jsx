@@ -18,7 +18,6 @@ const routeNames = {
     'home.appointments.index': '/home/appointments', 
 
     'home.blog.index': '/home/blog', 
-    'home.blog.categories.show': '/home/blog/categories/:id/show', 
     'home.blog.categories.edit': '/home/blog/categories/:id/edit', 
     'home.blog.categories.create': '/home/blog/categories/create', 
     'home.blog.categories.index': '/home/blog/categories', 

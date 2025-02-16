@@ -96,17 +96,18 @@ const createBlogArticle = asyncHandler(async (req, res) => {
         content 
     }); 
 
-    const categories_array = categories.split(',');
+    const categories_array = categories.split(','); 
+    console.log('categories:',categories_array);
 
     if (categories && categories?.length === 0) { 
 
-        return res.status(400).json({ message: 'No categories. You must add at least one test item!' }); 
+        return res.status(400).json({ message: 'No categories. You must add at least one category!' }); 
 
     } else if (categories && categories?.length > 0) { 
         const categoriesResolve = categories_array?.map(async (category, index) => { 
             await BlogArticleCategory.create({
                 user: req?.user_id, 
-                blog_article: article?._id, 
+                blog_article: blogArticle?._id, 
                 blog_category: category, 
             });
         }); 
@@ -127,12 +128,21 @@ const createBlogArticle = asyncHandler(async (req, res) => {
  * Get Blog Article
  */
 const getBlogArticle = asyncHandler(async (req, res) => {
-    const blogArticle = await BlogArticle.findOne({ _id: req?.params?.id, deleted_at: null }).lean(); 
+    const blogArticle = await BlogArticle.findOne({ _id: req?.params?.id, deleted_at: null })
+                                        .populate({
+                                            path: 'user',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .lean(); 
 
     if (!blogArticle) return res.status(404).json({ message: "Blog Article not found!" }); 
 
-    const categories = await BlogArticleCategory.find({ blog_category: blogCategory?._id })
+    const categories = await BlogArticleCategory.find({ blog_article: blogArticle?._id })
                                                 .sort('-created_at')
+                                                .populate({
+                                                    path: 'user',
+                                                    select: 'first_name last_name username'
+                                                })
                                                 .populate({
                                                     path: 'blog_category', 
                                                 })

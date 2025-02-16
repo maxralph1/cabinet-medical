@@ -16,7 +16,7 @@ export default function Create() {
 
         await createBlogCategory(formData); 
         await blogCategory?.setData({}); 
-    };
+    }; 
 
     return (
         <Layout>

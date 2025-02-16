@@ -33,7 +33,6 @@ import ProtectedAppointmentsIndex from '@/views/protected/appointments/Index.jsx
 
 import ProtectedBlogIndex from '@/views/protected/blog/Index.jsx'; 
 
-import ProtectedBlogCategoryShow from '@/views/protected/blog/categories/Show.jsx'; 
 import ProtectedBlogCategoryEdit from '@/views/protected/blog/categories/Edit.jsx'; 
 import ProtectedBlogCategoryCreate from '@/views/protected/blog/categories/Create.jsx'; 
 import ProtectedBlogCategoriesIndex from '@/views/protected/blog/categories/Index.jsx'; 
@@ -155,7 +154,6 @@ function App() {
               <Route path={ route('home.appointments.index') } element={ <ProtectedAppointmentsIndex /> } /> 
 
               <Route path={ route('home.blog.index') } element={ <ProtectedBlogIndex /> } /> 
-              <Route path={ route('home.blog.categories.show') } element={ <ProtectedBlogCategoryShow /> } /> 
               <Route path={ route('home.blog.categories.edit') } element={ <ProtectedBlogCategoryEdit /> } /> 
               <Route path={ route('home.blog.categories.create') } element={ <ProtectedBlogCategoryCreate /> } /> 
               <Route path={ route('home.blog.categories.index') } element={ <ProtectedBlogCategoriesIndex /> } /> 

@@ -7,7 +7,7 @@ import useAxios from '@/utils/useAxios.jsx';
 import swal from 'sweetalert2'; 
 
 
-export function useBlogCategory(id = null) {
+export function useBlogPublication(id = null) {
     const [errors, setErrors] = useState({}); 
     const [loading, setLoading] = useState(false); 
     const [data, setData] = useState({}); 
@@ -18,22 +18,22 @@ export function useBlogCategory(id = null) {
     useEffect(() => {
         if (id !== null) {
             const controller = new AbortController();
-            getBlogCategory(id, { signal: controller.signal })
+            getBlogPublication(id, { signal: controller.signal })
             return () => controller.abort();
         }
     }, [id]);
 
-    async function createBlogCategory(blogCategory) {
+    async function createBlogPublication(blogPublication) {
         setLoading(true); 
         setErrors({}); 
 
-        // console.log(blogCategory); 
-        return axiosInstance.post('blog/categories', blogCategory)
+        // console.log(blogPublication); 
+        return axiosInstance.post('blog/articles', blogPublication)
             .then(response => {
                 setData(response?.data?.data)
                 console.log(response); 
                 swal.fire({
-                    text: `Blog Category created.`, 
+                    text: `Blog Publication created.`, 
                     color: '#f2f2f20', 
                     width: 325, 
                     position: 'top', 
@@ -67,23 +67,23 @@ export function useBlogCategory(id = null) {
             });
     } 
 
-    async function getBlogCategory(id, page, limit) {
+    async function getBlogPublication(id, page, limit) {
         // setLoading(true); 
         // console.log(id, page, limit);
 
-        return axiosInstance.get(`blog/categories/${id}?page=${page}&limit=${limit}`)
+        return axiosInstance.get(`blog/articles/${id}?page=${page}&limit=${limit}`)
             .then(response => setData(response?.data?.data))
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false));
     } 
 
-    async function updateBlogCategory(blogCategory) {
+    async function updateBlogPublication(blogPublication) {
         setLoading(true); 
         setErrors({}); 
-        console.log(blogCategory);
+        console.log(blogPublication);
 
-        return axiosInstance.put(`blog/categories/${id}`, blogCategory)
-            .then(() => navigate(route('home.blog.categories.index')))
+        return axiosInstance.put(`blog/articles/${id}`, blogPublication)
+            .then(() => navigate(route('home.blog.publications.index')))
             .catch(error => setErrors(error?.response))
             .finally(() => {
                 setLoading(false); 
@@ -91,9 +91,9 @@ export function useBlogCategory(id = null) {
             });
     }
 
-    async function deleteBlogCategory(blogCategory) { 
-        console.log('blogCategory:', blogCategory); 
-        return axiosInstance.patch(`blog/categories/${blogCategory}`)
+    async function deleteBlogPublication(blogPublication) { 
+        console.log('blogPublication:', blogPublication); 
+        return axiosInstance.patch(`blog/articles/${blogPublication}`)
             .then(() => {})
             .catch(error => {
                 // console.log(error?.response); 
@@ -102,15 +102,15 @@ export function useBlogCategory(id = null) {
             .finally(() => setLoading(false)); 
     } 
 
-    async function restoreBlogCategory(blogCategory) {
-        return axiosInstance.patch(`blog/categories/${blogCategory?._id}/restore`)
+    async function restoreBlogPublication(blogPublication) {
+        return axiosInstance.patch(`blog/articles/${blogPublication?._id}/restore`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
     } 
 
-    async function destroyBlogCategory(blogCategory) {
-        return axiosInstance.delete(`blog/categories/${blogCategory?._id}`)
+    async function destroyBlogPublication(blogPublication) {
+        return axiosInstance.delete(`blog/articles/${blogPublication?._id}`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
@@ -118,12 +118,12 @@ export function useBlogCategory(id = null) {
 
 
     return {
-        blogCategory: { data, setData, errors, loading }, 
-        createBlogCategory, 
-        getBlogCategory, 
-        updateBlogCategory, 
-        deleteBlogCategory, 
-        restoreBlogCategory, 
-        destroyBlogCategory
+        blogPublication: { data, setData, errors, loading }, 
+        createBlogPublication, 
+        getBlogPublication, 
+        updateBlogPublication, 
+        deleteBlogPublication, 
+        restoreBlogPublication, 
+        destroyBlogPublication
     }
 }

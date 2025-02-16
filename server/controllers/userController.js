@@ -10,9 +10,9 @@ import Appointment from '../models/Appointment.js';
 const getUsers = asyncHandler(async (req, res) => { 
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
+    const skip = (current_page - 1) * limit; 
     const roleQuery = req?.query?.role; 
     const searchQuery = req?.query?.search; 
-    const skip = (current_page - 1) * limit; 
 
     console.log(current_page, limit, roleQuery); 
 

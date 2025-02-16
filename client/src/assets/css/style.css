@@ -44,6 +44,23 @@ a, Link {
     /* ensures content doesn't overflow rounded corners */
 }
 
+.box-shadow {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.swal2-confirm-button, .swal2-cancel-button {
+    border-radius: 35px !important; 
+    /* background-color: transparent; */
+}
+
+/* .swal2-confirm-button {
+    border-color: red;
+}
+
+.swal2-cancel-button {
+    border-color: black;
+} */
+
 /* .form-control, .form-select {  }  */
 
 .form-floating .form-control, .form-floating .form-select { 

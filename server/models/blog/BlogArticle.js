@@ -4,9 +4,13 @@ const Schema = mongoose.Schema;
 
 const blogArticleSchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' }, 
-        blog_category: { type: Schema.Types.ObjectId, ref: 'BlogCategory' }, 
+        // blog_category: { type: Schema.Types.ObjectId, ref: 'BlogCategory' }, 
         title: { type: String }, 
         content: { type: String }, 
+        image_path: { 
+            public_id: { type: String, default: '' },
+            url: { type: String, default: '' }
+        }, 
         deleted_at: { type: String, default: null }, 
         deleted_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
     }, 
