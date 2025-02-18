@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'; 
+import { useLocation } from 'react-router-dom'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 import Constants from '@/utils/Constants.jsx'; 
 
 
 export default function SelectedCategoryComponent({ selectedCategoryItems, setSelectedCategoryItems }) {
+    const location = useLocation(); 
+
     const axiosInstance = useAxios(); 
     const [categorySearchQuery, setCategorySearchQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -18,7 +21,12 @@ export default function SelectedCategoryComponent({ selectedCategoryItems, setSe
         const fetchResults = async () => {
         setCategorySearchLoading(true);
         try {
-            const response = await axiosInstance.get(`${ Constants?.serverURL }/api/v1/blog/categories?search=${categorySearchQuery}`); 
+            let response; 
+            if ((location?.pathname)?.startsWith('/home/blog')) {
+                response = await axiosInstance.get(`${ Constants?.serverURL }/api/v1/blog/categories?search=${categorySearchQuery}`); 
+            } else if ((location?.pathname)?.startsWith('/home/inventory')) {
+                response = await axiosInstance.get(`${ Constants?.serverURL }/api/v1/inventory/categories?search=${categorySearchQuery}`); 
+            }
             // console.log('response:', response?.data?.data); 
             // setSelectedCategoryItems(response?.data?.data); 
             setResults(response?.data?.data); 
@@ -117,6 +125,9 @@ export default function SelectedCategoryComponent({ selectedCategoryItems, setSe
             </section>
 
             <section className="selected-category pt-1 px-3">
+                { ((location?.pathname)?.endsWith('/edit') && selectedCategoryItems?.length>0) && (
+                    <h3 className="fs-6">Current Categories</h3>
+                ) }
                 {selectedCategoryItems?.map((item, index) => (
                     <li key={index} className="d-flex align-items-center gap-3">
                         <div className="category d-flex justify-content-start align-items-center gap-3 pt-2">

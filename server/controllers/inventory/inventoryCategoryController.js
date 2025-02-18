@@ -10,12 +10,21 @@ const getInventoryCategories = asyncHandler(async (req, res) => {
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
+    const searchQuery = req?.query?.search; 
 
-    const inventoryCategories = await InventoryCategory.find({ deleted_at: null })
-                                                        .sort('-created_at')
-                                                        .skip(skip)
-                                                        .limit(limit)
-                                                        .lean();
+    let inventoryCategories;
+
+    if (searchQuery) {
+        inventoryCategories = await InventoryCategory.find({ name: new RegExp(searchQuery, 'i'), deleted_at: null })
+                                            .sort('-created_at')
+                                            .lean();
+    } else if (!searchQuery) {
+        inventoryCategories = await InventoryCategory.find({ deleted_at: null })
+                                            .sort('-created_at')
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .lean();
+    }
 
     if (!inventoryCategories?.length) return res.status(404).json({ message: "No inventory categories found!" }); 
 

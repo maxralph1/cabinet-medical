@@ -137,14 +137,18 @@ export default function Layout({ children }) {
                                     Inventory
                                 </Link>
                         </li>
-                        <li className="fw-semibold">
-                            <Link to={ route('home.settings.index') }>
-                                Settings
-                            </Link>
-                        </li>
-                        <li className="fw-semibold">
+                        <li 
+                            onClick={ () => setToggleNav(!toggleNav) } 
+                            className="fw-semibold">
                             <Link to={ route('home.blog.index') }>
                                 Blog
+                            </Link>
+                        </li>
+                        <li 
+                            onClick={ () => setToggleNav(!toggleNav) } 
+                            className="fw-semibold">
+                            <Link to={ route('home.settings.index') }>
+                                Settings
                             </Link>
                         </li>
                         <li 

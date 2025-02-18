@@ -14,10 +14,14 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
     const skip = (current_page - 1) * limit; 
 
     const inventoryProducts = await InventoryProduct.find({ deleted_at: null })
-                                                        .sort('-created_at')
-                                                        .skip(skip)
-                                                        .limit(limit)
-                                                        .lean();
+                                                    .sort('-created_at')
+                                                    .skip(skip)
+                                                    .limit(limit)
+                                                    .populate({
+                                                        path: 'user',
+                                                        select: 'first_name last_name username'
+                                                    })
+                                                    .lean();
 
     if (!inventoryProducts?.length) return res.status(404).json({ message: "No inventory products found!" }); 
 
@@ -26,6 +30,7 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
     let inventoryProductList = []; 
 
     const updateInventoryProductPromises = inventoryProducts?.map(async inventoryProductItem => { 
+        /** Product Units */ 
         let foundInventoryProductUnits = await InventoryProductUnit.find({ inventory_product: inventoryProductItem?._id })
                                                                     .populate({
                                                                         path: 'user',
@@ -42,9 +47,22 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
                                                                     .populate({
                                                                         path: 'inventory_product', 
                                                                     })
-                                                                    .lean()
-
+                                                                    .lean(); 
         inventoryProductItem['product_units'] = foundInventoryProductUnits; 
+        /** End of Product Units */ 
+
+        /** Product Categories */
+        let foundInventoryProductCategories = await InventoryProductCategory.find({ inventory_product: inventoryProductItem?._id })
+                                                                            .populate({
+                                                                                path: 'user',
+                                                                                select: 'first_name last_name username'
+                                                                            })
+                                                                            .populate({
+                                                                                path: 'inventory_category', 
+                                                                            })
+                                                                            .lean(); 
+        inventoryProductItem['product_categories'] = foundInventoryProductCategories; 
+        /** End of Product Categories */
 
         inventoryProductList.push(inventoryProductItem); 
     }); 
@@ -64,12 +82,16 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
  * Create Inventory Product
  */
 const createInventoryProduct = asyncHandler(async (req, res) => {
-    const { name, 
+    const { categories, 
+            name, 
             description, 
             notes, 
             amount_purchased, 
             manufacturer, 
-            make_country } = req?.body; 
+            make_country, 
+            product_units } = req?.body; 
+
+    console.log('request body:', req?.body);
 
     let inventoryProductImageUpload = {};
     if (!req?.files?.image) {
@@ -94,6 +116,40 @@ const createInventoryProduct = asyncHandler(async (req, res) => {
         make_country
     }); 
 
+    /** Product Category(ies) */
+    if (categories && categories?.length > 0) { 
+        const categories_array = categories.split(',');
+
+        const categoriesResolve = categories_array?.map(async (category, index) => { 
+            await InventoryProductCategory.create({
+                user: req?.user_id, 
+                inventory_product: inventoryProduct?._id, 
+                inventory_category: category, 
+            });
+        }); 
+
+        await Promise.all(categoriesResolve); 
+    }
+    /** End of Product Category(ies) */
+
+    /** Product Units */
+    if (product_units) {
+        const product_units_array = JSON.parse(product_units);
+        const productUnitsResolve = product_units_array?.map(async (unit, index) => { 
+            await InventoryProductUnit.create({
+                user: req?.user_id, 
+                inventory_product: inventoryProduct?._id, 
+                product_number: unit?.product_number, 
+                amount_purchased: unit?.amount_purchased, 
+                manufacture_date: unit?.manufacture_date, 
+                expiration_date: unit?.expiration_date
+            }); 
+        }); 
+
+        await Promise.all(productUnitsResolve); 
+    }
+    /** End of Product Units */
+
     inventoryProduct.save()
                     .then(() => {
                         res.status(201).json({ success: `Inventory Product ${inventoryProduct?._id} created` });
@@ -107,18 +163,23 @@ const createInventoryProduct = asyncHandler(async (req, res) => {
  * Get Inventory Product
  */
 const getInventoryProduct = asyncHandler(async (req, res) => {
-    const inventoryProduct = await InventoryProduct.findOne({ _id: req?.params?.id, deleted_at: null }).lean(); 
+    const inventoryProduct = await InventoryProduct.findOne({ _id: req?.params?.id, deleted_at: null })
+                                                    .populate({
+                                                        path: 'user',
+                                                        select: 'first_name last_name username'
+                                                    })
+                                                    .lean(); 
 
     if (!inventoryProduct) return res.status(404).json({ message: "Inventory Product not found!" }); 
 
-    const categories = await InventoryProductCategory.find({ inventory_product: inventoryProduct?._id })
+    const categories = await InventoryProductCategory.find({ inventory_product: inventoryProduct?._id, deleted_at: null })
                                                     .sort('-created_at')
                                                     .populate({
                                                         path: 'inventory_category', 
                                                     })
                                                     .lean(); 
 
-    const product_units = await InventoryProductUnit.find({ inventory_product: inventoryProduct?._id })
+    const product_units = await InventoryProductUnit.find({ inventory_product: inventoryProduct?._id, deleted_at: null })
                                                     .sort('-created_at')
                                                     .populate({
                                                         path: 'user',

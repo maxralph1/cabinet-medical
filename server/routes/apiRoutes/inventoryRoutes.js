@@ -1,31 +1,16 @@
 import express from 'express'; 
+
 const inventoryRouter = express.Router();
-import authenticated from '../../middleware/authenticated.js'; 
-import roles from '../../config/allowedRoles.js'; 
-import checkRoles from '../../middleware/checkRoles.js'; 
-import { getInventories, 
-        createInventory, 
-        getInventory, 
-        updateInventory, 
-        deleteInventory, 
-        restoreInventory, 
-        destroyInventory
-} from '../../controllers/inventoryController.js'; 
+import inventoryCategoryRouter from './inventoryRoutes/inventoryCategoryRoutes.js'; 
+import inventoryProductRouter from './inventoryRoutes/inventoryProductRoutes.js'; 
+import inventoryProductUnitRouter from './inventoryRoutes/inventoryProductUnitRoutes.js'; 
+import inventoryInvoiceRouter from './inventoryRoutes/inventoryInvoiceRoutes.js'; 
+
+ 
+inventoryRouter.use('/categories', inventoryCategoryRouter); 
+inventoryRouter.use('/products', inventoryProductRouter); 
+inventoryRouter.use('/product-units', inventoryProductUnitRouter); 
+inventoryRouter.use('/invoices', inventoryInvoiceRouter); 
 
 
-inventoryRouter.use(authenticated); 
-
-inventoryRouter.route('/')
-                .get(getInventories,)
-                .post(createInventory); 
-
-inventoryRouter.route('/:id')
-                .get(getInventory)
-                .put(updateInventory)
-                .patch(deleteInventory)
-                .delete(destroyInventory); 
-
-inventoryRouter.patch('/:id/restore', restoreInventory); 
-
-
-export default inventoryRouter; 
+export default inventoryRouter;

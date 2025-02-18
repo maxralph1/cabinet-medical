@@ -67,8 +67,10 @@ export default function Create() {
                             <label htmlFor="description">Description</label>
                         </div>
                     </div>
-                    <div className="d-flex justify-content-end pt-3">
-                        <button type="submit" className="btn btn-outline-secondary border-radius-25">Save</button>
+                    <div className="row">
+                        <div className="col-sm-12 col-md-6 d-flex justify-content-end pt-3">
+                            <button type="submit" className="btn btn-outline-secondary border-radius-25">Save</button>
+                        </div>
                     </div>
                 </form>
             </section>

@@ -31,6 +31,7 @@ import ProtectedAppointmentEdit from '@/views/protected/appointments/Edit.jsx';
 import ProtectedAppointmentCreate from '@/views/protected/appointments/Create.jsx'; 
 import ProtectedAppointmentsIndex from '@/views/protected/appointments/Index.jsx'; 
 
+/** Blog */
 import ProtectedBlogIndex from '@/views/protected/blog/Index.jsx'; 
 
 import ProtectedBlogCategoryEdit from '@/views/protected/blog/categories/Edit.jsx'; 
@@ -41,6 +42,7 @@ import ProtectedBlogPublicationShow from '@/views/protected/blog/publications/Sh
 import ProtectedBlogPublicationEdit from '@/views/protected/blog/publications/Edit.jsx'; 
 import ProtectedBlogPublicationCreate from '@/views/protected/blog/publications/Create.jsx'; 
 import ProtectedBlogPublicationsIndex from '@/views/protected/blog/publications/Index.jsx'; 
+/** End of Blog */
 
 import ProtectedChatShow from '@/views/protected/chats/Show.jsx'; 
 import ProtectedChatEdit from '@/views/protected/chats/Edit.jsx'; 
@@ -57,10 +59,28 @@ import ProtectedDiagnosisTypeEdit from '@/views/protected/diagnosis-types/Edit.j
 import ProtectedDiagnosisTypeCreate from '@/views/protected/diagnosis-types/Create.jsx'; 
 import ProtectedDiagnosisTypesIndex from '@/views/protected/diagnosis-types/Index.jsx'; 
 
-import ProtectedInventoryShow from '@/views/protected/inventory/Show.jsx'; 
-import ProtectedInventoryEdit from '@/views/protected/inventory/Edit.jsx'; 
-import ProtectedInventoryCreate from '@/views/protected/inventory/Create.jsx'; 
+// import ProtectedInventoryShow from '@/views/protected/inventory/Show.jsx'; 
+// import ProtectedInventoryEdit from '@/views/protected/inventory/Edit.jsx'; 
+// import ProtectedInventoryCreate from '@/views/protected/inventory/Create.jsx'; 
+// import ProtectedInventoryIndex from '@/views/protected/inventory/Index.jsx'; 
+
+/** Inventory */
 import ProtectedInventoryIndex from '@/views/protected/inventory/Index.jsx'; 
+
+import ProtectedInventoryCategoryEdit from '@/views/protected/inventory/categories/Edit.jsx'; 
+import ProtectedInventoryCategoryCreate from '@/views/protected/inventory/categories/Create.jsx'; 
+import ProtectedInventoryCategoriesIndex from '@/views/protected/inventory/categories/Index.jsx'; 
+
+import ProtectedInventoryProductShow from '@/views/protected/inventory/products/Show.jsx'; 
+import ProtectedInventoryProductEdit from '@/views/protected/inventory/products/Edit.jsx'; 
+import ProtectedInventoryProductCreate from '@/views/protected/inventory/products/Create.jsx'; 
+import ProtectedInventoryProductsIndex from '@/views/protected/inventory/products/Index.jsx'; 
+
+import ProtectedInventoryInvoiceShow from '@/views/protected/inventory/invoices/Show.jsx'; 
+import ProtectedInventoryInvoiceEdit from '@/views/protected/inventory/invoices/Edit.jsx'; 
+import ProtectedInventoryInvoiceCreate from '@/views/protected/inventory/invoices/Create.jsx'; 
+import ProtectedInventoryInvoicesIndex from '@/views/protected/inventory/invoices/Index.jsx'; 
+/** End of Inventory */
 
 import ProtectedMedicalBillShow from '@/views/protected/medical-bills/Show.jsx'; 
 import ProtectedMedicalBillEdit from '@/views/protected/medical-bills/Edit.jsx'; 
@@ -153,6 +173,7 @@ function App() {
               <Route path={ route('home.appointments.create') } element={ <ProtectedAppointmentCreate /> } /> 
               <Route path={ route('home.appointments.index') } element={ <ProtectedAppointmentsIndex /> } /> 
 
+              {/* Blog */}
               <Route path={ route('home.blog.index') } element={ <ProtectedBlogIndex /> } /> 
               <Route path={ route('home.blog.categories.edit') } element={ <ProtectedBlogCategoryEdit /> } /> 
               <Route path={ route('home.blog.categories.create') } element={ <ProtectedBlogCategoryCreate /> } /> 
@@ -162,6 +183,7 @@ function App() {
               <Route path={ route('home.blog.publications.edit') } element={ <ProtectedBlogPublicationEdit /> } /> 
               <Route path={ route('home.blog.publications.create') } element={ <ProtectedBlogPublicationCreate /> } /> 
               <Route path={ route('home.blog.publications.index') } element={ <ProtectedBlogPublicationsIndex /> } /> 
+              {/* End of Blog */} 
 
               <Route path={ route('home.chats.show') } element={ <ProtectedChatShow /> } />
               <Route path={ route('home.chats.edit') } element={ <ProtectedChatEdit /> } />
@@ -178,10 +200,27 @@ function App() {
               <Route path={ route('home.diagnosis-types.create') } element={ <ProtectedDiagnosisTypeCreate /> } />
               <Route path={ route('home.diagnosis-types.index') } element={ <ProtectedDiagnosisTypesIndex /> } /> 
 
-              <Route path={ route('home.inventory.show') } element={ <ProtectedInventoryShow /> } />
+              {/* <Route path={ route('home.inventory.show') } element={ <ProtectedInventoryShow /> } />
               <Route path={ route('home.inventory.edit') } element={ <ProtectedInventoryEdit /> } />
               <Route path={ route('home.inventory.create') } element={ <ProtectedInventoryCreate /> } />
+              <Route path={ route('home.inventory.index') } element={ <ProtectedInventoryIndex /> } />  */} 
+
+              {/* Inventory */}
               <Route path={ route('home.inventory.index') } element={ <ProtectedInventoryIndex /> } /> 
+              <Route path={ route('home.inventory.categories.edit') } element={ <ProtectedInventoryCategoryEdit /> } /> 
+              <Route path={ route('home.inventory.categories.create') } element={ <ProtectedInventoryCategoryCreate /> } /> 
+              <Route path={ route('home.inventory.categories.index') } element={ <ProtectedInventoryCategoriesIndex /> } /> 
+
+              <Route path={ route('home.inventory.products.show') } element={ <ProtectedInventoryProductShow /> } /> 
+              <Route path={ route('home.inventory.products.edit') } element={ <ProtectedInventoryProductEdit /> } /> 
+              <Route path={ route('home.inventory.products.create') } element={ <ProtectedInventoryProductCreate /> } /> 
+              <Route path={ route('home.inventory.products.index') } element={ <ProtectedInventoryProductsIndex /> } /> 
+
+              <Route path={ route('home.inventory.invoices.show') } element={ <ProtectedInventoryInvoiceShow /> } /> 
+              <Route path={ route('home.inventory.invoices.edit') } element={ <ProtectedInventoryInvoiceEdit /> } /> 
+              <Route path={ route('home.inventory.invoices.create') } element={ <ProtectedInventoryInvoiceCreate /> } /> 
+              <Route path={ route('home.inventory.invoices.index') } element={ <ProtectedInventoryInvoicesIndex /> } /> 
+              {/* End of Inventory */} 
 
               <Route path={ route('home.medical-bills.show') } element={ <ProtectedMedicalBillShow /> } />
               <Route path={ route('home.medical-bills.edit') } element={ <ProtectedMedicalBillEdit /> } />

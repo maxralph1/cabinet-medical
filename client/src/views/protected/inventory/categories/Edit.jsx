@@ -6,24 +6,24 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
-import { useBlogCategory } from '@/hooks/blog/useBlogCategory.jsx'; 
+import { useInventoryCategory } from '@/hooks/inventory/useInventoryCategory.jsx'; 
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
 export default function Edit() {
     const { id } = useParams(); 
-    const { blogCategory, updateBlogCategory } = useBlogCategory(id); 
-    console.log(blogCategory); 
+    const { inventoryCategory, updateInventoryCategory } = useInventoryCategory(id); 
+    console.log(inventoryCategory); 
 
     const handleSubmit = async e => {
         e.preventDefault(); 
 
         const formData = new FormData(); 
-        blogCategory?.data?.name && formData.append('name', blogCategory?.data?.name); 
-        blogCategory?.data?.description && formData.append('description', blogCategory?.data?.description); 
+        inventoryCategory?.data?.name && formData.append('name', inventoryCategory?.data?.name); 
+        inventoryCategory?.data?.description && formData.append('description', inventoryCategory?.data?.description); 
 
-        await updateBlogCategory(formData); 
-        await blogCategory?.setData({}); 
+        await updateInventoryCategory(formData); 
+        await inventoryCategory?.setData({}); 
     };
 
     return (
@@ -31,27 +31,27 @@ export default function Edit() {
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">
                     <Link 
-                        to={ route('home.blog.categories.index') } className="">Blog Categories</Link>&nbsp;
+                        to={ route('home.inventory.categories.index') } className="">Inventory Categories</Link>&nbsp;
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         className="bi bi-caret-right-fill" viewBox="0 0 16 16">
                         <path
                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
                     </svg>&nbsp;
-                    <span>Add Blog Category</span>
+                    <span>Add Inventory Category</span>
                 </h2>
             </div>
 
             <section className="pt-4">
-                <form onSubmit={ handleSubmit } id="blog-category-form" className="blog-category-form">
+                <form onSubmit={ handleSubmit } id="inventory-category-form" className="inventory-category-form">
                     <div className="row">
                         <div className="form-floating mb-3 col-sm-12 col-md-6">
                             <input 
                                 type="text" 
-                                value={ blogCategory?.data?.name ?? '' }
+                                value={ inventoryCategory?.data?.name ?? '' }
                                 id="name" 
                                 className="form-control" 
-                                onChange={ e => blogCategory.setData({
-                                    ...blogCategory?.data,
+                                onChange={ e => inventoryCategory.setData({
+                                    ...inventoryCategory?.data,
                                     name: e.target.value,
                                 }) } 
                                 placeholder="WBC Count" 
@@ -62,12 +62,12 @@ export default function Edit() {
                     <div className="row">
                         <div className="form-floating mb-3 col-sm-12 col-md-6">
                             <textarea 
-                                value={ blogCategory?.data?.description ?? '' }
+                                value={ inventoryCategory?.data?.description ?? '' }
                                 id="description"
                                 className="form-control" 
                                 style={{ height: '100px' }}  
-                                onChange={ e => blogCategory.setData({
-                                    ...blogCategory?.data,
+                                onChange={ e => inventoryCategory.setData({
+                                    ...inventoryCategory?.data,
                                     description: e.target.value,
                                 }) } 
                                 placeholder="This is the count of the White Blood Cells." 

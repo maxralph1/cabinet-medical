@@ -17,6 +17,7 @@ const routeNames = {
     'home.appointments.create': '/home/appointments/create', 
     'home.appointments.index': '/home/appointments', 
 
+    /** Blog */
     'home.blog.index': '/home/blog', 
     'home.blog.categories.edit': '/home/blog/categories/:id/edit', 
     'home.blog.categories.create': '/home/blog/categories/create', 
@@ -26,6 +27,25 @@ const routeNames = {
     'home.blog.publications.edit': '/home/blog/publications/:id/edit', 
     'home.blog.publications.create': '/home/blog/publications/create', 
     'home.blog.publications.index': '/home/blog/publications', 
+    /** End of Blog */
+
+    /** Inventory */
+    'home.inventory.index': '/home/inventory', 
+    'home.inventory.categories.edit': '/home/inventory/categories/:id/edit', 
+    'home.inventory.categories.create': '/home/inventory/categories/create', 
+    'home.inventory.categories.index': '/home/inventory/categories', 
+
+    'home.inventory.products.show': '/home/inventory/products/:id/show', 
+    'home.inventory.products.edit': '/home/inventory/products/:id/edit', 
+    'home.inventory.products.create': '/home/inventory/products/create', 
+    'home.inventory.products.index': '/home/inventory/products', 
+
+    'home.inventory.invoices.pay': '/home/inventory/invoices/:id/pay', 
+    'home.inventory.invoices.show': '/home/inventory/invoices/:id/show', 
+    'home.inventory.invoices.edit': '/home/inventory/invoices/:id/edit', 
+    'home.inventory.invoices.create': '/home/inventory/invoices/create', 
+    'home.inventory.invoices.index': '/home/inventory/invoices', 
+    /** End of Inventory */
 
     'home.chats.show': '/home/chats/:id/show', 
     'home.chats.edit': '/home/chats/:id/edit', 
