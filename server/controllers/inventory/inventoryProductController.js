@@ -12,16 +12,25 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
+    const searchQuery = req?.query?.search; 
 
-    const inventoryProducts = await InventoryProduct.find({ deleted_at: null })
-                                                    .sort('-created_at')
-                                                    .skip(skip)
-                                                    .limit(limit)
-                                                    .populate({
-                                                        path: 'user',
-                                                        select: 'first_name last_name username'
-                                                    })
-                                                    .lean();
+    let inventoryProducts; 
+
+    if (searchQuery) {
+        inventoryProducts = await InventoryProduct.find({ name: new RegExp(searchQuery, 'i'), deleted_at: null })
+                                                .sort('-created_at')
+                                                .lean();
+    } else if (!searchQuery) {
+        inventoryProducts = await InventoryProduct.find({ deleted_at: null })
+                                                .sort('-created_at')
+                                                .skip(skip)
+                                                .limit(limit)
+                                                .populate({
+                                                    path: 'user',
+                                                    select: 'first_name last_name username'
+                                                })
+                                                .lean();
+    }
 
     if (!inventoryProducts?.length) return res.status(404).json({ message: "No inventory products found!" }); 
 
@@ -119,7 +128,6 @@ const createInventoryProduct = asyncHandler(async (req, res) => {
     /** Product Category(ies) */
     if (categories && categories?.length > 0) { 
         const categories_array = categories.split(',');
-
         const categoriesResolve = categories_array?.map(async (category, index) => { 
             await InventoryProductCategory.create({
                 user: req?.user_id, 

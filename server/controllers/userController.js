@@ -14,9 +14,9 @@ const getUsers = asyncHandler(async (req, res) => {
     const roleQuery = req?.query?.role; 
     const searchQuery = req?.query?.search; 
 
-    console.log(current_page, limit, roleQuery); 
+    // console.log(current_page, limit, roleQuery); 
 
-    console.log(searchQuery);
+    // console.log(searchQuery);
 
 
     let users, usersCount; 

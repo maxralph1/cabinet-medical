@@ -7,7 +7,7 @@ const medicalBillSchema = new Schema({
         authorizing_professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
         appointment: { type: Schema.Types.ObjectId, ref: 'Appointment' }, 
         diagnosis: { type: Schema.Types.ObjectId, ref: 'Diagnosis' }, 
-        regimen: { type: Schema.Types.ObjectId, ref: 'Regimen' }, 
+        // regimen: { type: Schema.Types.ObjectId, ref: 'Regimen' }, 
         purpose: { type: String }, 
         notes: { type: String }, 
         comments: { type: String }, 
