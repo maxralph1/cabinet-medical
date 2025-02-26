@@ -7,7 +7,44 @@ import InventoryProductUnit from '../../models/inventory/InventoryProductUnit.js
  * Get Inventory Product Units
  */
 const getInventoryProductUnits = asyncHandler(async (req, res) => {
-    res.json({ message: "Get all inventory product units" }); 
+    const current_page = parseInt(req?.query?.page) || 1;
+    const limit = parseInt(req?.query?.limit) || 10; 
+    const skip = (current_page - 1) * limit; 
+    const searchQuery = req?.query?.search; 
+
+    let inventoryProductUnits; 
+
+    if (searchQuery) {
+        inventoryProductUnits = await InventoryProductUnit.find({ name: new RegExp(searchQuery, 'i'), 
+                                                                deleted_at: null })
+                                                        .sort('-created_at')
+                                                        .lean();
+    } else if (!searchQuery) {
+        inventoryProductUnits = await InventoryProductUnit.find({ deleted_at: null })
+                                                        .sort('-created_at')
+                                                        .skip(skip)
+                                                        .limit(limit)
+                                                        .populate({
+                                                            path: 'user',
+                                                            select: 'first_name last_name username'
+                                                        })
+                                                        .populate({
+                                                            path: 'inventory_product'
+                                                        })
+                                                        .lean();
+    }
+
+    if (!inventoryProductUnits?.length) return res.status(404).json({ message: "No inventory products found!" }); 
+
+    const total = await InventoryProductUnit.countDocuments({ deleted_at: null }); 
+
+    res.json({ meta: {
+                    current_page, 
+                    limit, 
+                    total_pages: Math.ceil(total / limit), 
+                    total_results: total
+                }, 
+                data: inventoryProductUnits }); 
 }); 
 
 /**

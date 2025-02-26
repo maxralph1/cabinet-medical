@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const blogCommentSchema = new Schema({
+const blogArticleLikeSchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' }, 
         blog_article: { type: Schema.Types.ObjectId, ref: 'BlogArticle' }, 
-        content: { type: String }, 
+        // blog_article_comment: { type: Schema.Types.ObjectId, ref: 'BlogArticleComment' }, 
         deleted_at: { type: String, default: null }, 
         deleted_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
     }, 
@@ -15,5 +15,5 @@ const blogCommentSchema = new Schema({
 );
 
 
-let BlogComment = mongoose.model('BlogComment', blogCommentSchema); 
-export default BlogComment; 
+let BlogArticleLike = mongoose.model('BlogArticleLike', blogArticleLikeSchema); 
+export default BlogArticleLike; 

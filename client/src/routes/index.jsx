@@ -40,6 +40,8 @@ const routeNames = {
     'home.inventory.products.create': '/home/inventory/products/create', 
     'home.inventory.products.index': '/home/inventory/products', 
 
+    'home.inventory.products.product-units.index': '/home/inventory/products/product-units', 
+
     'home.inventory.invoices.pay': '/home/inventory/invoices/:id/pay', 
     'home.inventory.invoices.show': '/home/inventory/invoices/:id/show', 
     'home.inventory.invoices.edit': '/home/inventory/invoices/:id/edit', 

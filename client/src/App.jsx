@@ -76,7 +76,8 @@ import ProtectedInventoryProductEdit from '@/views/protected/inventory/products/
 import ProtectedInventoryProductCreate from '@/views/protected/inventory/products/Create.jsx'; 
 import ProtectedInventoryProductsIndex from '@/views/protected/inventory/products/Index.jsx'; 
 
-// import ProtectedInventoryInvoicePay from '@/views/protected/inventory/invoices/Pay.jsx'; 
+import ProtectedInventoryProductUnitsIndex from '@/views/protected/inventory/products/product-units/Index.jsx'; 
+
 import ProtectedInventoryInvoiceShow from '@/views/protected/inventory/invoices/Show.jsx'; 
 import ProtectedInventoryInvoiceEdit from '@/views/protected/inventory/invoices/Edit.jsx'; 
 import ProtectedInventoryInvoiceCreate from '@/views/protected/inventory/invoices/Create.jsx'; 
@@ -216,6 +217,8 @@ function App() {
               <Route path={ route('home.inventory.products.edit') } element={ <ProtectedInventoryProductEdit /> } /> 
               <Route path={ route('home.inventory.products.create') } element={ <ProtectedInventoryProductCreate /> } /> 
               <Route path={ route('home.inventory.products.index') } element={ <ProtectedInventoryProductsIndex /> } /> 
+
+              <Route path={ route('home.inventory.products.product-units.index') } element={ <ProtectedInventoryProductUnitsIndex /> } /> 
 
               <Route path={ route('home.inventory.invoices.pay') } element={ <ProtectedInventoryInvoiceShow /> } /> 
               <Route path={ route('home.inventory.invoices.show') } element={ <ProtectedInventoryInvoiceShow /> } /> 

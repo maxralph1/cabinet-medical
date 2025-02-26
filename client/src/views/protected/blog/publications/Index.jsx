@@ -11,7 +11,7 @@ import FroalaEditorView from 'react-froala-wysiwyg';
 import 'froala-editor/js/froala_editor.pkgd.min.js';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import PaginationMeter from '@/components/PaginationMeter.jsx';
-import PaginationLinks from '@/components/PaginationLinks.jsx';
+import PaginationLinks from '@/components/PaginationLinks.jsx'; 
 import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx'; 
 import { useBlogPublication } from '@/hooks/blog/useBlogPublication.jsx'; 
 import Layout from '@/components/protected/Layout.jsx'; 
@@ -141,7 +141,7 @@ export default function Index() {
                 && <PaginationLinks 
                     items={ blogPublications } 
                     get_items={ getBlogPublications } 
-                    set_query={ setBlogPublicationQuery } /> }  
+                    set_query={ setBlogPublicationQuery } /> } 
         </Layout>
     )
 }

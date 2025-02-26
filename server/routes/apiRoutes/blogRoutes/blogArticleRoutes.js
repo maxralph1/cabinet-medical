@@ -13,19 +13,19 @@ import { getBlogArticles,
 } from '../../../controllers/blog/blogArticleController.js'; 
 
 
-blogArticleRouter.use(authenticated); 
+// blogArticleRouter.use(authenticated); 
 
 blogArticleRouter.route('/')
                 .get(getBlogArticles)
-                .post(createBlogArticle); 
+                .post(authenticated, createBlogArticle); 
 
 blogArticleRouter.route('/:id')
                 .get(getBlogArticle)
-                .put(updateBlogArticle)
-                .patch(deleteBlogArticle)
-                .delete(destroyBlogArticle); 
+                .put(authenticated, updateBlogArticle)
+                .patch(authenticated, deleteBlogArticle)
+                .delete(authenticated, destroyBlogArticle); 
 
-blogArticleRouter.patch('/:id/restore', restoreBlogArticle); 
+blogArticleRouter.patch('/:id/restore', authenticated, restoreBlogArticle); 
 
 
 export default blogArticleRouter; 

@@ -3,8 +3,8 @@ import express from 'express';
 const blogRouter = express.Router();
 import blogCategoryRouter from './blogRoutes/blogCategoryRoutes.js'; 
 import blogArticleRouter from './blogRoutes/blogArticleRoutes.js'; 
-import blogCommentRouter from './blogRoutes/blogCommentRoutes.js'; 
-import blogLikeRouter from './blogRoutes/blogLikeRoutes.js'; 
+import blogCommentRouter from './blogRoutes/blogArticleCommentRoutes.js'; 
+import blogLikeRouter from './blogRoutes/blogArticleLikeRoutes.js'; 
 
  
 blogRouter.use('/categories', blogCategoryRouter); 

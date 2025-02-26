@@ -2,8 +2,8 @@ import cloudinaryImageUpload from '../../config/imageUpload/cloudinary.js';
 import asyncHandler from 'express-async-handler'; 
 import BlogArticle from '../../models/blog/BlogArticle.js';
 import BlogArticleCategory from '../../models/blog/BlogArticleCategory.js'; 
-import BlogComment from '../../models/blog/BlogComment.js';
-import BlogLike from '../../models/blog/BlogLike.js';
+import BlogArticleComment from '../../models/blog/BlogArticleComment.js';
+import BlogArticleLike from '../../models/blog/BlogArticleLike.js';
 
 
 /**
@@ -18,6 +18,10 @@ const getBlogArticles = asyncHandler(async (req, res) => {
                                         .sort('-created_at')
                                         .skip(skip)
                                         .limit(limit)
+                                        .populate({
+                                            path: 'user',
+                                            select: 'first_name last_name username role'
+                                        })
                                         .lean();
 
     if (!blogArticles?.length) return res.status(404).json({ message: "No blog articles found!" }); 
@@ -27,7 +31,7 @@ const getBlogArticles = asyncHandler(async (req, res) => {
     let blogArticleList = []; 
 
     const updateBlogArticlePromises = blogArticles?.map(async blogArticleItem => { 
-        let foundBlogArticleCategories = await BlogArticleCategory.find({ blog_article: blogArticleItem?._id })
+        let foundBlogArticleCategories = await BlogArticleCategory.find({ blog_article: blogArticleItem?._id, deleted_at: null })
                                                                 .populate({
                                                                     path: 'user',
                                                                     select: 'first_name last_name username'
@@ -41,20 +45,20 @@ const getBlogArticles = asyncHandler(async (req, res) => {
                                                                 .lean(); 
         blogArticleItem['categories'] = foundBlogArticleCategories; 
 
-        let foundBlogArticleComments = await BlogComment.find({ blog_article: blogArticleItem?._id })
+        let foundBlogArticleComments = await BlogArticleComment.find({ blog_article: blogArticleItem?._id, deleted_at: null })
+                                                            .populate({
+                                                                path: 'user',
+                                                                select: 'first_name last_name username'
+                                                            })
+                                                            .lean(); 
+        blogArticleItem['comments'] = foundBlogArticleComments; 
+
+        let foundBlogArticleLikes = await BlogArticleLike.find({ blog_article: blogArticleItem?._id, deleted_at: null })
                                                         .populate({
                                                             path: 'user',
                                                             select: 'first_name last_name username'
                                                         })
                                                         .lean(); 
-        blogArticleItem['comments'] = foundBlogArticleComments; 
-
-        let foundBlogArticleLikes = await BlogLike.find({ blog_article: blogArticleItem?._id })
-                                                .populate({
-                                                    path: 'user',
-                                                    select: 'first_name last_name username'
-                                                })
-                                                .lean(); 
         blogArticleItem['likes'] = foundBlogArticleLikes; 
 
         blogArticleList.push(blogArticleItem); 
@@ -191,6 +195,58 @@ const updateBlogArticle = asyncHandler(async (req, res) => {
 }); 
 
 /**
+ * Mark Blog Article as Featured
+ */
+const makeFeaturedBlogArticle = asyncHandler(async (req, res) => {
+    const blogArticle = await BlogArticle.findOne({ _id: req?.params?.id, deleted_at: null }); 
+
+    if (!blogArticle) return res.status(404).json({ message: "Blog Article not found!" }); 
+
+    const previousFeaturedBlogArticle = await BlogArticle.findOne({ featured: true }); 
+    previousFeaturedBlogArticle.featured = false;
+    previousFeaturedBlogArticle.save();
+
+    blogArticle.featured = true; 
+    
+    blogArticle.save()
+                .then(() => {
+                    res.json({ success: `Blog Article ${blogArticle?._id} marked as featured` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                }); 
+}); 
+
+/**
+ * Mark Blog Article as Must-Read
+ */
+const makeMustReadBlogArticle = asyncHandler(async (req, res) => {
+    const blogArticle = await BlogArticle.findOne({ _id: req?.params?.id, deleted_at: null }); 
+
+    if (!blogArticle) return res.status(404).json({ message: "Blog Article not found!" }); 
+
+    const previousMustReadBlogArticles = await BlogArticle.countDocuments({ must_read: true }); 
+
+    let previousMustReadBlogArticle; 
+    previousMustReadBlogArticle = await BlogArticle.sort('created_at').findOne({ must_read: true }); 
+
+    if (previousMustReadBlogArticles?.length >= 3) {
+        previousMustReadBlogArticle.must_read = false;
+        previousMustReadBlogArticle.save();
+    }; 
+
+    blogArticle.must_read = true; 
+    
+    blogArticle.save()
+                .then(() => {
+                    res.json({ success: `Blog Article ${blogArticle?._id} marked as must-read` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                }); 
+}); 
+
+/**
  * Soft-delete Blog Article
  */
 const deleteBlogArticle = asyncHandler(async (req, res) => {
@@ -254,6 +310,8 @@ export { getBlogArticles,
         createBlogArticle, 
         getBlogArticle, 
         updateBlogArticle, 
+        makeFeaturedBlogArticle, 
+        makeMustReadBlogArticle, 
         deleteBlogArticle, 
         restoreBlogArticle, 
         destroyBlogArticle };

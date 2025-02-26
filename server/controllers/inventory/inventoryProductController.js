@@ -84,7 +84,7 @@ const getInventoryProducts = asyncHandler(async (req, res) => {
                     total_pages: Math.ceil(total / limit), 
                     total_results: total
                 }, 
-                data: inventoryProductList });
+                data: inventoryProductList }); 
 }); 
 
 /**

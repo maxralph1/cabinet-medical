@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom'; 
 import { route } from '@/routes'; 
-import useAxios from '@/utils/useAxios.jsx'; 
 import axios from 'axios'; 
 import Constants from '@/utils/Constants.jsx'; 
+import useAxios from '@/utils/useAxios.jsx'; 
 import swal from 'sweetalert2'; 
 
 
-export function useBlogPublication(id = null) {
+export function useBlogPublicationComment(id = null) {
     const [errors, setErrors] = useState({}); 
     const [loading, setLoading] = useState(false); 
     const [data, setData] = useState({}); 
@@ -17,27 +17,27 @@ export function useBlogPublication(id = null) {
     useEffect(() => {
         if (id !== null) {
             const controller = new AbortController();
-            getBlogPublication(id, { signal: controller.signal })
-            return () => controller.abort();
+            getBlogPublicationComment(id, { signal: controller.signal })
+            return () => controller.abort(); 
         }
-    }, [id]);
+    }, [id]); 
 
-    async function createBlogPublication(blogPublication) {
+    async function createBlogPublicationComment(blogPublication) {
         setLoading(true); 
         setErrors({}); 
 
-        // console.log(blogPublication); 
-        return axiosInstance.post('blog/articles', blogPublication)
+        // console.log(blogPublicationComment); 
+        return axiosInstance.post(`blog/comments`, blogPublication)
             .then(response => {
                 setData(response?.data?.data)
                 console.log(response); 
-                swal.fire({
-                    text: `Blog Publication created.`, 
-                    color: '#f2f2f20', 
-                    width: 325, 
-                    position: 'top', 
-                    showConfirmButton: false
-                });
+                // swal.fire({
+                //     text: `Blog Publication Comment added.`,
+                //     color: '#f2f2f20', 
+                //     width: 325, 
+                //     position: 'top', 
+                //     showConfirmButton: false 
+                // });
             })
             .catch(error => {
                 setErrors(error?.response); 
@@ -66,34 +66,19 @@ export function useBlogPublication(id = null) {
             });
     } 
 
-    async function getBlogPublication(id, page, limit) {
+    async function getBlogPublicationComment(id) {
         // setLoading(true); 
-        // console.log(id, page, limit);
+        // console.log(id);
 
-        // return axiosInstance.get(`blog/articles/${id}?page=${page}&limit=${limit}`)
-        return axios.get(`${ Constants?.serverURL }/api/v1/blog/articles/${id}?page=${page}&limit=${limit}`)
+        return axiosInstance.get(`blog/comments/${id}`)
             .then(response => setData(response?.data?.data))
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false));
     } 
 
-    async function updateBlogPublication(blogPublication) {
-        setLoading(true); 
-        setErrors({}); 
-        console.log(blogPublication);
-
-        return axiosInstance.put(`blog/articles/${id}`, blogPublication)
-            .then(() => navigate(route('home.blog.publications.index')))
-            .catch(error => setErrors(error?.response))
-            .finally(() => {
-                setLoading(false); 
-                setData({}); 
-            });
-    }
-
-    async function deleteBlogPublication(blogPublication) { 
-        console.log('blogPublication:', blogPublication); 
-        return axiosInstance.patch(`blog/articles/${blogPublication}`)
+    async function deleteBlogPublicationComment(blogPublicationComment) { 
+        console.log('blogPublicationComment:', blogPublicationComment); 
+        return axiosInstance.patch(`blog/comments/${blogPublicationComment}`)
             .then(() => {})
             .catch(error => {
                 // console.log(error?.response); 
@@ -102,27 +87,26 @@ export function useBlogPublication(id = null) {
             .finally(() => setLoading(false)); 
     } 
 
-    async function restoreBlogPublication(blogPublication) {
-        return axiosInstance.patch(`blog/articles/${blogPublication?._id}/restore`)
+    async function restoreBlogPublicationComment(blogPublicationComment) {
+        return axiosInstance.patch(`blog/comments/${blogPublicationComment?._id}/restore`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
     } 
 
-    async function destroyBlogPublication(blogPublication) {
-        return axiosInstance.delete(`blog/articles/${blogPublication?._id}`)
+    async function destroyBlogPublicationComment(blogPublicationComment) {
+        return axiosInstance.delete(`blog/comments/${blogPublicationComment?._id}`)
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
     } 
 
     return {
-        blogPublication: { data, setData, errors, loading }, 
-        createBlogPublication, 
-        getBlogPublication, 
-        updateBlogPublication, 
-        deleteBlogPublication, 
-        restoreBlogPublication, 
-        destroyBlogPublication 
+        blogPublicationComment: { data, setData, errors, loading }, 
+        createBlogPublicationComment, 
+        getBlogPublicationComment, 
+        deleteBlogPublicationComment, 
+        restoreBlogPublicationComment, 
+        destroyBlogPublicationComment
     }
 }

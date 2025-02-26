@@ -7,6 +7,8 @@ const blogArticleSchema = new Schema({
         // blog_category: { type: Schema.Types.ObjectId, ref: 'BlogCategory' }, 
         title: { type: String }, 
         content: { type: String }, 
+        featured: { type: Boolean, default: false }, 
+        must_read: { type: Boolean, default: false }, 
         image_path: { 
             public_id: { type: String, default: '' },
             url: { type: String, default: '' }
