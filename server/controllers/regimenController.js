@@ -1,4 +1,7 @@
 import asyncHandler from 'express-async-handler'; 
+import { formatISO, parseISO, startOfDay, endOfDay, subDays, 
+        startOfMonth, endOfMonth, addMonths, subMonths, 
+        startOfYear, endOfYear, addYears, subYears } from 'date-fns'; 
 import Regimen from '../models/Regimen.js'; 
 import RegimenAdministration from '../models/RegimenAdministration.js';
 
@@ -80,10 +83,11 @@ const getRegimens = asyncHandler(async (req, res) => {
  * Create Regimen
  */ 
 const createRegimen = asyncHandler(async (req, res) => {
-    const { patient, notes, comments, 
-            date_start, time_start, 
-            date_end, time_end, 
-        proposed_administration_date_times } = req?.body; 
+    const { patient, notes,
+            administrations_count, date_time_start, frequency_value, frequency_unit, 
+            proposed_administration_date_times } = req?.body; 
+
+    console.log(req?.body)
 
     // proposed_administration_date_times is an array
 
@@ -91,25 +95,59 @@ const createRegimen = asyncHandler(async (req, res) => {
         patient, 
         authorizing_professional: req?.user_id, 
         notes, 
-        comments, 
-        date_start, 
-        time_start, 
-        date_end, 
-        time_end
     }); 
 
+    /** Proposed Administration Frequency */
     if (proposed_administration_date_times && (proposed_administration_date_times?.length > 0)) {
-        const dateTimesResolve = proposed_administration_date_times?.map(async (item, index) => {
-            async function createRegimenAdministrations() {
-                const newRegimenAdministration = await RegimenAdministration.create({
-                    user: patient, 
-                    regimen: regimen?._id, 
-                    proposed_administration_date_time: item
-                }); 
-            }; 
-            await createRegimenAdministrations();
-        });
+        const proposed_administration_date_times_array = JSON.parse(proposed_administration_date_times);
+        const proposedAdministrationdateTimesResolve = proposed_administration_date_times_array?.map(async (unit, index) => { 
+            await RegimenAdministration.create({
+                authorizing_professional: req?.user_id, 
+                patient, 
+                regimen: regimen?._id, 
+                proposed_administration_date_time: unit?.date_time, 
+            }); 
+        }); 
+
+        await Promise.all(proposedAdministrationdateTimesResolve); 
     }; 
+
+    if ((administrations_count && date_time_start && frequency_value && frequency_unit)) {
+
+        const proposedAdministrationdateTimesResolve = async () => {
+            const promises = []; // Collect all promises to run them concurrently
+
+            let proposed_date_time = new Date(date_time_start);
+
+            for (let i = 0; i <= administrations_count; i++) {
+
+                let createPromise = RegimenAdministration.create({
+                        authorizing_professional: req?.user_id, 
+                        patient, 
+                        regimen: regimen?._id, 
+                        proposed_administration_date_time: proposed_date_time?.toISOString(),
+                    });
+
+                promises.push(createPromise); 
+
+                if (frequency_unit == 'per_second') {
+                    proposed_date_time.setSeconds(proposed_date_time.getSeconds() + frequency_value);
+                } else if (frequency_unit == 'per_minute') {
+                    proposed_date_time.setMinutes(proposed_date_time.getMinutes() + frequency_value);
+                } else if (frequency_unit == 'hourly') {
+                    proposed_date_time.setHours(proposed_date_time.getHours() + frequency_value);
+                } else if (frequency_unit == 'daily') {
+                    proposed_date_time.setDate(proposed_date_time.getDate() + frequency_value);
+                };
+            }
+
+            await Promise.all(promises);
+        };
+
+        await proposedAdministrationdateTimesResolve();
+
+    };
+    /** End of Proposed Administration Frequency */
 
     regimen.save()
             .then(() => {
@@ -137,7 +175,15 @@ const getRegimen = asyncHandler(async (req, res) => {
 
     if (!regimen) return res.status(404).json({ message: "Regimen not found!" }); 
 
-    res.json({ data: regimen });
+    const regimen_administrations = await RegimenAdministration.find({ regimen: regimen?._id, deleted_at: null })
+                                                    .sort('-created_at')
+                                                    .lean(); 
+
+    let regimenObj = regimen; 
+
+    regimenObj.regimen_administrations = regimen_administrations; 
+
+    res.json({ data: regimenObj });
 }); 
 
 /**

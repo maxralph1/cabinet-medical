@@ -30,23 +30,24 @@ const routeNames = {
     /** End of Blog */
 
     /** Inventory */
-    'home.inventory.index': '/home/inventory', 
     'home.inventory.categories.edit': '/home/inventory/categories/:id/edit', 
     'home.inventory.categories.create': '/home/inventory/categories/create', 
     'home.inventory.categories.index': '/home/inventory/categories', 
-
+    
     'home.inventory.products.show': '/home/inventory/products/:id/show', 
     'home.inventory.products.edit': '/home/inventory/products/:id/edit', 
     'home.inventory.products.create': '/home/inventory/products/create', 
     'home.inventory.products.index': '/home/inventory/products', 
-
+    
     'home.inventory.products.product-units.index': '/home/inventory/products/product-units', 
-
+    
     'home.inventory.invoices.pay': '/home/inventory/invoices/:id/pay', 
     'home.inventory.invoices.show': '/home/inventory/invoices/:id/show', 
     'home.inventory.invoices.edit': '/home/inventory/invoices/:id/edit', 
     'home.inventory.invoices.create': '/home/inventory/invoices/create', 
     'home.inventory.invoices.index': '/home/inventory/invoices', 
+    
+    'home.inventory.index': '/home/inventory', 
     /** End of Inventory */
 
     'home.chats.show': '/home/chats/:id/show', 
@@ -63,11 +64,6 @@ const routeNames = {
     'home.diagnoses.edit': '/home/diagnoses/:id/edit', 
     'home.diagnoses.create': '/home/diagnoses/create', 
     'home.diagnoses.index': '/home/diagnoses', 
-
-    'home.inventory.show': '/home/inventory/:id/show', 
-    'home.inventory.edit': '/home/inventory/:id/edit', 
-    'home.inventory.create': '/home/inventory/create', 
-    'home.inventory.index': '/home/inventory', 
 
     'home.medical-bills.show': '/home/medical-bills/:id/show', 
     'home.medical-bills.edit': '/home/medical-bills/:id/edit', 

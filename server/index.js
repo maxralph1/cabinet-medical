@@ -48,9 +48,9 @@ app.use(urlencoded({ extended: true }));
 //     origin: 'http://localhost:5174', 
 //     credentials: true // Allow cookies to be sent
 // })); 
-app.use(cookieParser()); 
 app.use(cors(corsOptions)); 
-// app.options('*', cors(corsOptions));
+app.use(cookieParser()); 
+// app.options('*', cors(corsOptions)); 
 app.use(fileupload({useTempFiles: true})); 
 
 app.use('/', expressStatic(join(__dirname, 'public'))); 

@@ -26,7 +26,9 @@ export default function Index() {
         page: 1, 
         limit: 1, 
     }); 
+
     const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery); 
+
     const { deleteBlogPublication } = useBlogPublication(); 
     console.log(blogPublications); 
 
@@ -74,7 +76,7 @@ export default function Index() {
                                                                     ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                                                                     ?.map((blogPublication, index) => {
                                                 return (
-                                                    <article key={ blogPublication?._id } className="d-flex flex-column justify-content-between align-items-start">
+                                                    <article key={ blogPublication?._id } className="d-flex flex-column justify-content-between align-items-start border-bottom pb-3">
                                                         <Link to={ route('blog.publications.show', { id: blogPublication?._id }) } className="text-decoration-none text-dark">
                                                             <h3 className="fs-5 fw-bold mb-0">{ blogPublication?.title }</h3>
                                                             <p className="text-secondary">
@@ -277,20 +279,25 @@ export default function Index() {
                                                                                     { (blogPublication?.comments?.length > 0) 
                                                                                         ?   blogPublication?.comments?.map((comment, index) => {
                                                                                                 return (
-                                                                                                    <div key={ comment?._id } className="d-flex justify-content-between align-items-end">
-                                                                                                        <div className="d-flex justify-content-start gap-3">
-                                                                                                            { comment?.user?.image_path?.url && (
-                                                                                                                <div className="user-image">
-                                                                                                                    <img src={ comment?.user?.image_path?.url } alt={ comment?.user?.first_name + ' ' + comment?.user?.last_name + ' image' } />
+                                                                                                    <div key={ comment?._id } className="d-flex flex-column">
+                                                                                                        <section className="align-self-start">
+                                                                                                            { comment?.content }
+                                                                                                        </section>
+                                                                                                        <section className="align-self-end d-flex justify-content-end gap-1 flex-wrap">
+                                                                                                            <div className="d-flex justify-content-start gap-3">
+                                                                                                                { comment?.user?.image_path?.url && (
+                                                                                                                    <div className="user-image">
+                                                                                                                        <img src={ comment?.user?.image_path?.url } alt={ comment?.user?.first_name + ' ' + comment?.user?.last_name + ' image' } style={{ width: '20px', height: '20px', borderRadius: '50px' }} />
+                                                                                                                    </div>
+                                                                                                                )}
+                                                                                                                <div className="user-names">
+                                                                                                                    { comment?.user?.first_name + ' ' + comment?.user?.last_name },
                                                                                                                 </div>
-                                                                                                            )}
-                                                                                                            <div className="user-names">
-                                                                                                                { comment?.user?.first_name + ' ' + comment?.user?.last_name }
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                        <div>
-                                                                                                            <small className="text-secondary">{ dayjs.utc(comment?.created_at).fromNow() }</small>
-                                                                                                        </div>
+                                                                                                            <div>
+                                                                                                                <small className="text-secondary">{ dayjs.utc(comment?.created_at).fromNow() }</small>
+                                                                                                            </div>
+                                                                                                        </section>
                                                                                                     </div>
                                                                                                 )
                                                                                             }) 
@@ -312,12 +319,14 @@ export default function Index() {
                                         : <></> }
             </section>
 
-            <section className="px-2 px-md-5">
-                { (blogPublications?.data?.length > 0) 
-                    && <PaginationLinks 
-                        items={ blogPublications } 
-                        get_items={ getBlogPublications } 
-                        set_query={ setBlogPublicationQuery } /> } 
+            <section className="w-100 d-flex justify-content-center">
+                <div className="px-2 px-md-5 pb-3 mb-5 position-fixed bottom-0 right-0 bg-white border border-2 border-secondary border-radius-25">
+                    { (blogPublications?.data?.length > 0) 
+                        && <PaginationLinks 
+                            items={ blogPublications } 
+                            get_items={ getBlogPublications } 
+                            set_query={ setBlogPublicationQuery } /> } 
+                </div>
             </section>
             
         </Layout>

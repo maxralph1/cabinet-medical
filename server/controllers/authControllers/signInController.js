@@ -47,21 +47,23 @@ const signInUser = asyncHandler(async (req, res) => {
         process.env.ACCESS_TOKEN_SECRET, 
         { expiresIn: 12 * 60 * 60 }
         // { expiresIn: 1 * 60 }
+        // { expiresIn: 1 }
     );
 
     const refresh = jwt.sign(
         { "user_id": userFound._id }, 
         process.env.REFRESH_TOKEN_SECRET, 
         { expiresIn: 12 * 60 * 60 }
-        // { expiresIn: 1 * 60 }
+        // { expiresIn: 0.1 * 60 }
+        // { expiresIn: 1 }
     );
 
     userFound.save()
         .then(function () {
             res.cookie('jwt', refresh, {
                 httpOnly: true, 
-                secure: true, 
-                sameSite: 'Lax', 
+                // secure: true, 
+                sameSite: 'None', 
                 maxAge: 24 * 60 * 60 * 1000      // 2 hours
                 // maxAge: 1 * 60 * 1000      // 1 minute
             }); 

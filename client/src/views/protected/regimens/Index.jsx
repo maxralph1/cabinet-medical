@@ -6,7 +6,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
+import swal from 'sweetalert2'; 
 import { useRegimens } from '@/hooks/useRegimens.jsx'; 
+import { useRegimen } from '@/hooks/useRegimen.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
@@ -20,6 +22,8 @@ export default function Index() {
     }); 
     const { regimens, getRegimens, loading } = useRegimens(regimenQuery); 
     console.log(regimens); 
+
+    const { deleteRegimen } = useRegimen(); 
 
     return (
         <Layout>
@@ -88,9 +92,46 @@ export default function Index() {
                                                                             { regimen?.patient ? ((regimen?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(regimen?.patient?.first_name)?.slice(1)) + ' ' + ((regimen?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(regimen?.patient?.last_name)?.slice(1)) : 'N/A' }
                                                                         </div>
                                                                     </Link>
-                                                                    <div>
+                                                                    <div className="d-flex gap-2">
                                                                         <span>
-                                                                            <Link to={ route('home.regimens.show', { id: regimen?._id }) } className="btn btn-sm btn-outline-secondary border-radius-25 fw-semibold py-0">Details</Link>
+                                                                            <Link to={ route('home.regimens.show', { id: regimen?._id }) }>
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-view-list text-info" viewBox="0 0 16 16">
+                                                                                    <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2m0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14"/>
+                                                                                </svg>
+                                                                            </Link>
+                                                                        </span>
+                                                                        <span>
+                                                                            <Link to={ route('home.regimens.edit', { id: regimen?._id }) }>
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-fill text-warning" viewBox="0 0 16 16">
+                                                                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                                                </svg>
+                                                                            </Link>
+                                                                        </span>
+                                                                        <span 
+                                                                            onClick={ () => {
+                                                                                swal.fire({
+                                                                                    text: "Are you sure you want to delete this?", 
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonColor: "#FF0000",
+                                                                                    cancelButtonColor: "#414741",
+                                                                                    confirmButtonText: "Yes!", 
+                                                                                    cancelButtonText: "No!", 
+                                                                                    customClass: {
+                                                                                        confirmButton: 'swal2-confirm-button', 
+                                                                                        cancelButton: 'swal2-cancel-button'
+                                                                                    }, 
+                                                                                }).then((result) => {
+                                                                                    if (result.isConfirmed) {
+                                                                                        deleteRegimen(regimen?._id); 
+                                                                                        // setRegimens([]); 
+                                                                                        getRegimens(regimenQuery); 
+                                                                                    }
+                                                                                });
+                                                                            }} 
+                                                                            className="cursor-pointer">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                                                </svg>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -102,13 +143,13 @@ export default function Index() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="d-flex justify-content-end pt-2">
+                                                                {/* <div className="d-flex justify-content-end pt-2">
                                                                     <Link 
                                                                         to={ route('home.regimens.edit', { id: regimen?._id }) }
                                                                         className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
                                                                         Update Regimen
                                                                     </Link>
-                                                                </div>
+                                                                </div> */}
 
                                                                 <div className="regimen w-100 d-flex justify-content-end gap-1 flex-wrap pt-3">
                                                                     <div>

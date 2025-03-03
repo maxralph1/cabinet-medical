@@ -7,7 +7,7 @@ export default function PaginationLinks({   items,
                                             set_query
                                         }) {
     return (
-        <section className="pagination-links d-flex justify-content-end align-items-center gap-3 pt-4">
+        <section className="pagination-links d-flex justify-content-end align-items-center gap-3 pt-3">
             <span 
                 type="button" 
                 onClick={ async () => { 

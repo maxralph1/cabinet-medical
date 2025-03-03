@@ -5,6 +5,8 @@ import User from '../../models/User.js';
 const refreshTokenHandler = async (req, res) => {
     const cookies = req?.cookies; 
 
+    console.log(cookies);
+
     if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" }); 
 
     const refresh = cookies?.jwt; 

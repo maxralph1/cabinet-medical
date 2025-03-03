@@ -29,8 +29,8 @@ export function useBlogPublicationLike(id = null) {
         // console.log(blogPublicationLike); 
         return axiosInstance.post(`blog/likes`, { article: blogPublication })
             .then(response => {
-                setData(response?.data?.data)
                 console.log(response); 
+                setData(response?.data?.data)
                 // swal.fire({
                 //     text: `Blog Publication liked.`,
                 //     color: '#f2f2f20', 
@@ -40,6 +40,8 @@ export function useBlogPublicationLike(id = null) {
                 // });
             })
             .catch(error => {
+                console.log(error); 
+                console.log(error?.response); 
                 setErrors(error?.response); 
                 if (error?.response?.status == 409) {
                     swal.fire({
@@ -49,16 +51,17 @@ export function useBlogPublicationLike(id = null) {
                         position: 'top', 
                         showConfirmButton: false
                     });
-                } else {
-                    swal.fire({
-                        text: `${error?.response?.status}: An error occured!`, 
-                        color: '#900000', 
-                        width: 325, 
-                        position: 'top', 
-                        showConfirmButton: false
-                    });
                 }
-                console.log(error);
+                // } else {
+                //     swal.fire({
+                //         text: `${error?.response?.status}: An error occured!`, 
+                //         color: '#900000', 
+                //         width: 325, 
+                //         position: 'top', 
+                //         showConfirmButton: false
+                //     });
+                // }
+                // console.log(error);
             })
             .finally(() => {
                 setLoading(false); 

@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const regimenAdministrationSchema = new Schema({
-        user: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        authorizing_professional: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        patient: { type: Schema.Types.ObjectId, ref: 'User' }, 
         regimen: { type: Schema.Types.ObjectId, ref: 'Regimen' }, 
         proposed_administration_date_time: { type: String }, 
         administered: { type: Boolean, default: false }, 

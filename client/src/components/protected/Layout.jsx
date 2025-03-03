@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import AuthContext from '@/context/AuthContext.jsx'; 
 import { Link, useLocation } from 'react-router-dom'; 
 import { route } from '@/routes'; 
-import TopNav from '@/components/protected/TopNav.jsx'; 
 
 
 export default function Layout({ children }) {
@@ -121,13 +120,6 @@ export default function Layout({ children }) {
                             className="fw-semibold">
                                 <Link to={ route('home.professionals.index') }>
                                     Professionals
-                                </Link>
-                        </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.departments.index') }>
-                                    Departments
                                 </Link>
                         </li>
                         <li 

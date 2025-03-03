@@ -39,14 +39,14 @@ const useAxios = () => {
         //     withCredentials: true 
         // }); 
 
-        const response = await axios.post(`${ baseURL }/auth/refresh-token`, {
-            headers: {
-                'Authorization': `Bearer ${ authTokens?.access }`, 
-                'Content-Type': 'application/json', 
+        const response = await axios.post(`${ baseURL }/auth/refresh-token`, 
+            {}, 
+            {
+                headers: {
+                    // 'Authorization': `Bearer ${ authTokens?.access }`, 
+                    'Content-Type': 'application/json', 
             }
-        }, { 
-            withCredentials: true 
-        }); 
+        }, { withCredentials: true }); 
 
         localStorage?.setItem('cabinet_medical_auth_tokens', JSON?.stringify(response?.data)); 
 
@@ -60,7 +60,7 @@ const useAxios = () => {
     axiosInstance.interceptors.response.use(
         response => response, 
         error => {
-            if (error?.response?.status === 401) { 
+            if ((error?.response?.status === 401) || (error == 'InvalidTokenError: Invalid token specified: must be a string')) { 
                 signOut();
                 navigate(route('sign-in'));
             }; 

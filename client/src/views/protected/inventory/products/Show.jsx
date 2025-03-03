@@ -1,4 +1,4 @@
-import { useState } from 'react'; 
+// import { useState } from 'react'; 
 import { Link, useParams } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import swal from 'sweetalert2'; 
@@ -33,7 +33,7 @@ export default function Show() {
                 </h2>
             </div>
 
-            <section className="product pt-3">
+            <section className="product-details pt-3">
                 <h3><span className="fs-6 fw-light">Product Name:&nbsp;</span>{ inventoryProduct?.data?.name }</h3>
 
                 <section className="categories pt-1 d-flex align-items-center">

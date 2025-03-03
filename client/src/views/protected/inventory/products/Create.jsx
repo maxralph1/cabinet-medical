@@ -319,7 +319,7 @@ export default function Create() {
                                         onClick={ () => {
                                             setProductUnits(prevItems => [...prevItems, productUnitComponents]); 
                                             setProductUnitComponents({});
-                                        }}
+                                        }} 
                                         className="btn btn-outline-secondary border-radius-25">
                                             Add Product Unit to List
                                     </button>
@@ -345,7 +345,7 @@ export default function Create() {
                                 })}
                             </ul>
                         </section>
-                    )}
+                    ) }
                     
                     <div className="row border-top pt-4">
                         {/* <div className="col-sm-12 col-md-6 d-flex justify-content-end pt-3"> */}
