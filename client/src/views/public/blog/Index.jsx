@@ -24,7 +24,7 @@ export default function Index() {
     const [blogPublicationQuery, setBlogPublicationQuery] = useState({
         range: 'all', 
         page: 1, 
-        limit: 1, 
+        limit: 10, 
     }); 
 
     const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery); 
@@ -53,7 +53,7 @@ export default function Index() {
         const wordCount = content.split(' ').length;
         const wordsPerMinute = 200; 
         return Math.ceil(wordCount / wordsPerMinute);
-    }
+    };
 
     return (
         <Layout>
@@ -115,11 +115,11 @@ export default function Index() {
                                                                     <span 
                                                                         className="" 
                                                                         style={{ marginTop: '0.1rem' }}>
-                                                                            {(blogPublication?.likes?.length > 0) && blogPublication.likes?.find(foundLike => foundLike?.user?._id == user?.user?.user_id)
+                                                                            {(blogPublication?.likes?.length > 0) && blogPublication?.likes?.find(foundLike => foundLike?.user?._id == user?.user?.user_id)
                                                                                 ? 
                                                                                 <button 
                                                                                     onClick={ async () => {
-                                                                                        await deleteBlogPublicationLike((blogPublication?.likes?.length > 0) && blogPublication.likes?.find(foundLike => foundLike?.user?._id == user?.user?.user_id));
+                                                                                        await deleteBlogPublicationLike((blogPublication?.likes?.length > 0) && blogPublication?.likes?.find(foundLike => foundLike?.user?._id == user?.user?.user_id));
                                                                                         await getBlogPublications(blogPublicationQuery); 
                                                                                     } }
                                                                                     className="text-decoration-none text-secondary d-flex align-items-center border-0 bg-transparent px-0">

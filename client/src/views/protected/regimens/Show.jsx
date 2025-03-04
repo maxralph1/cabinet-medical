@@ -100,7 +100,7 @@ export default function Show() {
                                                     }, 
                                                 }).then((result) => {
                                                     if (result.isConfirmed) {
-                                                        deleteRegimenUnit(item?._id); 
+                                                        deleteRegimenAdministration(item?._id); 
                                                         // setRegimens([]);
                                                         getRegimen(id); 
                                                     }

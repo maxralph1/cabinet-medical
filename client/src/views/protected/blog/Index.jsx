@@ -31,7 +31,8 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">
-                    <Link to={ route('home.blog.index') }>Blog</Link>&nbsp;Publications
+                    {/* <Link to={ route('home.blog.index') }>Blog</Link>&nbsp;Publications */}
+                    Blog Publications
                 </h2>
                 <Link to={ route('home.blog.publications.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
                     <span className="mb-1">

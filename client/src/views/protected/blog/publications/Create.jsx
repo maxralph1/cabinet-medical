@@ -43,38 +43,37 @@ export default function Create() {
     const [editorValue, setEditorValue] = useState('');
     /** End of Rich-text Editor */
 
-    const [selectedCategoryItems, setSelectedCategoryItems] = useState([]); 
-    console.log('selected:', selectedCategoryItems);
+    // const [selectedCategoryItems, setSelectedCategoryItems] = useState([]); 
+    // console.log('selected:', selectedCategoryItems);
 
     const handleSubmit = async e => {
         e.preventDefault(); 
         // console.log(editorValue); 
-        console.log(selectedCategoryItems); 
+        // console.log(selectedCategoryItems); 
 
-        const selectedCategoryItemsString = selectedCategoryItems.map(item => item._id).join(',');
-        console.log('id strings:', selectedCategoryItemsString);
+        // const selectedCategoryItemsString = selectedCategoryItems.map(item => item._id).join(',');
+        // console.log('id strings:', selectedCategoryItemsString);
 
-        // if ((selectedCategoryItems) && (selectedDiagnosisTypes?.length>0)) {
-        if ((selectedCategoryItems)?.length > 0) {
+        // if ((selectedCategoryItems)?.length > 0) {
             const formData = new FormData(); 
-            (selectedCategoryItems?.length>0) && formData.append('categories', selectedCategoryItemsString); 
+            // (selectedCategoryItems?.length>0) && formData.append('categories', selectedCategoryItemsString); 
             (image) && formData.append('image', blogPublication?.data?.image); 
             blogPublication?.data?.title && formData.append('title', blogPublication?.data?.title); 
             (editorValue) && formData.append('content', editorValue); 
 
             await createBlogPublication(formData); 
             await blogPublication?.setData({}); 
-            await setSelectedCategoryItems([]); 
+            // await setSelectedCategoryItems([]); 
             await setEditorValue(''); 
-        } else {
-            swal.fire({
-                text: `Please select a category.`, 
-                color: '#900000', 
-                width: 325, 
-                position: 'top', 
-                showConfirmButton: false
-            });
-        }
+        // } else {
+        //     swal.fire({
+        //         text: `Please select a category.`, 
+        //         color: '#900000', 
+        //         width: 325, 
+        //         position: 'top', 
+        //         showConfirmButton: false
+        //     });
+        // }
     }; 
 
     return (
@@ -95,9 +94,9 @@ export default function Create() {
             <section className="pt-4">
                 <form onSubmit={ handleSubmit } id="blog-publication-form" className="blog-publication-form">
                     <div className="row">
-                        <SelectedCategoryComponent 
+                        {/* <SelectedCategoryComponent 
                             selectedCategoryItems={ selectedCategoryItems } 
-                            setSelectedCategoryItems={ setSelectedCategoryItems } />
+                            setSelectedCategoryItems={ setSelectedCategoryItems } /> */}
                     </div>
                     <div className="image row g-2 ">
                         <div className="mb-3 position-relative"> 

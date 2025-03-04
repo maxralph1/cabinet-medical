@@ -54,7 +54,6 @@ import ProtectedDiagnosisEdit from '@/views/protected/diagnoses/Edit.jsx';
 import ProtectedDiagnosisCreate from '@/views/protected/diagnoses/Create.jsx'; 
 import ProtectedDiagnosesIndex from '@/views/protected/diagnoses/Index.jsx'; 
 
-import ProtectedDiagnosisTypeShow from '@/views/protected/diagnosis-types/Show.jsx'; 
 import ProtectedDiagnosisTypeEdit from '@/views/protected/diagnosis-types/Edit.jsx'; 
 import ProtectedDiagnosisTypeCreate from '@/views/protected/diagnosis-types/Create.jsx'; 
 import ProtectedDiagnosisTypesIndex from '@/views/protected/diagnosis-types/Index.jsx'; 
@@ -197,7 +196,6 @@ function App() {
               <Route path={ route('home.diagnoses.create') } element={ <ProtectedDiagnosisCreate /> } />
               <Route path={ route('home.diagnoses.index') } element={ <ProtectedDiagnosesIndex /> } /> 
 
-              <Route path={ route('home.diagnosis-types.show') } element={ <ProtectedDiagnosisTypeShow /> } />
               <Route path={ route('home.diagnosis-types.edit') } element={ <ProtectedDiagnosisTypeEdit /> } />
               <Route path={ route('home.diagnosis-types.create') } element={ <ProtectedDiagnosisTypeCreate /> } />
               <Route path={ route('home.diagnosis-types.index') } element={ <ProtectedDiagnosisTypesIndex /> } /> 

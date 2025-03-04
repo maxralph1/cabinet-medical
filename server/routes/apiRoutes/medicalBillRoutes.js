@@ -11,9 +11,21 @@ import { getMedicalBills,
         restoreMedicalBill, 
         destroyMedicalBill
 } from '../../controllers/medicalBillController.js'; 
+import { createMedicalBillPayment, 
+        captureMedicalBillPayment, 
+        authorizeMedicalBillPayment, 
+        captureAuthorisedMedicalBillPayment
+} from '../../controllers/medicalBillPaymentController.js'; 
 
 
 medicalBillRouter.use(authenticated); 
+
+/** Additional Routes */
+/** Payment */ 
+medicalBillRouter.post('/payment', createMedicalBillPayment); 
+medicalBillRouter.post('/payment/:orderID/capture', captureMedicalBillPayment); 
+medicalBillRouter.post('/payment/:orderID/authorize', authorizeMedicalBillPayment); 
+medicalBillRouter.post('/payment/:authorizationId/captureAuthorize', captureAuthorisedMedicalBillPayment); 
 
 medicalBillRouter.route('/')
                 .get(getMedicalBills,)

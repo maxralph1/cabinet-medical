@@ -14,9 +14,10 @@ import Layout from '@/components/protected/Layout.jsx';
 
 export default function Show() {
     const { id } = useParams(); 
-    const { inventoryProductUnit, deleteInventoryProductUnit } = useInventoryProductUnit(); 
     const { inventoryProduct, getInventoryProduct } = useInventoryProduct(id); 
     console.log(inventoryProduct); 
+
+    const { inventoryProductUnit, deleteInventoryProductUnit } = useInventoryProductUnit(); 
 
     return (
         <Layout>
@@ -78,15 +79,15 @@ export default function Show() {
                     <section className="product-units pt-4">
                         <h4 className="fs-5">Product Units:&nbsp;&nbsp;</h4>
                         <ul className="list-unstyled pt-1">
-                            { inventoryProduct?.data?.product_units?.map((item, index) => (
+                            { inventoryProduct?.data?.product_units?.map((unit, index) => (
                                 <li key={index} className="product-unit pb-2 d-flex">
                                     <span>{ index+1 }.&nbsp;</span>
 
                                     <div className="d-flex flex-column">
-                                        <span>Product Number:&nbsp;<span className="fw-semibold">{ item?.product_number }</span></span>
-                                        <span>Amount Purchased:&nbsp;<span className="fw-semibold">{ item?.amount_purchased }</span></span>
-                                        <span>Manufacture Date:&nbsp;<span className="fw-semibold">{ item?.manufacture_date }</span></span>
-                                        <span>Expiration Date:&nbsp;<span className="fw-semibold">{ item?.expiration_date }</span></span>
+                                        <p className="mb-0">Product Number:&nbsp;<span className="fw-semibold">{ unit?.product_number }</span></p>
+                                        <p className="mb-0">Amount Purchased:&nbsp;<span className="fw-semibold">{ unit?.amount_purchased }</span></p>
+                                        <p className="mb-0">Manufacture Date:&nbsp;<span className="fw-semibold">{ dayjs(unit?.manufacture_date).format('ddd, MMM D, YYYY h:mm A') }</span></p>
+                                        <p className="mb-0">Manufacture Date:&nbsp;<span className="fw-semibold">{ dayjs(unit?.expiration_date).format('ddd, MMM D, YYYY h:mm A') }</span></p>
                                     </div>
 
                                     <div>

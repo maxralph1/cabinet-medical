@@ -72,7 +72,7 @@ export function useDiagnosisType(id = null) {
         // console.log(id, page, limit);
 
         return axiosInstance.get(`diagnosis-types/${id}?page=${page}&limit=${limit}`)
-            .then(response => setData(response?.data))
+            .then(response => setData(response?.data?.data))
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false));
     } 
@@ -83,7 +83,7 @@ export function useDiagnosisType(id = null) {
         console.log(diagnosisType);
 
         return axiosInstance.put(`diagnosis-types/${id}`, diagnosisType)
-            .then(() => navigate(route('home.diagnosisTypes.index')))
+            .then(() => navigate(route('home.diagnosis-types.index')))
             .catch(error => setErrors(error?.response))
             .finally(() => {
                 setLoading(false); 
@@ -96,7 +96,7 @@ export function useDiagnosisType(id = null) {
         return axiosInstance.patch(`diagnosis-types/${diagnosisType}`)
             .then(() => {})
             .catch(error => {
-                // console.log(error?.response); 
+                console.log(error); 
                 setErrors(error?.response); 
             })
             .finally(() => setLoading(false)); 

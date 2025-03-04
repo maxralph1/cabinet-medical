@@ -79,7 +79,10 @@ const getBlogArticles = asyncHandler(async (req, res) => {
  * Create Blog Article
  */
 const createBlogArticle = asyncHandler(async (req, res) => {
-    const { title, content, categories } = req?.body; 
+    const { title, 
+            content, 
+            // categories 
+        } = req?.body; 
 
     let blogArticleImageUpload = {};
     if (!req?.files?.image) {
@@ -100,24 +103,24 @@ const createBlogArticle = asyncHandler(async (req, res) => {
         content 
     }); 
 
-    const categories_array = categories.split(','); 
-    console.log('categories:',categories_array);
+    // const categories_array = categories.split(','); 
+    // console.log('categories:',categories_array);
 
-    if (categories && categories?.length === 0) { 
+    // if (categories && categories?.length === 0) { 
 
-        return res.status(400).json({ message: 'No categories. You must add at least one category!' }); 
+    //     return res.status(400).json({ message: 'No categories. You must add at least one category!' }); 
 
-    } else if (categories && categories?.length > 0) { 
-        const categoriesResolve = categories_array?.map(async (category, index) => { 
-            await BlogArticleCategory.create({
-                user: req?.user_id, 
-                blog_article: blogArticle?._id, 
-                blog_category: category, 
-            });
-        }); 
+    // } else if (categories && categories?.length > 0) { 
+    //     const categoriesResolve = categories_array?.map(async (category, index) => { 
+    //         await BlogArticleCategory.create({
+    //             user: req?.user_id, 
+    //             blog_article: blogArticle?._id, 
+    //             blog_category: category, 
+    //         });
+    //     }); 
 
-        await Promise.all(categoriesResolve); 
-    };
+    //     await Promise.all(categoriesResolve); 
+    // };
 
     blogArticle.save()
                 .then(() => {
@@ -141,20 +144,26 @@ const getBlogArticle = asyncHandler(async (req, res) => {
 
     if (!blogArticle) return res.status(404).json({ message: "Blog Article not found!" }); 
 
-    const categories = await BlogArticleCategory.find({ blog_article: blogArticle?._id })
-                                                .sort('-created_at')
-                                                .populate({
-                                                    path: 'user',
-                                                    select: 'first_name last_name username'
-                                                })
-                                                .populate({
-                                                    path: 'blog_category', 
-                                                })
-                                                .lean(); 
+    const comments = await BlogArticleComment.find({ blog_article: blogArticle?._id, deleted_at: null })
+                                            .sort('-created_at')
+                                            .populate({
+                                                path: 'user',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .lean(); 
+
+    const likes = await BlogArticleLike.find({ blog_article: blogArticle?._id, deleted_at: null })
+                                        .sort('-created_at')
+                                        .populate({
+                                            path: 'user',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .lean(); 
 
     let blogArticleObj = blogArticle; 
 
-    blogArticleObj.categories = categories; 
+    blogArticleObj.comments = comments; 
+    blogArticleObj.likes = likes; 
 
     res.json({ data: blogArticleObj }); 
 }); 

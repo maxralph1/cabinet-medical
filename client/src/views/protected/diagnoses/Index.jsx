@@ -7,7 +7,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
+import swal from 'sweetalert2'; 
 import { useDiagnoses } from '@/hooks/useDiagnoses.jsx'; 
+import { useDiagnosis } from '@/hooks/useDiagnosis.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
@@ -24,6 +26,8 @@ export default function Index() {
     }); 
     const { diagnoses, getDiagnoses, loading } = useDiagnoses(diagnosisQuery); 
     console.log(diagnoses); 
+
+    const { deleteDiagnosis } = useDiagnosis(); 
 
     return (
         <Layout>
@@ -112,20 +116,121 @@ export default function Index() {
                                                                             
                                                                         </div>
                                                                     </section>
-                                                                    <div>
-                                                                        <span 
-                                                                            type="button" 
-                                                                            data-bs-toggle="modal" data-bs-target={`#diagnosis${diagnosis?._id}Modal`}
-                                                                            className="btn btn-sm btn-outline-secondary border-radius-35 py-0">Details</span>
-                                                                    </div>
-                                                                </div>
+                                                                    <div className="d-flex gap-2">
+                                                                        <div>
+                                                                            <span 
+                                                                                type="button" 
+                                                                                data-bs-toggle="modal" data-bs-target={`#diagnosis${diagnosis?._id}Modal`}>
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-view-list text-info" viewBox="0 0 16 16">
+                                                                                    <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2m0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14"/>
+                                                                                </svg>
+                                                                            </span>
 
-                                                                <div className="d-flex justify-content-end pt-2">
-                                                                    <Link 
-                                                                        to={ route('home.diagnoses.edit', { id: diagnosis?._id }) }
-                                                                        className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
-                                                                        Update (with Results)
-                                                                    </Link>
+                                                                            <section className="modal fade" id={`diagnosis${diagnosis?._id}Modal`} tabIndex="-1" aria-labelledby={`diagnosis${diagnosis?._id}ModalLabel`} aria-hidden="true">
+                                                                                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                                                    <div className="modal-content">
+                                                                                        <div className="modal-header d-flex justify-content-end">
+                                                                                            <h3 className="visually-hidden" id={`diagnosis${diagnosis?._id}ModalLabel`}>Diagnosis { diagnosis?._id }</h3>
+                                                                                            <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent">
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                                                                </svg>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div className="modal-body">
+                                                                                            <p>Patient:&nbsp;
+                                                                                                <span className="fw-semibold">
+                                                                                                    { diagnosis?.patient ? ((diagnosis?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.first_name)?.slice(1)) + ' ' + ((diagnosis?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.last_name)?.slice(1)) : 'N/A' }
+                                                                                                </span>
+                                                                                            </p>
+                                                                                            <p>Authorizing Professional:&nbsp;
+                                                                                                <span className="fw-semibold">
+                                                                                                    { diagnosis?.authorizing_professional ? ((diagnosis?.authorizing_professional?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.authorizing_professional?.first_name)?.slice(1)) + ' ' + ((diagnosis?.authorizing_professional?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.authorizing_professional?.last_name)?.slice(1)) : 'N/A' }
+                                                                                                </span>
+                                                                                            </p>
+                                                                                            <p>Examiner:&nbsp;
+                                                                                                <span className="fw-semibold">
+                                                                                                    { diagnosis?.examiner ? ((diagnosis?.examiner?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.examiner?.first_name)?.slice(1)) + ' ' + ((diagnosis?.examiner?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.examiner?.last_name)?.slice(1)) : 'N/A' }
+                                                                                                </span>
+                                                                                            </p>
+
+                                                                                            { (diagnosis?.diagnosis_segments?.length > 0) && (
+                                                                                                <section className="diagnosis-segments pt-2">
+                                                                                                    <h3 className="border-bottom fs-6">Tests</h3>
+                                                                                                    <div className="table-responsive">
+                                                                                                        <table className="table">
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                <th scope="col">#</th>
+                                                                                                                <th scope="col">Type</th>
+                                                                                                                <th scope="col">Result</th>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tbody className="table-group-divider">
+                                                                                                                { diagnosis?.diagnosis_segments?.map((segment, index) => {
+                                                                                                                    return (
+                                                                                                                        <tr key={ segment?._id } className="diagnosis-segment">
+                                                                                                                            <th scope="row">{ index+1}</th>
+                                                                                                                            <td>{ segment?.diagnosis_type?.title }</td>
+                                                                                                                            <td>{ segment?.result ? segment?.result : 'N/A' }</td>
+                                                                                                                        </tr>
+                                                                                                                    )
+                                                                                                                }) }
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </section>
+                                                                                            ) }
+
+                                                                                            <section className="notes pt-3">
+                                                                                                <h3 className="border-bottom fs-6 fst-italic">Notes by Authorizing Professional</h3>
+                                                                                                <p>{ diagnosis?.notes ? diagnosis?.notes : 'N/A' }</p>
+                                                                                            </section>
+
+                                                                                            <section className="comments pt-3">
+                                                                                                <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(lab. Scientist):</h3>
+                                                                                                <p>{ diagnosis?.comments ? diagnosis?.comments : 'N/A' }</p>
+                                                                                            </section>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </section>
+                                                                        </div>
+                                                                        <span>
+                                                                            <Link to={ route('home.diagnoses.edit', { id: diagnosis?._id }) }>
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-fill text-warning" viewBox="0 0 16 16">
+                                                                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                                                </svg>
+                                                                            </Link>
+                                                                        </span>
+                                                                        <span 
+                                                                            onClick={ () => {
+                                                                                swal.fire({
+                                                                                    text: "Are you sure you want to delete this?", 
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonColor: "#FF0000",
+                                                                                    cancelButtonColor: "#414741",
+                                                                                    confirmButtonText: "Yes!", 
+                                                                                    cancelButtonText: "No!", 
+                                                                                    customClass: {
+                                                                                        confirmButton: 'swal2-confirm-button', 
+                                                                                        cancelButton: 'swal2-cancel-button'
+                                                                                    }, 
+                                                                                }).then((result) => {
+                                                                                    if (result.isConfirmed) {
+                                                                                        deleteDiagnosis(diagnosis?._id); 
+                                                                                        // setDiagnosiss([]);
+                                                                                        getDiagnoses(diagnosisQuery); 
+                                                                                    }
+                                                                                });
+                                                                            }} 
+                                                                            className="cursor-pointer">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                                                </svg>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
 
                                                                 <section className="diagnosis w-100 d-flex justify-content-end gap-4 flex-wrap pt-3">
@@ -141,76 +246,6 @@ export default function Index() {
                                                                         <span>
                                                                             { dayjs(diagnosis?.updated_at||diagnosis?.created_at).format('ddd, MMM D, YYYY h:mm A') }
                                                                         </span>
-                                                                    </div>
-                                                                </section>
-                                                                <section className="modal fade" id={`diagnosis${diagnosis?._id}Modal`} tabIndex="-1" aria-labelledby={`diagnosis${diagnosis?._id}ModalLabel`} aria-hidden="true">
-                                                                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                                                        <div className="modal-content">
-                                                                            <div className="modal-header d-flex justify-content-end">
-                                                                                <h3 className="visually-hidden" id={`diagnosis${diagnosis?._id}ModalLabel`}>Diagnosis { diagnosis?._id }</h3>
-                                                                                <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                                                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                                                    </svg>
-                                                                                </button>
-                                                                            </div>
-                                                                            <div className="modal-body">
-                                                                                <p>Patient:&nbsp;
-                                                                                    <span className="fw-semibold">
-                                                                                        { diagnosis?.patient ? ((diagnosis?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.first_name)?.slice(1)) + ' ' + ((diagnosis?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.last_name)?.slice(1)) : 'N/A' }
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p>Authorizing Professional:&nbsp;
-                                                                                    <span className="fw-semibold">
-                                                                                        { diagnosis?.authorizing_professional ? ((diagnosis?.authorizing_professional?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.authorizing_professional?.first_name)?.slice(1)) + ' ' + ((diagnosis?.authorizing_professional?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.authorizing_professional?.last_name)?.slice(1)) : 'N/A' }
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p>Examiner:&nbsp;
-                                                                                    <span className="fw-semibold">
-                                                                                        { diagnosis?.examiner ? ((diagnosis?.examiner?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.examiner?.first_name)?.slice(1)) + ' ' + ((diagnosis?.examiner?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.examiner?.last_name)?.slice(1)) : 'N/A' }
-                                                                                    </span>
-                                                                                </p>
-
-                                                                                { (diagnosis?.diagnosis_segments?.length > 0) && (
-                                                                                    <section className="diagnosis-segments pt-2">
-                                                                                        <h3 className="border-bottom fs-6">Tests</h3>
-                                                                                        <div className="table-responsive">
-                                                                                            <table className="table">
-                                                                                                <thead>
-                                                                                                    <tr>
-                                                                                                    <th scope="col">#</th>
-                                                                                                    <th scope="col">Type</th>
-                                                                                                    <th scope="col">Result</th>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody className="table-group-divider">
-                                                                                                    { diagnosis?.diagnosis_segments?.map((segment, index) => {
-                                                                                                        return (
-                                                                                                            <tr key={ segment?._id } className="diagnosis-segment">
-                                                                                                                <th scope="row">{ index+1}</th>
-                                                                                                                <td>{ segment?.diagnosis_type?.title }</td>
-                                                                                                                <td>{ segment?.result ? segment?.result : 'N/A' }</td>
-                                                                                                            </tr>
-                                                                                                        )
-                                                                                                    }) }
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </section>
-                                                                                ) }
-
-                                                                                <section className="notes pt-3">
-                                                                                    <h3 className="border-bottom fs-6 fst-italic">Notes by Authorizing Professional</h3>
-                                                                                    <p>{ diagnosis?.notes ? diagnosis?.notes : 'N/A' }</p>
-                                                                                </section>
-
-                                                                                <section className="comments pt-3">
-                                                                                    <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(lab. Scientist):</h3>
-                                                                                    <p>{ diagnosis?.comments ? diagnosis?.comments : 'N/A' }</p>
-                                                                                </section>
-
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                 </section>
                                                             </li> 

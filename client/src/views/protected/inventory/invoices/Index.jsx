@@ -28,7 +28,13 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">
-                    <Link to={ route('home.inventory.index') }>Inventory</Link>&nbsp;Invoices
+                    <Link to={ route('home.inventory.index') }>Inventory</Link>&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        className="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                    </svg>&nbsp;
+                    <span>Invoices</span>
                 </h2>
                 <Link to={ route('home.inventory.invoices.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
                     <span className="mb-1">
@@ -139,7 +145,7 @@ export default function Index() {
                                                                         <Link 
                                                                             to={ route('home.inventory.invoices.show', { id: inventoryInvoice?._id }) } 
                                                                             className="d-flex flex-column text-decoration-none">
-                                                                            <span>
+                                                                            <span style={{ fontSize: 'x-small' }}>
                                                                                 <span>Invoice #:</span>&nbsp;
                                                                                 <span className="fw-semibold text-uppercase">{ inventoryInvoice?._id }</span>
                                                                             </span>
@@ -203,11 +209,13 @@ export default function Index() {
                                                                         </span>
                                                                     </div>
                                                                 </div>
-                                                                <div className="d-flex justify-content-end">
-                                                                    <Link 
-                                                                        to={ route('home.inventory.invoices.pay', { id: inventoryInvoice?._id }) } 
-                                                                        className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Pay Invoice</Link>
-                                                                </div>
+                                                                { (!inventoryInvoice?.paid_at) && (
+                                                                    <div className="d-flex justify-content-end">
+                                                                        <Link 
+                                                                            to={ route('home.inventory.invoices.pay', { id: inventoryInvoice?._id }) } 
+                                                                            className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Pay Invoice</Link>
+                                                                    </div>
+                                                                ) }
                                                             </li> 
                                                         )
                                                     })) }

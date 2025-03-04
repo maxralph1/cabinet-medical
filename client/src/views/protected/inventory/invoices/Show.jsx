@@ -223,7 +223,14 @@ export default function Show() {
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">
                     <Link 
-                        to={ route('home.inventory.invoices.index') } className="">Inventory Invoices</Link>&nbsp;
+                        to={ route('home.inventory.index') } className="">Inventory</Link>&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        className="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                    </svg>&nbsp;
+                    <Link 
+                        to={ route('home.inventory.invoices.index') } className="">Invoices</Link>&nbsp;
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         className="bi bi-caret-right-fill" viewBox="0 0 16 16">
                         <path
@@ -258,20 +265,23 @@ export default function Show() {
 
                 <section className="d-flex align-items-center gap-3">
                     <div>
-                        <span>Amount Payable:</span>&nbsp;
-                        <span className="fw-bold fs-2">
+                        { (inventoryInvoice?.data?.paid_at) 
+                            ? <span>Amount Paid:</span>
+                            : <span>Amount Payable:</span>}
+                        &nbsp;
+                        <span className="fw-bold fs-4">
                             {(inventoryInvoice?.data?.products?.reduce((total, product) => {
                                 return total + Number(product?.inventory_product_unit?.amount_purchased || 0);
-                            }, 0))?.toFixed(2)} MUR
+                            }, 0))?.toFixed(2)}&nbsp;<span className="fs-6">MUR</span>
                         </span>
                     </div>
-                    { (!payWithCard) && (
+                    { ((!payWithCard) && (!inventoryInvoice?.data?.paid_at)) && (
                         <div>
                             <button 
                                 onClick={ () => {
                                     setPayWithCard(!payWithCard); 
                                 } }
-                                className="btn btn-sm btn-outline-secondary border-radius-25 fw-bold fs-5 px-3">Pay with&nbsp;
+                                className="btn btn-sm btn-outline-secondary border-radius-25 fw-bold fs-6 px-3">Pay&nbsp;
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-credit-card-fill" viewBox="0 0 16 16">
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1"/>
                                 </svg>
@@ -374,34 +384,36 @@ export default function Show() {
                                         ) }
                                     </div>
 
-                                    <div className="ms-3">
-                                        <span 
-                                            onClick={ () => {
-                                                swal.fire({
-                                                    text: "Are you sure you want to delete this?", 
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: "#FF0000",
-                                                    cancelButtonColor: "#414741",
-                                                    confirmButtonText: "Yes!", 
-                                                    cancelButtonText: "No!", 
-                                                    customClass: {
-                                                        confirmButton: 'swal2-confirm-button', 
-                                                        cancelButton: 'swal2-cancel-button'
-                                                    }, 
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        deleteInventoryProductUnit(item?._id); 
-                                                        // setInventoryProducts([]);
-                                                        getInventoryProduct(id); 
-                                                    }
-                                                });
-                                            }} 
-                                            className="cursor-pointer">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                </svg>
-                                        </span>
-                                    </div>
+                                    { (!inventoryInvoice?.data?.paid_at) && (
+                                        <div className="ms-3">
+                                            <span 
+                                                onClick={ () => {
+                                                    swal.fire({
+                                                        text: "Are you sure you want to delete this?", 
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: "#FF0000",
+                                                        cancelButtonColor: "#414741",
+                                                        confirmButtonText: "Yes!", 
+                                                        cancelButtonText: "No!", 
+                                                        customClass: {
+                                                            confirmButton: 'swal2-confirm-button', 
+                                                            cancelButton: 'swal2-cancel-button'
+                                                        }, 
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            deleteInventoryProductUnit(item?._id); 
+                                                            // setInventoryProducts([]);
+                                                            getInventoryProduct(id); 
+                                                        }
+                                                    });
+                                                }} 
+                                                className="cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                    </svg>
+                                            </span>
+                                        </div>
+                                    ) }
                                 </li>
                             )) }
                         </ul>

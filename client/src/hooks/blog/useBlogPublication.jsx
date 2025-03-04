@@ -83,7 +83,8 @@ export function useBlogPublication(id = null) {
         console.log(blogPublication);
 
         return axiosInstance.put(`blog/articles/${id}`, blogPublication)
-            .then(() => navigate(route('home.blog.publications.index')))
+            // .then(() => navigate(route('home.blog.publications.index')))
+            .then(() => navigate(route('home.blog.index')))
             .catch(error => setErrors(error?.response))
             .finally(() => {
                 setLoading(false); 
