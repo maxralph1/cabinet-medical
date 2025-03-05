@@ -150,7 +150,10 @@ export default function Index() {
                                                                                 <span className="fw-semibold text-uppercase">{ inventoryInvoice?._id }</span>
                                                                             </span>
                                                                             <span>
-                                                                                <span>Amount Payable:</span>&nbsp;
+                                                                                <span>Amount&nbsp;
+                                                                                    { (inventoryInvoice?.payment_status == 'paid') 
+                                                                                        ? 'Paid' 
+                                                                                        : 'Payable' }:</span>&nbsp;
                                                                                 <span className="fw-semibold">
                                                                                     {inventoryInvoice?.products?.reduce((total, product) => {
                                                                                         return total + Number(product?.inventory_product_unit?.amount_purchased || 0);

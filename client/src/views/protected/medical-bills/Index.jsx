@@ -6,7 +6,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
+import swal from 'sweetalert2'; 
 import { useMedicalBills } from '@/hooks/useMedicalBills.jsx'; 
+import { useMedicalBill } from '@/hooks/useMedicalBill.jsx'; 
 import PaginationMeter from '@/components/PaginationMeter.jsx';
 import PaginationLinks from '@/components/PaginationLinks.jsx';
 import Layout from '@/components/protected/Layout.jsx'; 
@@ -20,6 +22,8 @@ export default function Index() {
     }); 
     const { medicalBills, getMedicalBills, loading } = useMedicalBills(medicalBillQuery); 
     console.log(medicalBills); 
+
+    const { deleteMedicalBill } = useMedicalBill(); 
 
     return (
         <Layout>
@@ -143,7 +147,7 @@ export default function Index() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="medical-bill w-100 d-flex justify-content-end gap-1 flex-wrap pt-3">
+                                                                <div className="medical-bill w-100 d-flex justify-content-end gap-1 flex-wrap pt-2">
                                                                     <div>
                                                                         <small className="text-secondary">Last activity:&nbsp;</small>
                                                                     </div>
@@ -161,6 +165,13 @@ export default function Index() {
                                                                         </span>
                                                                     </div>
                                                                 </div>
+                                                                { (!medicalBill?.fully_paid_on) && (
+                                                                    <div className="d-flex justify-content-end pt-3">
+                                                                        <Link 
+                                                                            to={ route('home.medical-bills.show', { id: medicalBill?._id }) } 
+                                                                            className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Pay Bill</Link>
+                                                                    </div>
+                                                                ) }
                                                             </li>
                                                         )
                                                     }))}

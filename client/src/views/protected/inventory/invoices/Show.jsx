@@ -37,8 +37,7 @@ export default function Show() {
     /** PayPal logic */
     const [isPaying, setIsPaying] = useState(false);
     const initialOptions = {
-        "client-id": `${Constants?.paypalClientID}`,
-            // "AYOeyCQvilLVKJGjslZfFSi_Nkl7A6OfXNarj5lS55iUcQXMhpp3AypVjAVkS_qvPcO5D415b9SnBFuN",
+        "client-id": `${Constants?.paypalClientID}`, 
         "enable-funding": "venmo",
         "disable-funding": "paylater",
         "buyer-country": "US",

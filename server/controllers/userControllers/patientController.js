@@ -17,28 +17,28 @@ const getPatients = asyncHandler(async (req, res) => {
 
     let users, usersCount;
 
-    if (searchQuery) {
-        // users = await User.find({ $or: [{ first_name: searchQuery }, { last_name: searchQuery }] })
-        users = await User.find({ $and: [
-                                {
-                                    $or: [{ first_name: searchQuery }, { last_name: searchQuery }]
-                                },
-                                { deleted_at: null },
-                                { role: 'patient' }
-                            ] })
-                            .select(['-password', '-password_reset_token', '-updated_at'])
-                            .sort('-created_at')
-                            .skip(skip)
-                            .limit(limit)
-                            .lean(); 
-    } else {
+    // if (searchQuery) {
+    //     // users = await User.find({ $or: [{ first_name: searchQuery }, { last_name: searchQuery }] })
+    //     users = await User.find({ $and: [
+    //                             {
+    //                                 $or: [{ first_name: searchQuery }, { last_name: searchQuery }]
+    //                             },
+    //                             { deleted_at: null },
+    //                             { role: 'patient' }
+    //                         ] })
+    //                         .select(['-password', '-password_reset_token', '-updated_at'])
+    //                         .sort('-created_at')
+    //                         .skip(skip)
+    //                         .limit(limit)
+    //                         .lean(); 
+    // } else {
         users = await User.find({ deleted_at: null, role: 'patient' })
                         .select(['-password', '-password_reset_token', '-updated_at'])
                         .sort('-created_at')
                         .skip(skip)
                         .limit(limit)
                         .lean(); 
-    }
+    // }
 
     if (!users?.length) return res.status(404).json({ message: "No users found!" }); 
 

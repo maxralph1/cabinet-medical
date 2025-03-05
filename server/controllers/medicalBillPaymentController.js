@@ -16,57 +16,22 @@ const createMedicalBillPayment = async (req, res) => {
     try {
         const { medicalBill } = req?.body; 
 
-        const foundMedicalBill = await InventoryMedicalBill.findById(medicalBill); 
+        const foundMedicalBill = await MedicalBill.findById(medicalBill); 
         if (!foundMedicalBill) {
-            return res.status(404).json({ message: 'MedicalBill not found' });
+            return res.status(404).json({ message: 'Medical Bill not found' });
         }; 
 
-        let totalPayable;
-
-        const itemsAssociatedWithMedicalBill = await InventoryProductMedicalBill.find({ inventory_medicalBill: medicalBill })
-                                                                        .populate({
-                                                                            path: 'inventory_product_unit',
-                                                                            populate: {
-                                                                                path: 'inventory_product', 
-                                                                            }
-                                                                        })
-                                                                        .lean(); 
-
-        console.log('associated items:', itemsAssociatedWithMedicalBill);
-        if (!itemsAssociatedWithMedicalBill) {
-            return res.status(404).json({ message: 'No items associated with medicalBill' }); 
-        }; 
-
-        totalPayable = (itemsAssociatedWithMedicalBill?.reduce((total, item) => {
-            return total + Number(item?.inventory_product_unit?.amount_purchased || 0);
-        }, 0))?.toFixed(2); 
+        const totalPayable = foundMedicalBill?.amount; 
 
         console.log('Payable:', totalPayable); 
 
         const { jsonResponse, httpStatusCode } = await createOrder(totalPayable); 
 
-        const updateProductsPaymentStatusResolve = itemsAssociatedWithMedicalBill?.map( async(item, index) => {
-            try {
-                const productUnitFilter = { _id: item?.inventory_product_unit?._id }; 
-                const productUnitUpdate = { payment_status: 'paid', inventory_medicalBill: foundMedicalBill?._id }; 
-
-                const updatedProductUnit = await InventoryProductUnit.findOneAndUpdate(productUnitFilter, productUnitUpdate, {
-                    new: true,  
-                }) 
-                if (!updatedProductUnit) return res.status(404).json({ message: 'Product Unit not found' });
-                console.log('updated product unit', updatedProductUnit); 
-            } catch (error) {
-                return res.status(500).json({ message: error.message });
-            }
-        }); 
-        // updateProductsPaymentStatusResolve(); 
-        await Promise.all(updateProductsPaymentStatusResolve); 
-
         const medicalBillFilter = { _id: foundMedicalBill?._id }; 
         const medicalBillUpdate = { paypal_order_id: jsonResponse?.id,  
-                                total_paid: totalPayable }; 
+                                    total_paid: totalPayable }; 
 
-        const updatedMedicalBill = await InventoryMedicalBill.findOneAndUpdate(medicalBillFilter, medicalBillUpdate, {
+        const updatedMedicalBill = await MedicalBill.findOneAndUpdate(medicalBillFilter, medicalBillUpdate, {
             new: true,  
         }) 
         if (!updatedMedicalBill) return res.status(404).json({ message: 'MedicalBill not found' });
@@ -104,10 +69,10 @@ const captureMedicalBillPayment = async (req, res) => {
                                                     ? 'card' 
                                                         : 'cash', 
                                 paypal_payer_id: (jsonResponse?.payment_source?.paypal?.account_id || null),
-                                paid: true, 
-                                paid_at: new Date().toISOString() }; 
+                                fully_paid: true, 
+                                fully_paid_on: new Date().toISOString() }; 
 
-        await InventoryMedicalBill.findOneAndUpdate(medicalBillFilter, medicalBillUpdate, {
+        await MedicalBill.findOneAndUpdate(medicalBillFilter, medicalBillUpdate, {
             new: true
         }); 
 

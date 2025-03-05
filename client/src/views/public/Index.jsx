@@ -1,3 +1,8 @@
+import { useState } from 'react'; 
+import { Link } from 'react-router-dom'; 
+import { route } from '@/routes'; 
+import swal from 'sweetalert2'; 
+import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx'; 
 import Layout from '@/components/public/Layout.jsx'; 
 import NazimImage from '@/assets/images/nazim-transparent.png'; 
 
@@ -6,13 +11,46 @@ export default function Index() {
     const date = new Date();
     const hour = date.getHours(); 
 
+    function submitConsultationForm (e) {
+        e.preventDefault(); 
+
+        swal.fire({
+            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided as soon as an available slot is booked. Thanks!`, 
+            color: '#f2f2f20', 
+            width: 325, 
+            position: 'top', 
+            showConfirmButton: false
+        });
+    };
+
+    function submitContactForm (e) {
+        e.preventDefault(); 
+
+        swal.fire({
+            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided.`, 
+            color: '#f2f2f20', 
+            width: 325, 
+            position: 'top', 
+            showConfirmButton: false
+        });
+    }; 
+
+    const [blogPublicationQuery, setBlogPublicationQuery] = useState({
+        range: 'all', 
+        page: 1, 
+        limit: 4, 
+    }); 
+
+    const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery); 
+    console.log(blogPublications)
+
     return (
         <Layout>
             <>
-                <section className="hero row align-items-center pt-4">
+                <section className="hero row align-items-center">
                     <div className="col-12 col-md-6">
                         <h2 className="text-center text-md-start fs-1">
-                            <span className="fw-light">Good&nbsp;
+                            {/* <span className="fw-light">Good&nbsp;
                                 { hour < 12 
                                     ? 'morning' 
                                         : hour < 16 
@@ -20,16 +58,16 @@ export default function Index() {
                                             : hour >= 16 
                                             ? 'evening' 
                                                 : '' }
-                            !</span>&nbsp;
+                            !</span>&nbsp; */}
                             <span>Welcome to Cabinet Medical Clinic.</span>
                         </h2>
                         <p className="text-center text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
                             <span>Ready to enhance your health and wellness?</span>
                             <span>We can be of help.</span></p>
-                        <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p>
                         <p className="text-center text-md-start">
-                            <a href="#" className="btn btn-outline-info border-radius-35">Book an appointment</a>
+                            <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
                         </p>
+                        <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p>
                     </div>
 
                     <div className="d-none d-md-block col-md-6">
@@ -50,8 +88,8 @@ export default function Index() {
                         ages. From consultations and home visits to specialized care, we are dedicated to delivering exceptional treatment
                         tailored to your needs.</p>
                         <p className="justify-content-center justify-content-md-start align-items-center d-flex flex-wrap gap-3">
-                            <a href="#" className="btn btn-outline-info border-radius-35">Book an appointment</a>
-                            <a href="#" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
+                            <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
+                            <a href="#contact-us" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
                         </p>
                     </div>
                 </section>
@@ -99,7 +137,7 @@ export default function Index() {
                 <section id="book-appointment" className="book-consultation py-4 text-center bg-body-tertiary">
                     <div className="card p-3 mx-2 mx-md-3 mx-lg-5">
                         <h2 className="text-uppercase fs-4 fw-bold pt-3">Book Consultation</h2>
-                        <form className="form pt-3">
+                        <form onSubmit={ submitConsultationForm } className="form pt-3">
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
@@ -166,7 +204,7 @@ export default function Index() {
                             </div>
                             <div className="row g-2 my-3">
                                 <p className="text-center text-md-start">
-                                    <a href="#" className="btn btn-outline-info border-radius-35">Book an appointment</a>
+                                    <button type="submit" className="btn btn-outline-info border-radius-35">Book an appointment</button>
                                 </p>
                             </div>
                         </form>
@@ -255,7 +293,7 @@ export default function Index() {
                         <div className="col-sm-12 col-md-6 text-center text-md-start">
                             <p>Over 5,100 patients trust us.</p>
                             <p className="">
-                                <a href="#" className="btn btn-outline-info border-radius-35">Book an Appointment</a>
+                                <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an Appointment</a>
                             </p>
                         </div>
                         <div className="col-sm-12 col-md-6">
@@ -289,81 +327,60 @@ export default function Index() {
                     </section>
                 </section>
 
-                <section className="blog text-center pt-4">
-                    <h2>Health Tips</h2>
-                    <p>Important tips about your health and fitness</p>
+                { (blogPublications?.data?.length > 0) && 
+                    <section className="blog text-center pt-4">
+                        <h2>Health Tips</h2>
+                        <p>Important tips about your health and fitness</p>
 
-                    <section className="articles">
-                        <ul className="articles-list row justify-content-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
-                            <li className="col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
-                                    style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
-                                <div className="pt-3 d-flex flex-column align-items-center">
-                                    <div className="d-flex flex-column-reverse">
-                                        <h3 className="fs-5 text-wrap">The Importance of Personalized Healthcare at Home</h3>
-                                        <p className="fw-bold" style={{ fontSize: 'smaller' }}>
-                                            <span className="text-secondary">Jan. 2, 2025&nbsp;
-                                                <span style={{ fontSize: 'x-small' }}>by</span>
-                                            </span>&nbsp;
-                                            <span className="text-info">Nazim Subrottee</span>
-                                        </p>
-                                    </div>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>
-                                        In recent years, there has been a growing need for personalized healthcare services that cater to patients in the
-                                        comfort of their homes.
-                                    </p>
-                                    <p className="">
-                                        <a href="#" className="btn btn-outline-info border-radius-35">Read more</a>
-                                    </p>
-                                </div>
-                            </li>
-                            <li className="col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
-                                    style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
-                                <div className="pt-3 d-flex flex-column align-items-center">
-                                    <div className="d-flex flex-column-reverse">
-                                        <h3 className="fs-5 text-wrap">The Importance of Personalized Healthcare at Home</h3>
-                                        <p className="fw-bold" style={{ fontSize: 'smaller' }}>
-                                            <span className="text-secondary">Jan. 2, 2025&nbsp;
-                                                <span style={{ fontSize: 'x-small' }}>by</span>
-                                            </span>&nbsp;
-                                            <span className="text-info">Nazim Subrottee</span>
-                                        </p>
-                                    </div>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>
-                                        In recent years, there has been a growing need for personalized healthcare services that cater to patients in the
-                                        comfort of their homes.
-                                    </p>
-                                    <p className="">
-                                        <a href="#" className="btn btn-outline-info border-radius-35">Read more</a>
-                                    </p>
-                                </div>
-                            </li>
-                            <li className="col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
-                                    style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
-                                <div className="pt-3 d-flex flex-column align-items-center">
-                                    <div className="d-flex flex-column-reverse">
-                                        <h3 className="fs-5 text-wrap">The Importance of Personalized Healthcare at Home</h3>
-                                        <p className="fw-bold" style={{ fontSize: 'smaller' }}>
-                                            <span className="text-secondary">Jan. 2, 2025&nbsp;
-                                                <span style={{ fontSize: 'x-small' }}>by</span>
-                                            </span>&nbsp;
-                                            <span className="text-info">Nazim Subrottee</span>
-                                        </p>
-                                    </div>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>
-                                        In recent years, there has been a growing need for personalized healthcare services that cater to patients in the
-                                        comfort of their homes.
-                                    </p>
-                                    <p className="">
-                                        <a href="#" className="btn btn-outline-info border-radius-35">Read more</a>
-                                    </p>
-                                </div>
-                            </li>
-                        </ul>
-                    </section>
-                </section>
+                        <section className="articles">
+                            <ul className="articles-list row justify-content-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
+                                { (blogPublications?.data?.map((publication, index) => {
+                                    return (
+                                        <li key={ publication?._id } className="col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                                            <img src={ publication?.image_path?.url || NazimImage } alt="" className="border-radius-15 object-fit-cover"
+                                                style={{ width: '200px', height: '200px' }} />
+                                            <div className="pt-3 d-flex flex-column align-items-center">
+                                                <div className="d-flex flex-column-reverse">
+                                                    <h3 className="fs-5 text-wrap">{ publication?.title }</h3>
+                                                    <p className="fw-bold" style={{ fontSize: 'smaller' }}>
+                                                        <span className="text-secondary">Jan. 2, 2025&nbsp;
+                                                            <span style={{ fontSize: 'x-small' }}>by</span>
+                                                        </span>&nbsp;
+                                                        <span className="text-info">
+                                                            { ((publication?.user?.role == 'general_practitioner')
+                                                                ? ' Dr.' 
+                                                                    : (publication?.user?.role == 'gynaecologist') 
+                                                                    ? ' Dr.' 
+                                                                        : (publication?.user?.role == 'laboratory_scientist') 
+                                                                        ? ' ' 
+                                                                            : (publication?.user?.role == 'nurse')
+                                                                            ? ' ' 
+                                                                                : '' ) }
+                                                            &nbsp;
+                                                            { publication?.user?.first_name + 
+                                                                ' ' + 
+                                                                publication?.user?.last_name }
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div 
+                                                    className="preview text-wrap" 
+                                                    style={{ maxWidth: '310px' }}
+                                                    dangerouslySetInnerHTML={{ __html: (publication?.content?.slice(0, 100)) + (publication?.content?.length > 99 ? '...' : '') }} 
+                                                />
+                                                <p className="">
+                                                    <Link 
+                                                        to={ route('blog.publications.show', { id: publication?._id }) } 
+                                                        className="btn btn-outline-info border-radius-35">Read more</Link>
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                }) )}
+                            </ul>
+                        </section>
+                    </section> 
+                }
 
                 <section className="testimonials text-center pt-4">
                     <h2 className="text-uppercase fs-6">Testimonials</h2>
@@ -439,7 +456,7 @@ export default function Index() {
                                 width="100%" height="100%" style={{ border: '0', borderRadius: '25px', minWidth: '300px', minHeight: '275px' }} allowFullScreen="" loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"></iframe>
                         </div>
-                        <form className="col-sm-12 col-md-6 order-0 order-md-1 form pt-3">
+                        <form onSubmit={ submitContactForm } className="col-sm-12 col-md-6 order-0 order-md-1 form pt-3">
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
@@ -487,7 +504,7 @@ export default function Index() {
                             </div>
                             <div className="row g-2 my-3">
                                 <p className="text-center text-md-start">
-                                    <a href="#" className="btn btn-outline-info border-radius-35">Send Message</a>
+                                    <button type="submit" className="btn btn-outline-info border-radius-35">Send Message</button>
                                 </p>
                             </div>
                         </form>

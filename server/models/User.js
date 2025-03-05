@@ -76,8 +76,8 @@ const userSchema = new Schema({
         receive_notifications: { type: Boolean, default: false }, 
         widget: {
             type: [String], 
-            enum: ['blood_cell', 'heart_rate', 'sugar_level', 'water_level'], 
-            default: ['blood_cell', 'heart_rate', 'sugar_level', 'water_level']
+            enum: ['heart_rate', 'rbc', 'sugar_level', 'water_level', 'wbc'], 
+            default: ['heart_rate', 'rbc', 'sugar_level', 'water_level', 'wbc']
         }, 
         banned: { type: Boolean, default: false }, 
         banned_at: { type: String, default: null }, 

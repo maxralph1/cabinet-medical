@@ -38,7 +38,6 @@ export default function Show() {
     const [isPaying, setIsPaying] = useState(false);
     const initialOptions = {
         "client-id": `${Constants?.paypalClientID}`,
-            // "AYOeyCQvilLVKJGjslZfFSi_Nkl7A6OfXNarj5lS55iUcQXMhpp3AypVjAVkS_qvPcO5D415b9SnBFuN",
         "enable-funding": "venmo",
         "disable-funding": "paylater",
         "buyer-country": "US",
@@ -68,9 +67,9 @@ export default function Show() {
 
         try {
             const response = await axiosInstance.post(
-                `medical-bills`, 
+                `medical-bills/payment`, 
                 {
-                    invoice: medicalBill?.data?._id, // The request body
+                    medicalBill: medicalBill?.data?._id, 
                 }, 
                 {
                     headers: {
@@ -120,7 +119,7 @@ export default function Show() {
     async function onApprove(data, actions) { 
         try {
             const response = await axiosInstance.post(
-                `inventory/invoices/payment/${data?.orderID}/capture`, 
+                `medical-bills/payment/${data?.orderID}/capture`, 
                 {}, // Empty body as it's a POST request without data payload 
                 {
                     headers: {
@@ -181,7 +180,7 @@ export default function Show() {
             } else {
                 // (3) Successful transaction -> Show confirmation or thank you message 
                 // clearCart(); 
-                navigate(route('home.inventory.invoices.index'));  
+                navigate(route('home.medical-bills.index'));  
                 console.log(
                     "Capture result",
                     orderData,
@@ -230,7 +229,10 @@ export default function Show() {
                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
                     </svg>&nbsp;
                     <span className="">
-                        { location?.pathname?.endsWith('pay') 
+                        {/* { location?.pathname?.endsWith('pay') 
+                            ? 'Pay' 
+                            : 'View' } */}
+                        { medicalBill?.data?.fully_paid == false 
                             ? 'Pay' 
                             : 'View' }
                         &nbsp;Medical Bill
@@ -242,32 +244,43 @@ export default function Show() {
                 <h3 className="fs-6"><span className="fw-light text-uppercase">Invoice ID:&nbsp;</span>{ medicalBill?.data?._id }</h3>
 
                 <p className="pt-2"><small className="text-secondary">added by</small>&nbsp;
-                    <span>{ ((medicalBill?.data?.user?.first_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.user?.first_name?.slice(1))
+                    <span>{ ((medicalBill?.data?.authorizing_professional?.first_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.authorizing_professional?.first_name?.slice(1))
                             + ' ' 
-                            + ((medicalBill?.data?.user?.last_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.user?.last_name?.slice(1)) }</span>,&nbsp;
-                    <span>{ dayjs.utc(medicalBill?.data?.user?.created_at).fromNow() }</span>
+                            + ((medicalBill?.data?.authorizing_professional?.last_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.authorizing_professional?.last_name?.slice(1)) }</span>,&nbsp;
+                    <span style={{ fontSize: 'small' }}>{ dayjs.utc(medicalBill?.data?.authorizing_professional?.created_at).fromNow() }</span>
+                </p>
+
+                <p className="pt-2"><small className="text-secondary">Patient:</small>&nbsp;
+                    <span>{ ((medicalBill?.data?.patient?.first_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.patient?.first_name?.slice(1))
+                            + ' ' 
+                            + ((medicalBill?.data?.patient?.last_name)?.slice(0,1)?.toUpperCase() + medicalBill?.data?.patient?.last_name?.slice(1)) }</span>
                 </p>
 
                 <section className={ (medicalBill?.data?.notes) ? 'notes pt-2' : 'notes pt-1' }>
-                    <h4 className="fs-6 fw-light">Notes:&nbsp;</h4>
+                    <h4 className="fs-6 fw-light text-secondary mb-0">Notes:&nbsp;</h4>
                     <div 
                         className="preview fs-6" 
                         dangerouslySetInnerHTML={{ __html: (medicalBill?.data?.notes) }} />
                 </section>
 
+                <section className={ (medicalBill?.data?.comments) ? 'comments pt-2' : 'comments pt-1' }>
+                    <h4 className="fs-6 fw-light text-secondary mb-0">Comments:&nbsp;</h4>
+                    <div 
+                        className="preview fs-6" 
+                        dangerouslySetInnerHTML={{ __html: (medicalBill?.data?.comments) }} />
+                </section>
+
                 <section className="d-flex align-items-center gap-3">
                     <div>
-                        { (medicalBill?.data?.paid_at) 
-                            ? <span>Amount Paid:</span>
-                            : <span>Amount Payable:</span>}
+                        { (medicalBill?.data?.fully_paid_on) 
+                            ? <span className="text-secondary">Amount Paid:</span>
+                            : <span className="text-secondary">Amount Payable:</span>}
                         &nbsp;
                         <span className="fw-bold fs-4">
-                            {(medicalBill?.data?.products?.reduce((total, product) => {
-                                return total + Number(product?.inventory_product_unit?.amount_purchased || 0);
-                            }, 0))?.toFixed(2)}&nbsp;<span className="fs-6">MUR</span>
+                            { medicalBill?.data?.amount ? (medicalBill?.data?.amount)?.toFixed(2) : '0.00'}&nbsp;<span className="fs-6">MUR</span>
                         </span>
                     </div>
-                    { ((!payWithCard) && (!medicalBill?.data?.paid_at)) && (
+                    { ((!payWithCard) && (!medicalBill?.data?.fully_paid_on)) && (
                         <div>
                             <button 
                                 onClick={ () => {
@@ -345,72 +358,6 @@ export default function Show() {
                     ) }
 
                 </section>
-
-                { (medicalBill?.data?.products?.length>0) && (
-                    <section className="product-units pt-4">
-                        <h4 className="fs-5">Invoice Items:&nbsp;&nbsp;</h4>
-                        <ul className="list-unstyled pt-1">
-                            { medicalBill?.data?.products?.map((item, index) => (
-                                <li key={index} className="product-unit py-3 d-flex border-top border-bottom">
-                                    <span>{ index+1 }.&nbsp;</span>
-
-                                    <div className="d-flex flex-column">
-                                        <p className="mb-0">Product Name:&nbsp;<span className="fw-semibold">{ item?.inventory_product_unit?.inventory_product?.name }</span></p>
-                                        { (item?.inventory_product_unit?.product_number) && (
-                                            <p className="mb-0">Product Number:&nbsp;<span className="fw-semibold">{ item?.inventory_product_unit?.product_number }</span></p>
-                                        ) }
-                                        <p className="mb-0">Amount Purchased:&nbsp;
-                                            <span className="fw-semibold">
-                                                { item?.inventory_product_unit?.amount_purchased ? Number(item?.inventory_product_unit?.amount_purchased)?.toFixed(2) : Number(0) } MUR
-                                            </span>
-                                        </p>
-                                        { (item?.inventory_product_unit?.manufacture_date) && (
-                                            <p className="mb-0">Manufacture Date:&nbsp;
-                                                <span className="fw-semibold">{ dayjs(item?.inventory_product_unit?.manufacture_date).format('ddd, MMM D, YYYY h:mm A') }</span>
-                                            </p>
-                                        ) }
-                                        { (item?.inventory_product_unit?.expiration_date) && (
-                                            <p className="mb-0">Expiration Date:&nbsp;
-                                                <span className="fw-semibold">{ dayjs(item?.inventory_product_unit?.expiration_date).format('ddd, MMM D, YYYY h:mm A') }</span>
-                                            </p>
-                                        ) }
-                                    </div>
-
-                                    { (!medicalBill?.data?.paid_at) && (
-                                        <div className="ms-3">
-                                            <span 
-                                                onClick={ () => {
-                                                    swal.fire({
-                                                        text: "Are you sure you want to delete this?", 
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#FF0000",
-                                                        cancelButtonColor: "#414741",
-                                                        confirmButtonText: "Yes!", 
-                                                        cancelButtonText: "No!", 
-                                                        customClass: {
-                                                            confirmButton: 'swal2-confirm-button', 
-                                                            cancelButton: 'swal2-cancel-button'
-                                                        }, 
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            deleteInventoryProductUnit(item?._id); 
-                                                            // setInventoryProducts([]);
-                                                            getInventoryProduct(id); 
-                                                        }
-                                                    });
-                                                }} 
-                                                className="cursor-pointer">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                    </svg>
-                                            </span>
-                                        </div>
-                                    ) }
-                                </li>
-                            )) }
-                        </ul>
-                    </section>
-                )}
             </section>
         </Layout>
     )

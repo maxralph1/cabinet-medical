@@ -11,7 +11,7 @@ export default function Layout({ children }) {
 
     return (
         <>
-            <header className="header d-flex align-items-center justify-content-between pt-3 pb-1 mb-3 border-bottom">
+            <header className="header container-fluid d-flex align-items-center justify-content-between pt-3 pb-1 mb-3 border-bottom">
                 <div className="brand">
                     <h1 className="fs-3">Cabinet Medical</h1>
                 </div>
@@ -57,7 +57,7 @@ export default function Layout({ children }) {
             </header>
 
             { toggleNav && 
-                <nav className="main-nav">
+                <nav className="main-nav container-fluid">
                     <ul className="nav-list list-unstyled d-flex flex-column gap-2 align-items-end">
                         <li 
                             onClick={ () => setToggleNav(!toggleNav) } 
@@ -150,13 +150,13 @@ export default function Layout({ children }) {
                 </nav>
             }
 
-            <main className="main dashboard pt-3">
+            <main className="main dashboard container-fluid pt-3">
 
                 { children }
 
             </main>
 
-            <footer className="footer pt-5 pb-3">
+            <footer className="footer container-fluid pt-5 pb-3">
                 &copy; { new Date().getFullYear() }. Cabinet Medical.
             </footer>
         </>

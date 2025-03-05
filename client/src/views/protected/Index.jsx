@@ -1,17 +1,88 @@
-import { useContext } from 'react'; 
-import AuthContext from '@/context/AuthContext.jsx';
+import { useContext, useState } from 'react'; 
+import AuthContext from '@/context/AuthContext.jsx'; 
+import { Link } from 'react-router-dom'; 
+import { route } from '@/routes'; 
+import dayjs from 'dayjs';
+import relativeTime from "dayjs/plugin/relativeTime"; 
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(relativeTime);
+dayjs.extend(utc); 
+import useAppointments from '@/hooks/dashboard/useAppointments?.jsx'; 
+import useRegimens from '@/hooks/dashboard/useRegimens.jsx'; 
+import useRevenue from '@/hooks/dashboard/useRevenue.jsx'; 
+import useUserCount from '@/hooks/dashboard/useUserCount.jsx'; 
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
 export default function Index() {
     const { user } = useContext(AuthContext); 
     const date = new Date();
-    const hour = date.getHours(); 
-    
+    const hour = date.getHours();  
+
+    const [appointmentRange, setAppointmentRange] = useState('all'); 
+    const [regimenRange, setRegimenRange] = useState('all'); 
+    const [revenueRange, setRevenueRange] = useState('all'); 
+    const [userCountRange, setUserCountRange] = useState('all'); 
+
+    const { appointments } = useAppointments(appointmentRange); 
+    const { regimens } = useRegimens(regimenRange); 
+    const { revenues } = useRevenue(revenueRange); 
+    const { userCount } = useUserCount(userCountRange); 
+    console.log(appointments); 
+    console.log(regimens); 
+    console.log(revenues); 
+    console.log(userCount); 
+
+    const getClosestAppointment = () => {
+        const now = new Date();
+
+        // Format current date and time as 'YYYY-MM-DDTHH:mm' to match the proposed appointment format
+        const currentDateTime = now.toISOString().slice(0, 16); // '2025-03-05T10:15' format
+        
+        // Find the appointment happening today
+        const todayAppointment = appointments?.data?.find((appointment) => {
+            const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+            return proposedStartDateTime === currentDateTime;
+        });
+
+        if (todayAppointment) {
+            // If an appointment is happening today, return it
+            return todayAppointment;
+        }
+
+        // If no appointment is happening today, find the closest future appointment
+        const futureAppointments = appointments?.data?.filter((appointment) => {
+            const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+            return proposedStartDateTime > currentDateTime;
+        });
+
+        // If there are future appointments, return the closest one
+        if (futureAppointments?.data?.length > 0) {
+            // Sort by the proposed start time, and pick the first (earliest future appointment)
+            const closestFutureAppointment = futureAppointments?.data?.reduce((closest, appointment) => {
+                const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+                return !closest || proposedStartDateTime < closest ? proposedStartDateTime : closest;
+            });
+
+            return futureAppointments?.data?.find((appointment) => {
+                const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+                return proposedStartDateTime === closestFutureAppointment;
+            });
+        }
+
+        // If no future appointments are found, return null
+        return null;
+    }; 
+
+    // const closestAppointment = getClosestAppointment(); 
+    // console.log('closest appointment:', getClosestAppointment())
+    // console.log('closest appointment:', closestAppointment)
+
     return (
         <Layout>
             <div className="salutation d-flex flex-column">
-                <span className="text-secondary fs-5">Hi { user?.user?.first_name + ' ' + user?.user?.last_name},</span>
+                <span className="text-secondary fs-4">Hi { user?.user?.first_name + ' ' + user?.user?.last_name}</span>
+                {/* <span className="text-secondary fs-5">Hi { user?.user?.first_name + ' ' + user?.user?.last_name},</span>
                 <span className="fs-1 fw-light">Good&nbsp;
                     { hour < 12 
                         ? 'morning' 
@@ -20,7 +91,7 @@ export default function Index() {
                                 : hour >= 16 
                                 ? 'evening' 
                                     : '' }
-                </span>
+                </span> */}
                 <div className="d-flex flex-column gap-2 pt-2 align-items-end">
                     <span>You have&nbsp;<a href="#" className="fw-semibold text-warning">1 appointment&nbsp;</a>today in the next <span className="fw-semibold">30 minutes</span>.</span>
                     <span>You have&nbsp;<a href="#" className="fw-semibold text-warning">1 ongoing regimen&nbsp;</a>. Ensure to take your medication.</span>
@@ -54,8 +125,8 @@ export default function Index() {
                             </svg>
                         </span>
                         <span>Total Appointments</span>
-                        <span className="fs-4 fw-semibold">13,675</span>
-                        <span className="bg-body-tertiary"><small>Updated January 9, 2025</small></span>
+                        <span className="fs-4 fw-semibold">{ Number(appointments?.data?.appointments_count) || 0 }</span>
+                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(appointments?.data?.last_update?.updated_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                     
                     <article className="doctors border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
@@ -68,8 +139,12 @@ export default function Index() {
                             </svg>
                         </span>
                         <span>Total Doctors</span>
-                        <span className="fs-4 fw-semibold">13,675</span>
-                        <span className="bg-body-tertiary"><small>Updated January 9, 2025</small></span>
+                        <span className="fs-4 fw-semibold">
+                            { Number(userCount?.data?.general_practitioners 
+                                || userCount?.data?.gynaecologists
+                            ) || 0 }
+                        </span>
+                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.last_update?.updated_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                     
                     <article className="patients border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
@@ -82,8 +157,10 @@ export default function Index() {
                             </svg>
                         </span>
                         <span>Total Patients</span>
-                        <span className="fs-4 fw-semibold">13,675</span>
-                        <span className="bg-body-tertiary"><small>Updated January 9, 2025</small></span>
+                        <span className="fs-4 fw-semibold">
+                            { Number(userCount?.data?.patients) || 0 }
+                        </span>
+                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.last_update?.updated_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                 </section>
 
@@ -209,14 +286,16 @@ export default function Index() {
                         </div>
                     </section>
                     <section className="w-100 d-flex justify-content-end pt-3">
-                        <button className="btn btn-sm btn-warning border-radius-35">Check Appointments</button>
+                        <Link 
+                            to={ route('home.appointments.index') } 
+                            className="btn btn-sm btn-warning border-radius-35 text-decoration-none">Check Appointments</Link>
                     </section>
                 </section>
 
                 <section className="latest border border-1 border-tertiary border-radius-25 px-3 py-4">
                     <div className="d-flex justify-content-between">
                         <h2 className="fs-5">Latest Appointments</h2>
-                        <span className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
+                        <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0 my-0">
                             <span className="mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" className="bi bi-plus-lg"
                                     viewBox="0 0 16 16">
@@ -225,7 +304,7 @@ export default function Index() {
                                 </svg>
                             </span>
                             <span>Schedule</span>
-                        </span>
+                        </Link>
                     </div>
                     <small className="text-secondary">Stay updated on your recent healthcare visits</small>
                     <section className="table-responsive pt-3 w-100">
