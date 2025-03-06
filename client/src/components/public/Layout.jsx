@@ -45,7 +45,7 @@ export default function Layout({ children }) {
                         </div>
                     ) 
                     :  (
-                        <span onClick={ signOut } className="text-uppercase text-danger">
+                        <span onClick={ signOut } className="text-uppercase text-danger cursor-pointer text-decoration-underline">
                             Sign Out
                         </span>
                     ) }
