@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabinet Medical</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
+        defer></script>
+    <script src="./assets/js/script.js" defer></script>
+</head>
+
+<body class="container-fluid p-3">
+    <header class="header d-flex align-items-center justify-content-between">
+        <div class="brand">
+            <h1 class="fs-3">Cabinet Medical</h1>
+        </div>
+
+        <div class="user d-flex align-items-center gap-3">
+            <div
+                class="d-flex align-items-center justify-content-between gap-3 border border-1 border-tertiary border-radius-35 p-1">
+                <span class="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                    style="background-color: #f2f2f2;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="" className="bi bi-bell"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                    </svg>
+                </span>
+                <span style="width: 35px; height: 35px;">
+                    <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain"
+                        class="w-100 h-100 d-flex border-radius-50 object-fit-cover" alt="">
+                </span>
+            </div>
+
+            <div>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                        class="bi bi-menu-button-wide" viewBox="0 0 16 16">
+                        <path
+                            d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5z" />
+                        <path
+                            d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0M0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <ul class="list-unstyled d-flex flex-column gap-2 align-items-end pt-3">
+            <li class="fw-semibold">Appointments</li>
+            <li class="fw-semibold">Regimen</li>
+            <li class="fw-semibold">Patients</li>
+            <li class="fw-semibold">Doctors</li>
+            <li class="fw-semibold">Departments</li>
+            <li class="fw-semibold">Inventory</li>
+            <li class="fw-semibold">Settings</li>
+            <li class="text-danger">Sign Out</li>
+        </ul>
+    </nav>
+
+    <main class="main dashboard">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fs-3">Inventory</h2>
+            <span class="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center">
+                <span class="mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-plus-lg"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                    </svg>
+                </span>
+                <span >Add</span>
+            </span>
+        </div>
+
+        <div class="d-flex justify-content-end pt-4">
+            <span>1 - 10 of 25 results</span>
+        </div>
+
+        <section class="pt-3">
+            <ul class="list-unstyled d-flex flex-column align-items-start gap-3">
+                <li class="border border-1 border-radius-25 d-flex flex-column px-3 py-4">
+                    <span>#1</span>
+                    <span><span class="text-secondary">Ref #:</span>&nbsp;<span>#123547QGV215484</span></span>
+                    <span><span class="text-secondary">Product Code:</span>&nbsp;<span>#123547QGV215484</span></span>
+                    <span class="fw-semibold fs-5">Griseofulvin</span>
+                    <div class="d-flex flex-wrap column-gap-4">
+                        <span class="text-secondary">Purchased:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                        <span class="text-secondary">Amount Purchased:&nbsp;<span class="fw-semibold">20MUR</span></span>
+                        <span class="text-secondary">Manufacturer:&nbsp;<span class="fw-semibold">Pfizer</span></span>
+                        <span class="text-secondary">Make Country:&nbsp;<span class="fw-semibold">China</span></span>
+                        <span class="text-secondary">Manufacture Date:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                        <span class="text-secondary">Expiration Date:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                    </div>
+                </li>
+                <li class="border border-1 border-radius-25 d-flex flex-column px-3 py-4">
+                    <span>#2</span>
+                    <span><span class="text-secondary">Ref #:</span>&nbsp;<span>#123547QGV215484</span></span>
+                    <span><span class="text-secondary">Product Code:</span>&nbsp;<span>#123547QGV215484</span></span>
+                    <span class="fw-semibold fs-5">Griseofulvin</span>
+                    <div class="d-flex flex-wrap column-gap-4">
+                        <span class="text-secondary">Purchased:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                        <span class="text-secondary">Manufacturer:&nbsp;<span class="fw-semibold">Pfizer</span></span>
+                        <span class="text-secondary">Make Country:&nbsp;<span class="fw-semibold">China</span></span>
+                        <span class="text-secondary">Manufacture Date:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                        <span class="text-secondary">Expiration Date:&nbsp;<span class="fw-semibold">20 November, 2025</span></span>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="pagination-links d-flex justify-content-end align-items-center gap-3 pt-4">
+            <span class="btn btn-sm btn-outline-secondary border-radius-25">
+                1
+            </span>
+            <span class="btn btn-sm btn-outline-secondary border-radius-25">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
+                </svg>
+            </span>
+            <span class="btn btn-sm btn-outline-secondary border-radius-25">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753" />
+                </svg>
+            </span>
+            <span class="btn btn-sm btn-outline-secondary border-radius-25">
+                20
+            </span>
+        </section>
+    </main>
+
+    <footer class="footer pt-5">
+        &copy; 2025. Cabinet Medical.
+    </footer>
+</body>
+
+</html>
