@@ -1,0 +1,2 @@
+::ffff:127.0.0.1 - - [2025-02-14T18:33:54.307Z] "OPTIONS /api/v1/auth/sign-in HTTP/1.1" 200 "0 - 7.421 ms" "http://localhost:5176/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+::ffff:127.0.0.1 - - [2025-02-14T18:33:56.145Z] "POST /api/v1/auth/sign-in HTTP/1.1" 200 "516 - 1828.465 ms" "http://localhost:5176/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
