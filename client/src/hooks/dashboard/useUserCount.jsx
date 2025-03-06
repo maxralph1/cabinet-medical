@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export default function useUserCount(range = 'all') {
+export function useUserCount(range = 'all') {
     const axiosInstance = useAxios(); 
     const [userCount, setUserCount] = useState([]); 
 

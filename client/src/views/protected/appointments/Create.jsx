@@ -8,6 +8,7 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
 import Constants from '@/utils/Constants.jsx'; 
+import swal from 'sweetalert2'; 
 import { usePatients } from '@/hooks/usePatients.jsx'; 
 import { useAppointmentsSpecificDate } from '@/hooks/useAppointmentsSpecificDate.jsx'; 
 import { useAppointment } from '@/hooks/useAppointment.jsx'; 
@@ -62,7 +63,8 @@ export default function Create() {
     const handleSubmit = async e => {
         e.preventDefault(); 
 
-        if ((selectedUserItem) && (selectedDiagnosisTypes?.length>0)) {
+        // if ((selectedUserItem) && (selectedDiagnosisTypes?.length>0)) {
+        if (selectedUserItem) {
             const formData = new FormData(); 
             selectedUserItem && formData.append('patient', selectedUserItem?._id); 
             currentYear && formData.append('proposed_year_start', currentYear); 

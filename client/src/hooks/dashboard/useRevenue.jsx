@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export default function useRevenue(range = 'all') {
+export function useRevenue(range = 'all') {
     const axiosInstance = useAxios(); 
     const [revenue, setRevenue] = useState([]); 
 

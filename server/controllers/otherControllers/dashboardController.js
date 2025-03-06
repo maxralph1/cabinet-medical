@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../../models/User.js';
 import Appointment from '../../models/Appointment.js'; 
 import MedicalBill from '../../models/MedicalBill.js'; 
+import InventoryInvoice from '../../models/inventory/InventoryInvoice.js'; 
 import DiagnosisType from '../../models/DiagnosisType.js'; 
 // import Diagnosis from '../../models/Diagnosis.js'; 
 import DiagnosisSegment from '../../models/DiagnosisSegment.js';
@@ -13,7 +14,6 @@ import RegimenAdministration from '../../models/RegimenAdministration.js';
  */
 const getRevenue = asyncHandler(async (req, res) => {
     try {
-        // Perform both aggregation queries concurrently
         const [totalAmount, totalPaid] = await Promise.all([
             MedicalBill.aggregate([
                 {
@@ -38,25 +38,41 @@ const getRevenue = asyncHandler(async (req, res) => {
                 },
                 {
                     $group: {
-                        _id: null, // No grouping, we want the total sum
-                        totalPaid: { $sum: "$totalPaidNumber" } // Sum the `total_paid` field after conversion
+                        _id: null, 
+                        totalPaid: { $sum: "$totalPaidNumber" } 
                     }
                 }
             ])
         ]);
 
-        // Extract values or default to 0 if no results were returned
-        const totalAmountResult = totalAmount.length > 0 ? totalAmount[0].totalAmount : 0;
-        const totalPaidResult = totalPaid.length > 0 ? totalPaid[0].totalPaid : 0;
+        const totalAmountResult = totalAmount?.length > 0 ? totalAmount[0]?.totalAmount : 0;
+        const totalPaidResult = totalPaid?.length > 0 ? totalPaid[0]?.totalPaid : 0; 
 
-        // Send back the response with both total values
+        const latestUpdateMedicalBill = await MedicalBill.findOne()
+                                                        .sort({ updated_at: -1 })
+                                                        .select('updated_at')
+                                                        .lean();
+        const latestUpdateInventoryInvoice = await InventoryInvoice.findOne()
+                                                                .sort({ updated_at: -1 })
+                                                                .select('updated_at')
+                                                                .lean(); 
+
+        // Combine the results from both collections
+        const combinedResults = [latestUpdateMedicalBill, latestUpdateInventoryInvoice];
+
+        // Sort by the updated_at field to find the most recent one
+        const latestUpdate = combinedResults.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0];
+
+        console.log('Latest update:', latestUpdate);
+
         res.json({
-            total_medical_bills_amount: totalAmountResult,
-            total_invoice_paid: totalPaidResult
-        });
+            data: {
+                total_medical_bills_amount: totalAmountResult,
+                total_invoice_paid: totalPaidResult, 
+                latest_update: latestUpdate
+            } });
     } catch (error) {
-        console.error('Error calculating totals:', error);
-        res.status(500).send('Error calculating totals');
+        res.status(500).json({ message: `Error calculating totals: ${error}`});
     }
 }); 
 
@@ -73,10 +89,26 @@ const getAppointments = asyncHandler(async (req, res) => {
                                             proposed_time_start: -1
                                         })
                                         .limit(10)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
                                         .lean(); 
         appointmentsCount = await Appointment.countDocuments({ patient: req?.user_id }); 
         upcomingAppointment = await Appointment.findOne({ patient: req?.user_id })
                                                 .sort({ updated_at: -1 })
+                                                .populate({
+                                                    path: 'patient',
+                                                    select: 'first_name last_name username role bio email phone'
+                                                })
+                                                .populate({
+                                                    path: 'professional',
+                                                    select: 'first_name last_name username role bio email phone'
+                                                })
                                                 .lean();
     } else {
         latestAppointments = await Appointment.find({ professional: req?.user_id })
@@ -86,23 +118,47 @@ const getAppointments = asyncHandler(async (req, res) => {
                                             proposed_time_start: -1
                                         })
                                         .limit(10)
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
                                         .lean(); 
         appointmentsCount = await Appointment.countDocuments({ professional: req?.user_id }); 
         upcomingAppointment = await Appointment.findOne({ professional: req?.user_id })
                                                 .sort({ updated_at: -1 })
+                                                .populate({
+                                                    path: 'patient',
+                                                    select: 'first_name last_name username role bio email phone'
+                                                })
+                                                .populate({
+                                                    path: 'professional',
+                                                    select: 'first_name last_name username role bio email phone'
+                                                })
                                                 .lean(); 
     }; 
 
-    const lastUpdate = await Appointment.findOne()
+    const latestUpdate = await Appointment.findOne()
                                         .sort({ updated_at: -1 })
                                         .select('updated_at')
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role bio email phone'
+                                        })
                                         .lean();
 
     res.json({ data: {
         latest_appointments: latestAppointments, 
         appointments_count: appointmentsCount, 
         upcoming_appointment: upcomingAppointment, 
-        last_update: lastUpdate
+        latest_update: latestUpdate
     }});
 }); 
 
@@ -127,7 +183,7 @@ const getUserCount = asyncHandler(async (req, res) => {
     const laboratoryScientists = await User.countDocuments({ role: 'laboratory_scientist', deleted_at: null }); 
     const patients = await User.countDocuments({ role: 'patient', deleted_at: null }); 
 
-    const lastUpdate = await User.findOne()
+    const latestUpdate = await User.findOne()
                                         .sort({ updated_at: -1 })
                                         .select('updated_at')
                                         .lean();
@@ -140,7 +196,7 @@ const getUserCount = asyncHandler(async (req, res) => {
         nurses: nurses, 
         laboratory_scientists: laboratoryScientists, 
         patients: patients, 
-        last_update: lastUpdate
+        latest_update: latestUpdate
     }}); 
 }); 
 
@@ -206,6 +262,8 @@ const getWidgetValues = asyncHandler(async (req, res) => {
  */
 const addWidget = asyncHandler(async (req, res) => {
     const { widget } = req?.body; 
+    console.log(widget); 
+    console.log(req?.body);
 
     if ((widget == 'heart_rate') 
         || (widget == 'rbc') 

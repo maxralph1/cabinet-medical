@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export default function useWidgets() {
+export function useWidgets() {
     const axiosInstance = useAxios(); 
     const [widgets, setWidgets] = useState([]); 
 
@@ -11,7 +11,7 @@ export default function useWidgets() {
         return () => { controller.abort() };
     }, []); 
  
-    async function getWidgets({}, { signal } = {}) { 
+    async function getWidgets({ signal } = {}) { 
         console.log({})
         setWidgets([]); 
         return axiosInstance.get(`dashboard/widgets`, { signal }) 

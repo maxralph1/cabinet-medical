@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export default function useRegimens(range = 'all') {
+export function useRegimens(range = 'all') {
     const axiosInstance = useAxios(); 
     const [regimens, setRegimens] = useState([]); 
 

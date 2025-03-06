@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export default function useAppointments(range = 'all') {
+export function useAppointments(range = 'all') {
     const axiosInstance = useAxios(); 
     const [appointments, setAppointments] = useState([]); 
 

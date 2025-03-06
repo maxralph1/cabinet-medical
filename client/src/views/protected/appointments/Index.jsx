@@ -21,6 +21,31 @@ export default function Index() {
     const { appointments, getAppointments, loading } = useAppointments(appointmentQuery); 
     console.log(appointments); 
 
+    // const calculateTimeDifference = (timeStart, timeEnd) => {
+    //     // Ensure times are in valid format (HH:mm)
+    //     return dayjs(timeEnd, "HH:mm").diff(dayjs(timeStart, "HH:mm"), 'minute');
+    // }; 
+
+    const calculateTimeDifference = (timeStart, timeEnd) => {
+        const [startHour, startMinute] = timeStart.split(':').map(num => parseInt(num, 10));
+        const [endHour, endMinute] = timeEnd.split(':').map(num => parseInt(num, 10));
+
+        const startDate = new Date();
+        startDate.setHours(startHour, startMinute, 0, 0);
+
+        const endDate = new Date();
+        endDate.setHours(endHour, endMinute, 0, 0);
+
+        // Calculate the difference in milliseconds
+        const diffInMilliseconds = endDate - startDate;
+
+        // Convert the difference to minutes
+        const diffInMinutes = diffInMilliseconds / (1000 * 60);
+
+        return diffInMinutes;
+    };
+
+
     return (
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
@@ -62,6 +87,9 @@ export default function Index() {
                                         : ((loading == false) && (appointments?.data?.length > 0)) 
                                             ?   <ul className="appointments list-unstyled d-flex flex-column align-items-start gap-3">
                                                     { (appointments?.data?.map((appointment, index) => {
+
+                                                        const timeDifference = calculateTimeDifference(appointment?.proposed_time_start, appointment?.proposed_time_end); 
+
                                                         return (
                                                             <li key={ appointment?._id } className="appointment w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
                                                                 {/* <span className="">#
@@ -121,7 +149,8 @@ export default function Index() {
                                                                             {/* 30 minutes
                                                                             const date1 = dayjs('2019-01-25')
                                                                             date1.diff('2018-06-05', 'month', true) */}
-                                                                            { dayjs(appointment?.proposed_time_end)?.diff(appointment?.proposed_time_start, 'minute', true) || '30 minutes' }
+                                                                            {/* { dayjs(appointment?.proposed_time_end)?.diff(appointment?.proposed_time_start, 'minute', true) || '30 minutes' } */} 
+                                                                            { timeDifference !== null ? timeDifference : '0' }&nbsp;minute{ (timeDifference < 2) ? '' : 's' }
                                                                         </span>
                                                                     </div>
                                                                 </section>

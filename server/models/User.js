@@ -49,6 +49,7 @@ const userSchema = new Schema({
                 message: props => `${props.value} is not a valid phone number.`
             } 
         }, 
+        bio: { type: String }, 
         password: { 
             type: String, 
             required: true 
