@@ -82,39 +82,6 @@ export default function Index() {
         return null;
     }; 
 
-    // const closestAppointment = getClosestAppointment(); 
-    // console.log('closest appointment:', getClosestAppointment())
-    // console.log('closest appointment:', closestAppointment)
-
-    // function calculateTimeDifference (timeEnd, timeStart) {
-    //     // const time_start = "12:24";
-    //     const time_start = timeStart?.toString();
-    //     // const time_end = "13:27";
-    //     const time_end = timeEnd?.toString();
-
-    //     // Function to convert a time string "HH:mm" to a Date object
-    //     const timeToDate = (time) => {
-    //         const [hours, minutes] = time?.split(':');
-    //         const now = new Date();
-    //         now.setHours(hours, minutes, 0, 0);  // Set hours, minutes, seconds, and milliseconds
-    //         return now;
-    //     }
-
-    //     // Calculate the difference in minutes
-    //     const startTime = timeToDate(time_start);
-    //     const endTime = timeToDate(time_end);
-
-    //     // Calculate the difference in milliseconds
-    //     const diffInMilliseconds = endTime - startTime;
-
-    //     // Convert the difference to minutes
-    //     const diffInMinutes = diffInMilliseconds / (1000 * 60);
-
-    //     console.log(diffInMinutes);  
-    //     return diffInMinutes
-
-    // };
-
     /** Time Difference Calculation */
     const [timeDifference, setTimeDifference] = useState(null);
 
@@ -582,17 +549,7 @@ export default function Index() {
                                         d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0" />
                                 </svg>
                             </span>
-                            { console.log(appointments?.data?.upcoming_appointment) } 
-                            {/* const startTime = dayjs(proposed_time_start, "HH:mm"); */}
-                            {/* <span>
-                                { dayjs(appointments?.data?.upcoming_appointment?.proposed_time_end, "HH:mm")?.diff((appointments?.data?.upcoming_appointment?.proposed_time_start, "HH:mm"), 'minute') || 'N/A' }
-                            </span> */}
-                            {/* <span>
-                                {dayjs(appointments?.data?.upcoming_appointment?.proposed_time_end, "HH:mm")
-                                    ?.diff(dayjs(appointments?.data?.upcoming_appointment?.proposed_time_start, "HH:mm"), 'minute') || 'N/A'}
-                            </span> */}
                             <span>
-                                {/* { calculateTimeDifference(appointments?.data?.upcoming_appointment?.proposed_time_end, appointments?.data?.upcoming_appointment?.proposed_time_start) } */}
                                 { timeDifference !== null ? timeDifference : '0' }&nbsp;minute{ (timeDifference < 2) ? '' : 's' }
                             </span>
                         </div>

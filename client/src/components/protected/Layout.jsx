@@ -26,8 +26,10 @@ export default function Layout({ children }) {
                             </svg>
                         </span>
                         <span className="cursor-pointer" style={{ width: '35px', height: '35px' }}>
-                            <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain"
+                            <Link to={ route('home.profile.index') }>
+                                <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain"
                                 className="w-100 h-100 d-flex border-radius-50 object-fit-cover" alt="" />
+                            </Link>
                         </span>
                     </div>
 

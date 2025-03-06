@@ -1,14 +1,26 @@
-import { useLocation } from 'react-router-dom'; 
+import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 
 
 export default function Layout({ children }) {
     return (
         <>
-            <header className="header d-flex align-items-center justify-content-between d-none">
+            <header className="header container-fluid d-flex align-items-center justify-content-between pt-1 pb-2 sticky-top py-2 shadow-sm border-bottom">
                 <div className="brand">
-                    <h1 className="fs-3">Cabinet Medical</h1>
+                    <h1 className="fs-4 mt-1 text-nowrap">Cabinet Medical</h1>
                 </div>
+                <ul className="nav public-top-nav d-flex flex-column align-items-end flex-md-row align-items-md-center justify-content-md-end flex-nowrap">
+                    <li className="nav-item pe-sm-3 text-end text-md-start ps-md-0">
+                        <Link 
+                            to={ route('index') }
+                            className="nav-link text-dark fw-bold active">
+                                Home
+                        </Link>
+                    </li>
+                    {/* <li className="nav-item text-end text-md-start btn btn-outline-info border-radius-35 p-0">
+                        <Link to={`${route('index')}#book-appointment`} className="nav-link text-dark fw-bold">Book Appointment</Link>
+                    </li> */}
+                </ul>
             </header> 
 
             <main className="main auth">
@@ -43,7 +55,7 @@ export default function Layout({ children }) {
                 </div>
             </main>
 
-            <footer className="footer pt-5">
+            <footer className="footer container-fluid pt-5">
                 <span className="text-secondary">&copy; 2025. Cabinet Medical.</span>
             </footer>
         </>

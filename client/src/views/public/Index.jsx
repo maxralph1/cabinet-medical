@@ -1,10 +1,13 @@
-import { useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import swal from 'sweetalert2'; 
 import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx'; 
 import Layout from '@/components/public/Layout.jsx'; 
-import NazimImage from '@/assets/images/nazim-transparent.png'; 
+import NazimTransparent from '@/assets/images/nazim-transparent.png'; 
+import NazimWide from '@/assets/images/nazim-wide-background.jpg'; 
+import NazimNormal from '@/assets/images/nazim-normal.jpg'; 
+import ServicesImage from '@/assets/images/medicine-services.svg'; 
 
 
 export default function Index() {
@@ -42,13 +45,38 @@ export default function Index() {
     }); 
 
     const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery); 
-    console.log(blogPublications)
+    console.log(blogPublications); 
+
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        // Create an Intersection Observer to watch for images entering the viewport
+        const images = document.querySelectorAll(".slide-in");
+
+        const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            // Set visible to true when the image is in view
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target); // Stop observing after it enters the viewport
+            }
+        });
+        }, { threshold: 0.5 });
+
+        images.forEach(image => observer.observe(image));
+
+        // Cleanup the observer on component unmount
+        return () => {
+        observer.disconnect();
+        };
+    }, []);
 
     return (
         <Layout>
             <>
-                <section className="hero row align-items-center">
-                    <div className="col-12 col-md-6">
+                <section className="hero row align-items-center pt-4 pb-3">
+                    {/* <div className="col-12 col-md-6"> */}
+                    <div className="col-sm-12 col-md-6">
                         <h2 className="text-center text-md-start fs-1">
                             {/* <span className="fw-light">Good&nbsp;
                                 { hour < 12 
@@ -70,8 +98,9 @@ export default function Index() {
                         <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p>
                     </div>
 
-                    <div className="d-none d-md-block col-md-6">
-                        <img src={ NazimImage } alt="Dr. Nazim Subrottee" className="img-fluid border-radius-25" />
+                    {/* <div className="d-none d-md-block col-md-6"> */}
+                    <div className="col-sm-12 col-md-6">
+                        <img src={ NazimWide } alt="Dr. Nazim Subrottee" className="img-fluid border-radius-25 slide-in" />
                     </div>
                 </section>
 
@@ -96,41 +125,40 @@ export default function Index() {
 
                 <section className="services pt-4">
                     <h2>Our Services</h2>
-                    <div>
-                        <ol>
-                            <li>
+                    <div className="row align-items-center row-gap-4">
+                        <div className="col-sm-12 col-md-6 px-3">
+                            <img src={ ServicesImage } className="w-100" alt="" />
+                        </div>
+                        <ul className="list-unstyled col-sm-12 col-md-6">
+                            <li className="border-bottom border-top pt-3">
                                 <h3 className="fs-5">General Consultation and Follow-Up</h3>
                                 <p>Get comprehensive medical care for all your health concerns. Our general consultations cover a wide range of health issues, from common illnesses to chronic conditions. We offer expert advice and thororugh follow-ups to ensure your health goals are met.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Point of Care Blood Tests</h3>
                                 <p>On-the-spot testing for anemia, cholesterol, gout, and diabetes.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Home Visit</h3>
                                 <p>Convenient care at the comfort of your home for patients unable to visit the clinic.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Elderly Care</h3>
                                 <p>Specialized services to support the health and wellbeing of elderly patients.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Prescriptions and Administrations Tracking</h3>
                                 <p>Accurate and prompt medical documentation.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Medical and Fitness Certificates</h3>
                                 <p>Issuance of certificates for work, travel, or fitness.</p>
                             </li>
-                            <li>
+                            <li className="border-bottom pt-3">
                                 <h3 className="fs-5">Death Certificates</h3>
                                 <p>Compassionate and timely assistance with medical documentation.</p>
                             </li>
-                        </ol>
-
-                        <div>
-                            <img src="#" alt="" />
-                        </div>
+                        </ul>
                     </div>
                 </section>
 
@@ -219,7 +247,7 @@ export default function Index() {
                     <section className="nav-scroller">
                         <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
                             <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -232,7 +260,7 @@ export default function Index() {
                                 </div>
                             </li>
                             <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -245,7 +273,7 @@ export default function Index() {
                                 </div>
                             </li>
                             <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -258,7 +286,7 @@ export default function Index() {
                                 </div>
                             </li>
                             <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -271,7 +299,7 @@ export default function Index() {
                                 </div>
                             </li>
                             <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimImage } alt="" className="border-radius-15"
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -333,12 +361,12 @@ export default function Index() {
                         <p>Important tips about your health and fitness</p>
 
                         <section className="articles">
-                            <ul className="articles-list row justify-content-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
+                            <ul className="articles-list row justify-content-center align-items-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden', paddingInlineStart: '0px' }}>
                                 { (blogPublications?.data?.map((publication, index) => {
                                     return (
-                                        <li key={ publication?._id } className="col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
-                                            <img src={ publication?.image_path?.url || NazimImage } alt="" className="border-radius-15 object-fit-cover"
-                                                style={{ width: '200px', height: '200px' }} />
+                                        <li key={ publication?._id } className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
+                                            <img src={ publication?.image_path?.url || NazimTransparent } alt="" className="border-radius-15 object-fit-cover"
+                                                style={{ width: '250px', height: '250px' }} />
                                             <div className="pt-3 d-flex flex-column align-items-center">
                                                 <div className="d-flex flex-column-reverse">
                                                     <h3 className="fs-5 text-wrap">{ publication?.title }</h3>

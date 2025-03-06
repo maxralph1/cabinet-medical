@@ -74,6 +74,8 @@ a, Link {
     margin-right: 1rem; 
 } 
 
+.btn:hover { transition: 1s ease-in-out;}
+
 .search {
     display: flex;
     /* justify-content: end; */
@@ -234,6 +236,18 @@ main {
     display: flex; 
     flex-direction: column;
 } */
+.slide-in {
+    opacity: 0;
+    transform: translateY(100px);
+    transition: transform 1s ease-out, opacity 0.6s ease-out;
+    margin-bottom: 20px;
+}
+
+.slide-in.visible {
+    opacity: 1;
+    transform: translateX(0);
+    /* Move to original position */
+}
 
 
 /*-------*/
