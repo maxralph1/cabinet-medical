@@ -127,7 +127,7 @@ export default function Index() {
                     <h2>Our Services</h2>
                     <div className="row align-items-center row-gap-4">
                         <div className="col-sm-12 col-md-6 px-3">
-                            <img src={ ServicesImage } className="w-100" alt="" />
+                            <img src={ ServicesImage } className="w-100 slide-in" alt="" />
                         </div>
                         <ul className="list-unstyled col-sm-12 col-md-6">
                             <li className="border-bottom border-top pt-3">
@@ -246,7 +246,7 @@ export default function Index() {
                     </div>
                     <section className="nav-scroller">
                         <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
-                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -259,7 +259,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -272,7 +272,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -285,7 +285,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -298,7 +298,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -478,7 +478,7 @@ export default function Index() {
                     </section>
 
                     <section className="row row-gap-5 pt-4">
-                        <div className="col-sm-12 col-md-6 order-1 order-md-0 border-radius-25">
+                        <div className="col-sm-12 col-md-6 order-1 order-md-0 border-radius-25 slide-in">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d159635.9642232964!2d57.426036514845116!3d-20.063555572287292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x217d01fe2adfbccd%3A0x215a4812b184b707!2sCabinet%20M%C3%A9dical%20-%20Dr.%20Nazim%20Subrottee%2C%20Robin%20Plaza%2C%20Royal%20road%2C%20Goodlands!3m2!1d-20.037483899999998!2d57.6496802!4m5!1s0x217d01fe2adfbccd%3A0x215a4812b184b707!2sCabinet%20M%C3%A9dical%20-%20Dr.%20Nazim%20Subrottee%2C%20Robin%20Plaza%2C%20Royal%20road%2C%20Goodlands!3m2!1d-20.037483899999998!2d57.6496802!5e0!3m2!1sen!2smu!4v1738771791134!5m2!1sen!2smu"
                                 width="100%" height="100%" style={{ border: '0', borderRadius: '25px', minWidth: '300px', minHeight: '275px' }} allowFullScreen="" loading="lazy"
