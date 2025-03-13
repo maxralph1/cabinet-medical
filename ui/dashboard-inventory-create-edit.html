@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabinet Medical</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
+        defer></script>
+    <script src="./assets/js/script.js" defer></script>
+</head>
+
+<body class="container-fluid p-3">
+    <header class="header d-flex align-items-center justify-content-between">
+        <div class="brand">
+            <h1 class="fs-3">Cabinet Medical</h1>
+        </div>
+
+        <div class="user d-flex align-items-center gap-3">
+            <div
+                class="d-flex align-items-center justify-content-between gap-3 border border-1 border-tertiary border-radius-35 p-1">
+                <span class="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                    style="background-color: #f2f2f2;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="" className="bi bi-bell"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                    </svg>
+                </span>
+                <span style="width: 35px; height: 35px;">
+                    <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain"
+                        class="w-100 h-100 d-flex border-radius-50 object-fit-cover" alt="">
+                </span>
+            </div>
+
+            <div>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                        class="bi bi-menu-button-wide" viewBox="0 0 16 16">
+                        <path
+                            d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5z" />
+                        <path
+                            d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0M0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <ul class="list-unstyled d-flex flex-column gap-2 align-items-end pt-3">
+            <li class="fw-semibold">Appointments</li>
+            <li class="fw-semibold">Regimen</li>
+            <li class="fw-semibold">Patients</li>
+            <li class="fw-semibold">Professionals</li>
+            <!-- <li class="fw-semibold">Doctors</li> -->
+            <li class="fw-semibold">Departments</li>
+            <li class="fw-semibold">Inventory</li>
+            <li class="fw-semibold">Settings</li>
+            <li class="text-danger">Sign Out</li>
+        </ul>
+    </nav>
+
+    <main class="main dashboard">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fs-3"><a href="#" class="">Inventory</a>&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                </svg>&nbsp;
+                <span>Add Inventory</span>
+            </h2>
+        </div>
+
+        <section class="pt-3">
+            <form action="#">
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="#414141" className="bi bi-image"
+                            viewBox="0 0 16 16">
+                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            <path
+                                d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="text" class="form-control" id="product_name" placeholder="Griseofulvin (500mg)">
+                        <label for="product_name">Product Name</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="text" class="form-control" id="product_code" placeholder="2548547054895958">
+                        <label for="product_code">Product Code</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="text" class="form-control" id="manufacturer" placeholder="Pfizer">
+                        <label for="manufacturer">Manufacturer</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="text" class="form-control" id="make_country" placeholder="China">
+                        <label for="make_country">Make Country</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <select class="form-select" id="product_type" aria-label="Product type">
+                            <option>Select ...</option>
+                            <option value="medication">Medication</option>
+                            <option value="surgical_equipment">Surgical Equipment</option>
+                        </select>
+                        <label for="product_type">Product Type</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="text" class="form-control" id="amount_purchased" placeholder="123MUR">
+                        <label for="amount_purchased">Amount Purchased</label>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="date" class="form-control" id="manufacture_date" placeholder="Pfizer">
+                        <label for="manufacture_date">Manufacture Date</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="date" class="form-control" id="expiration_date" placeholder="China">
+                        <label for="expiration_date">Expiration Date</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-sm-12 col-md-6">
+                        <input type="date" class="form-control" id="purchase_date" placeholder="Pfizer">
+                        <label for="purchase_date">Purchase Date</label>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end pt-3">
+                    <button type="submit" class="btn btn-outline-secondary border-radius-25">Save</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer pt-5">
+        &copy; 2025. Cabinet Medical.
+    </footer>
+</body>
+
+</html>
