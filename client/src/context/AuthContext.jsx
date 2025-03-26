@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { route } from '@/routes'; 
 import Constants from '@/utils/Constants.jsx'; 
 import swal from 'sweetalert2'; 
-import SwalAlert from '../utils/swalAlert.jsx';
-import swalAlert from '../utils/swalAlert.jsx';
+import swalAlert from '@/utils/swalAlert.jsx';
 
 const AuthContext = createContext(); 
 
