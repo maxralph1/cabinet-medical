@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'; 
 import MedicalBill from '../models/MedicalBill.js'; 
+import Notification from '../models/Notification.js';
 
 
 /**
@@ -90,6 +91,13 @@ const createMedicalBill = asyncHandler(async (req, res) => {
         comments, 
         amount
     }); 
+
+    const notification = await Notification.create({
+        user: medicalBill?.patient, 
+        medical_bill: medicalBill?._id, 
+        read: false,
+        type: 'medical-bill-new',
+    });
 
     medicalBill.save()
                 .then(() => {
@@ -189,7 +197,7 @@ const restoreMedicalBill = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Medical Bill
+ * Permanent-delete Medical Bill
  */
 const destroyMedicalBill = asyncHandler(async (req, res) => {
     const medicalBill = await MedicalBill.findOne({ _id: req?.params?.id, deleted_at: null }); 

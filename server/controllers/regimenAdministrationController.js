@@ -107,7 +107,7 @@ const restoreRegimenAdministration = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Regimen Administration
+ * Permanent-delete Regimen Administration
  */
 const destroyRegimenAdministration = asyncHandler(async (req, res) => {
     const regimenAdministration = await RegimenAdministration.findOne({ _id: req?.params?.id, deleted_at: null }); 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
 import useAxios from '@/utils/useAxios.jsx'; 
 
-export function useUserCount(range = 'all') {
+export function useUserCount(range = '') {
     const axiosInstance = useAxios(); 
     const [userCount, setUserCount] = useState([]); 
 
@@ -16,8 +16,8 @@ export function useUserCount(range = 'all') {
         setUserCount([]); 
         return axiosInstance.get(`dashboard/user-count?range=${range}`, { signal }) 
             .then(response => { 
-                console.log(response?.data)
-                setUserCount(response?.data)
+                console.log(response?.data);
+                setUserCount(response?.data);
             })
             .catch(error => console.log(error)); 
     } 

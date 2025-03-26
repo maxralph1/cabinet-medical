@@ -1,4 +1,4 @@
-import { useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import dayjs from 'dayjs';
@@ -24,6 +24,13 @@ export default function Index() {
     console.log(regimens); 
 
     const { deleteRegimen } = useRegimen(); 
+
+    useEffect(() => {
+        if (regimens) {
+        console.log('Regimen has been updated:', regimens);
+        // Your logic for when `regimen` updates, like triggering other actions
+        }
+    }, [regimens]);
 
     return (
         <Layout>

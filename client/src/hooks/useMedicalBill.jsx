@@ -33,7 +33,7 @@ export function useMedicalBill(id = null) {
                 navigate(route('home.medical-bills.index')); 
                 swal.fire({
                     text: `Medical Bill added.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false
@@ -86,7 +86,7 @@ export function useMedicalBill(id = null) {
                 navigate(route('home.medical-bills.index')); 
                 swal.fire({
                     text: `Medical Bill updated.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

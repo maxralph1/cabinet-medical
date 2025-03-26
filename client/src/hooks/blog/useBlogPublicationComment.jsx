@@ -33,7 +33,7 @@ export function useBlogPublicationComment(id = null) {
                 console.log(response); 
                 // swal.fire({
                 //     text: `Blog Publication Comment added.`,
-                //     color: '#f2f2f20', 
+                //     color: '#f2f2f2', 
                 //     width: 325, 
                 //     position: 'top', 
                 //     showConfirmButton: false 

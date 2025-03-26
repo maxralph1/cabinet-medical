@@ -129,7 +129,7 @@ const restoreChatMessage = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Chat Message
+ * Permanent-delete Chat Message
  */
 const destroyChatMessage = asyncHandler(async (req, res) => {
     const chatMessage = await ChatMessage.findOne({ _id: req?.params?.id, deleted_at: null }); 

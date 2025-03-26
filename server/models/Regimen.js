@@ -10,6 +10,12 @@ const regimenSchema = new Schema({
         inventory: { type: Schema.Types.ObjectId, ref: 'Inventory' }, 
         notes: { type: String }, 
         comments: { type: String }, 
+        status: {
+            type: String, 
+            required: true, 
+            enum: ['pending', 'ongoing', 'completed', 'cancelled'], 
+            default: 'pending'
+        }, 
         deleted_at: { type: String, default: null }, 
         deleted_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
     }, 

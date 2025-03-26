@@ -33,7 +33,7 @@ export function useRegimen(id = null) {
                 navigate(route('home.regimens.index')); 
                 swal.fire({
                     text: `Regimen added.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false
@@ -51,7 +51,7 @@ export function useRegimen(id = null) {
                     });
                 } else {
                     swal.fire({
-                        text: `${error?.response?.status}: An error occured!`, 
+                        text: `${error?.response?.status}: ${error?.response?.data?.message ?? 'An error occured!'}`, 
                         color: '#900000', 
                         width: 325, 
                         position: 'top', 
@@ -86,13 +86,16 @@ export function useRegimen(id = null) {
                 navigate(route('home.regimens.index')); 
                 swal.fire({
                     text: `Regimen updated.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false
                 });
             })
-            .catch(error => setErrors(error?.response))
+            .catch(error => {
+                console.log(error?.response);
+                setErrors(error?.response);
+            })
             .finally(() => {
                 setLoading(false); 
                 setData({}); 

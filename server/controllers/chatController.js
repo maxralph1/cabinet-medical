@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import Chat from '../models/Chat.js'; 
 import ChatUser from '../models/ChatUser.js'; 
 import ChatMessage from '../models/ChatMessage.js'; 
+import Notification from '../models/Notification.js'; 
 
 
 /**
@@ -40,15 +41,21 @@ const getChats = asyncHandler(async (req, res) => {
  * Create Chat
  */ 
 const createChat = asyncHandler(async (req, res) => {
-    const { topic, description, message } = req?.body; 
+    const { message, other_user_id, chat_id } = req?.body; 
 
-    const chat = new Chat({
-        user: req?.user_id, 
-        topic, 
-        description
-    }); 
+    const chatUserAlreadyExists = await ChatUser.findOne({ user: other_user, chat: chat?._id });
 
-    const chatUserAlreadyExists = await ChatUser.findOne({ user: req?.user_id, chat: chat?._id });
+    let chat; 
+
+    if (!chat_id) {
+        chat = new Chat({
+            user: req?.user_id, 
+            topic, 
+            description
+        });
+    }; 
+
+    
 
     let chatUser;
     if (!chatUserAlreadyExists) {
@@ -56,13 +63,22 @@ const createChat = asyncHandler(async (req, res) => {
             user: req?.user_id, 
             chat: chat?._id
         });
-    }
-    
+    } else {
+        chatUser = chatUserAlreadyExists;
+    }; 
+
     let chatMessage = await ChatMessage.create({
         chat: chat?._id, 
         user: req?.user_id, 
         content: message
-    })
+    }); 
+
+    const notification = await Notification.create({
+        user: chatUser?._id, 
+        chat_message: chatMessage._id,
+        read: false,
+        type: 'chat-message', 
+    });
 
     chat.save()
         .then(() => {

@@ -22,15 +22,15 @@ export default function Index() {
     const date = new Date();
     const hour = date.getHours();  
 
-    const [appointmentRange, setAppointmentRange] = useState('all'); 
+    const [appointmentRange, setAppointmentRange] = useState(''); 
     const [regimenRange, setRegimenRange] = useState('all'); 
-    const [revenueRange, setRevenueRange] = useState('all'); 
-    const [userCountRange, setUserCountRange] = useState('all'); 
+    const [revenueRange, setRevenueRange] = useState(''); 
+    const [userCountRange, setUserCountRange] = useState(''); 
 
-    const { appointments } = useAppointments(appointmentRange); 
+    const { appointments, getAppointments } = useAppointments(appointmentRange); 
     const { regimens } = useRegimens(regimenRange); 
-    const { revenue } = useRevenue(revenueRange); 
-    const { userCount } = useUserCount(userCountRange); 
+    const { revenue, getRevenue } = useRevenue(revenueRange); 
+    const { userCount, getUserCount } = useUserCount(userCountRange); 
     const { widgets, getWidgets } = useWidgets(); 
     const { widgetValues } = useWidgetValues();
     const { widget, createWidget, deleteWidget } = useWidget(); 
@@ -41,15 +41,32 @@ export default function Index() {
     console.log('widgets:', widgets); 
     console.log('widgetValues:', widgetValues); 
 
-    const getClosestAppointment = () => {
-        const now = new Date();
+    const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+    const [closestAppointment, setClosestAppointment] = useState(null); 
+    console.log(closestAppointment)
 
-        // Format current date and time as 'YYYY-MM-DDTHH:mm' to match the proposed appointment format
-        const currentDateTime = now.toISOString().slice(0, 16); // '2025-03-05T10:15' format
-        
+    // Set upcoming appointments when appointments data changes
+    useEffect(() => {
+        if (appointments?.data?.upcoming_appointments) {
+            setUpcomingAppointments(appointments?.data?.upcoming_appointments);
+        }
+    }, [appointments]); // Runs when 'appointments' prop changes
+
+    // Get the closest appointment whenever the upcomingAppointments changes
+    useEffect(() => {
+        if (upcomingAppointments.length > 0) {
+            const closest = getClosestAppointment(upcomingAppointments);
+            setClosestAppointment(closest);
+        }
+    }, [upcomingAppointments]); // Runs when 'upcomingAppointments' state changes
+
+    const getClosestAppointment = (appointments) => {
+        const now = new Date();
+        const currentDateTime = now.toISOString().slice(0, 16); // 'YYYY-MM-DDTHH:mm' format
+
         // Find the appointment happening today
-        const todayAppointment = appointments?.data?.find((appointment) => {
-            const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+        const todayAppointment = appointments?.find((appointment) => {
+            const proposedStartDateTime = appointment?.proposed_schedule_start;
             return proposedStartDateTime === currentDateTime;
         });
 
@@ -59,81 +76,28 @@ export default function Index() {
         }
 
         // If no appointment is happening today, find the closest future appointment
-        const futureAppointments = appointments?.data?.filter((appointment) => {
-            const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+        const futureAppointments = appointments?.filter((appointment) => {
+            const proposedStartDateTime = appointment?.proposed_schedule_start;
             return proposedStartDateTime > currentDateTime;
         });
 
         // If there are future appointments, return the closest one
-        if (futureAppointments?.data?.length > 0) {
-            // Sort by the proposed start time, and pick the first (earliest future appointment)
-            const closestFutureAppointment = futureAppointments?.data?.reduce((closest, appointment) => {
-                const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+        if (futureAppointments?.length > 0) {
+            const closestFutureAppointment = futureAppointments?.reduce((closest, appointment) => {
+                const proposedStartDateTime = appointment?.proposed_schedule_start;
                 return !closest || proposedStartDateTime < closest ? proposedStartDateTime : closest;
             });
 
-            return futureAppointments?.data?.find((appointment) => {
-                const proposedStartDateTime = `${appointment?.proposed_year_start}-${String(appointment?.proposed_month_start).padStart(2, '0')}-${String(appointment?.proposed_date_start).padStart(2, '0')}T${appointment?.proposed_time_start}`;
+            return futureAppointments?.find((appointment) => {
+                const proposedStartDateTime = appointment?.proposed_schedule_start;
                 return proposedStartDateTime === closestFutureAppointment;
             });
         }
 
         // If no future appointments are found, return null
         return null;
-    }; 
-
-    /** Time Difference Calculation */
-    const [timeDifference, setTimeDifference] = useState(null);
-
-    // Function to calculate time difference
-    const calculateTimeDifference = (timeEnd, timeStart) => {
-        const timeToDate = (time) => {
-            if (!time || typeof time !== 'string' || !time.includes(':')) {
-                throw new Error('Invalid time format');
-            }
-
-            const [hours, minutes] = time.split(':');
-            if (isNaN(hours) || isNaN(minutes)) {
-                throw new Error('Invalid time format');
-            }
-
-            const now = new Date();
-            now.setHours(hours, minutes, 0, 0);
-            return now;
-        };
-
-        try {
-            if (!timeEnd || !timeStart) {
-                throw new Error('Both timeEnd and timeStart are required');
-            }
-
-            const startTime = timeToDate(timeStart);
-            const endTime = timeToDate(timeEnd);
-
-            const diffInMilliseconds = endTime - startTime;
-            const diffInMinutes = diffInMilliseconds / (1000 * 60);
-
-            return diffInMinutes;
-        } catch (error) {
-            console.error('Error:', error.message);
-            return 'N/A';
-        }
     };
 
-    useEffect(() => {
-        // Wait for data to be available and then calculate the time difference
-        if (appointments?.data?.upcoming_appointment?.proposed_time_end && 
-            appointments?.data?.upcoming_appointment?.proposed_time_start) {
-            
-            const diff = calculateTimeDifference(
-                appointments?.data?.upcoming_appointment?.proposed_time_end,
-                appointments?.data?.upcoming_appointment?.proposed_time_start
-            );
-            
-            setTimeDifference(diff);  // Store the result in state
-        }
-    }, [appointments]);
-    /** End of Time Difference Calculation */
 
     return (
         <Layout>
@@ -150,37 +114,177 @@ export default function Index() {
                                     : '' }
                 </span> */}
                 <div className="d-flex flex-column gap-2 pt-2 align-items-end">
-                    <span>You have&nbsp;<a href="#" className="fw-semibold text-warning">1 appointment&nbsp;</a>today in the next <span className="fw-semibold">30 minutes</span>.</span>
-                    <span>You have&nbsp;<a href="#" className="fw-semibold text-warning">1 ongoing regimen&nbsp;</a>. Ensure to take your medication.</span>
+                    <span>You have&nbsp;
+                        <Link to={ route('home.appointments.index') } className="fw-semibold text-warning">
+                            { appointments?.data?.upcoming_appointments?.length }&nbsp;
+                            appointment{ appointments?.data?.upcoming_appointments?.length>1 && 's' }&nbsp;
+                        </Link>in the coming days<span className="fw-semibold"></span>.</span>
+
+                    <span>You have&nbsp;
+                        <Link to={ route('home.regimens.index') } className="fw-semibold text-warning">{ regimens?.data?.length } uncompleted regimen{ regimens?.data?.length>1 && 's' }</Link>&nbsp;
+                        { regimens?.data?.length>1 && '. Ensure to take your medication.' }
+                        <span className="fw-semibold"></span>.</span>
                 </div>
             </div>
             
             <section className="dashboard-meters w-100">
                 <section className="admin-meters gap-3 pt-4">
                     <article className="revenue border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                        <div className="w-100 d-flex justify-content-between">
+                            <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
                             style={{ backgroundColor: '#f2f2f2' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-currency-dollar"
-                                viewBox="0 0 16 16">
-                                <path
-                                    d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z" />
-                            </svg>
-                        </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-currency-dollar"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z" />
+                                </svg>
+                            </span>
+                            <div className="dropdown">
+                                <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                    </svg>
+                                </span>
+                                <ul class="dropdown-menu border-radius-25 px-3">
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setRevenueRange('today'); 
+                                                await getRevenue(revenueRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                Today
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setRevenueRange('this-week'); 
+                                                await getRevenue(revenueRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Week
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setRevenueRange('this-month');
+                                                await getRevenue(revenueRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Month
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setRevenueRange('this-year'); 
+                                                await getRevenue(revenueRange);  
+                                            }}
+                                            className="dropdown-item">
+                                                This Year
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setRevenueRange(''); 
+                                                await getRevenue(revenueRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                All
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <span>Total Revenue</span>
                         <span className="fs-4 fw-semibold">{ (Number(revenue?.data?.total_medical_bills_amount) + Number(revenue?.data?.total_invoice_paid)) || '0.00' }<span className="fs-5">MUR</span></span>
                         <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(revenue?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                     
                     <article className="appointments border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                        <div className="w-100 d-flex justify-content-between">
+                            <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
                             style={{ backgroundColor: '#f2f2f2' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-event"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-event"
                                 viewBox="0 0 16 16">
-                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                <path
-                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                            </svg>
-                        </span>
+                                    <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                    <path
+                                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                </svg>
+                            </span>
+                            <div className="dropdown">
+                                <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                    </svg>
+                                </span>
+                                <ul class="dropdown-menu border-radius-25 px-3">
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setAppointmentRange('today'); 
+                                                await getAppointments(appointmentRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                Today
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setAppointmentRange('this-week'); 
+                                                await getAppointments(appointmentRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Week
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setAppointmentRange('this-month');
+                                                await getAppointments(appointmentRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Month
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setAppointmentRange('this-year'); 
+                                                await getAppointments(appointmentRange);  
+                                            }}
+                                            className="dropdown-item">
+                                                This Year
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setAppointmentRange(''); 
+                                                await getAppointments(appointmentRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                All
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <span>Total Appointments</span>
                         <span className="fs-4 fw-semibold">{ Number(appointments?.data?.appointments_count) || 0 }</span>
                         <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(appointments?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
@@ -200,23 +304,89 @@ export default function Index() {
                                 || userCount?.data?.gynaecologists
                             ) || 0 }
                         </span>
-                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
+                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                     
                     <article className="patients border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                        <div className="w-100 d-flex justify-content-between">
+                            <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
                             style={{ backgroundColor: '#f2f2f2' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-standing"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-standing"
                                 viewBox="0 0 16 16">
-                                <path
-                                    d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0" />
-                            </svg>
-                        </span>
+                                    <path
+                                        d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0" />
+                                </svg>
+                            </span>
+                            <div className="dropdown">
+                                <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                    </svg>
+                                </span>
+                                <ul class="dropdown-menu border-radius-25 px-3">
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setUserCountRange('today'); 
+                                                await getUserCount(userCountRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                Today
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setUserCountRange('this-week'); 
+                                                await getUserCount(userCountRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Week
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setUserCountRange('this-month');
+                                                await getUserCount(userCountRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                This Month
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setUserCountRange('this-year'); 
+                                                await getUserCount(userCountRange);  
+                                            }}
+                                            className="dropdown-item">
+                                                This Year
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => { 
+                                                setUserCountRange(''); 
+                                                await getUserCount(userCountRange); 
+                                            }}
+                                            className="dropdown-item">
+                                                All
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <span>Total Patients</span>
                         <span className="fs-4 fw-semibold">
                             { Number(userCount?.data?.patients) || 0 }
                         </span>
-                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
+                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                 </section>
 
@@ -228,8 +398,8 @@ export default function Index() {
                                     <span>{ (widget == 'heart_rate') ? 'Heart Rate' 
                                                 : (widget == 'liquid_volume') ? 'Liquid Volume' 
                                                 : (widget == 'rbc') ? 'Red Blood Cells' 
-                                                : (widget == 'sugar_level') ? 'Sugar Level' 
-                                                : (widget == 'water_level') ? 'Water Level' 
+                                                : (widget == 'blood_glucose_level') ? 'Blood Glucose' 
+                                                // : (widget == 'water_level') ? 'Water Level' 
                                                 : (widget == 'wbc') ? 'White Blood Cells' 
                                                 : '' }</span>
                                     <span 
@@ -246,25 +416,22 @@ export default function Index() {
                                                     </svg>
                                                 ) : (widget == 'liquid_volume') 
                                                     ? (
-                                                        ''
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moisture"
+                                                                        viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267" />
+                                                        </svg>
                                                     ) : (widget == 'rbc') 
                                                         ? (
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet-fill" viewBox="0 0 16 16">
                                                                 <path d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6M6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13"/>
                                                             </svg>
-                                                        ) : (widget == 'sugar_level') 
+                                                        ) : (widget == 'blood_glucose_level') 
                                                             ? (
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-boxes" viewBox="0 0 16 16">
                                                                     <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434zM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567zM7.5 9.933l-2.75 1.571v3.134l2.75-1.571zm1 3.134 2.75 1.571v-3.134L8.5 9.933zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567zm2.242-2.433V3.504L8.5 5.076V8.21zM7.5 8.21V5.076L4.75 3.504v3.134zM5.258 2.643 8 4.21l2.742-1.567L8 1.076zM15 9.933l-2.75 1.571v3.134L15 13.067zM3.75 14.638v-3.134L1 9.933v3.134z"/>
                                                                 </svg>
-                                                            ) : (widget == 'water_level') 
-                                                                ? (
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moisture"
-                                                                        viewBox="0 0 16 16">
-                                                                        <path
-                                                                            d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267" />
-                                                                    </svg>
-                                                                ) : (widget == 'wbc') 
+                                                            ) : (widget == 'wbc') 
                                                                     ? (
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet" viewBox="0 0 16 16">
                                                                             <path fillRule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
@@ -275,14 +442,38 @@ export default function Index() {
                                     </span>
 
                                 </div>
-                                <span className="fs-6 fw-semibold">120{ (widget == 'heart_rate') ? 'BPM'
-                                                                        : (widget == 'liquid_volume') ? 'L' 
-                                                                        : (widget == 'rbc') ? <span>/<span className="micro">μ</span>L</span> 
-                                                                        : (widget == 'sugar_level') ? '/mL' 
-                                                                        : (widget == 'water_level') ? 'L' 
-                                                                        : (widget == 'wbc') ? <span>/<span className="micro">μ</span>L</span>  
-                                                                        : '' }</span>
-                                <span className="bg-body-tertiary"><small>Updated January 9, 2025</small></span>
+                                {/* { console.log(widgetValues?.data?.length > 0) && widgetValues?.data?.find(foundWidget => foundWidget?.blood_glucose_level?.result)} */}
+                                <span className="fs-6 fw-semibold">
+                                    { (widget == 'heart_rate') 
+                                        ? <span>{ (widgetValues?.data?.heart_rate != null) ? ((widgetValues?.data?.heart_rate?.result)?.match(/\d+(\.\d+)?/)[0] + 'BPM') : 'N/A'}</span>
+                                            : (widget == 'liquid_volume') 
+                                            ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? ((widgetValues?.data?.liquid_volumne?.result)?.match(/\d+(\.\d+)?/)[0] + '/L') : 'N/A'}</span> 
+                                                : (widget == 'rbc') 
+                                                ? <span>{ (widgetValues?.data?.rbc != null) ? ((widgetValues?.data?.rbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
+                                                // ? <span>/<span className="micro">μ</span>L</span> 
+                                                    : (widget == 'blood_glucose_level') 
+                                                    ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? ((widgetValues?.data?.blood_glucose_level?.result)?.match(/\d+(\.\d+)?/)[0] + '/mL') : 'N/A'}</span>
+                                                        : (widget == 'wbc') 
+                                                        ? <span>{ (widgetValues?.data?.wbc != null) ? ((widgetValues?.data?.wbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
+                                                        // ? <span>/<span className="micro">μ</span>L</span>  
+                                        : '' }</span>
+                                <span className="bg-body-tertiary">
+                                    <small>Updated&nbsp;
+                                        { (widget == 'heart_rate') 
+                                        ? <span>{ (widgetValues?.data?.heart_rate != null) ? dayjs(widgetValues?.data?.heart_rate?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                            : (widget == 'liquid_volume') 
+                                            ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? dayjs(widgetValues?.data?.liquid_volumne?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span> 
+                                                : (widget == 'rbc') 
+                                                ? <span>{ (widgetValues?.data?.rbc != null) ? dayjs(widgetValues?.data?.rbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                // ? <span>/<span className="micro">μ</span>L</span> 
+                                                    : (widget == 'blood_glucose_level') 
+                                                    ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? dayjs(widgetValues?.data?.blood_glucose_level?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                        : (widget == 'wbc') 
+                                                        ? <span>{ (widgetValues?.data?.wbc != null) ? dayjs(widgetValues?.data?.wbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                        // ? <span>/<span className="micro">μ</span>L</span>  
+                                        : '' }
+                                    </small>
+                                </span>
                             </article>
                         )
                     })) }
@@ -388,11 +579,11 @@ export default function Index() {
                                                     </button> }
                                         </article>
                                         <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Sugar Level</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'sugar_level') 
+                                            <h4 className="fs-6 mt-2">Blood Glucose</h4>
+                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'blood_glucose_level') 
                                                 ? <button 
                                                     onClick={ async () => {
-                                                        await deleteWidget('sugar_level'); 
+                                                        await deleteWidget('blood_glucose_level'); 
                                                         await getWidgets(); 
                                                     } } 
                                                     className="bg-transparent border-0">
@@ -402,31 +593,7 @@ export default function Index() {
                                                     </button> 
                                                 : <button 
                                                     onClick={ async () => {
-                                                        await createWidget('sugar_level'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Water Level</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'water_level') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('water_level'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('water_level'); 
+                                                        await createWidget('blood_glucose_level'); 
                                                         await getWidgets(); 
                                                     } }
                                                     className="bg-transparent border-0">
@@ -483,12 +650,12 @@ export default function Index() {
                                 </span>
                                 <span>
                                     { (user?.user?.role == 'patient') 
-                                        ? ((appointments?.data?.upcoming_appointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (appointments?.data?.upcoming_appointment?.professional?.first_name)?.slice(1)) 
+                                        ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
                                             + ' ' 
-                                            + ((appointments?.data?.upcoming_appointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (appointments?.data?.upcoming_appointment?.professional?.last_name)?.slice(1))
-                                        : ((appointments?.data?.upcoming_appointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (appointments?.data?.upcoming_appointment?.patient?.first_name)?.slice(1)) 
+                                            + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
+                                        : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
                                             + ' ' 
-                                            + ((appointments?.data?.upcoming_appointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (appointments?.data?.upcoming_appointment?.patient?.last_name)?.slice(1)) }
+                                            + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
                                 </span>
                                 <span className="chat-with-doctor ms-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chat-left-text"
@@ -502,7 +669,7 @@ export default function Index() {
                             </span>
                             <span className="badge rounded-pill text-bg-info">
                                 { (user?.user?.role == 'patient') 
-                                    ? ((appointments?.data?.upcoming_appointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (appointments?.data?.upcoming_appointment?.professional?.role)?.slice(1))  
+                                    ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
                                     : ((user?.user?.role == 'general_practitioner')
                                         || (user?.user?.role == 'gynaecologist') 
                                         || (user?.user?.role == 'paediatrician')) 
@@ -520,8 +687,8 @@ export default function Index() {
                     <section className="about-doctor-patient pt-3">
                         <p>
                             { (user?.user?.role == 'patient') 
-                                ? (appointments?.data?.upcoming_appointment?.professional?.bio) 
-                                : (appointments?.data?.upcoming_appointment?.patient?.bio)}
+                                ? (closestAppointment?.professional?.bio) 
+                                : (closestAppointment?.patient?.bio)}
                         </p>
                     </section> 
                     <section className="appointment-schedule w-100 d-flex justify-content-between">
@@ -535,10 +702,7 @@ export default function Index() {
                                 </svg>
                             </span>
                             <span>
-                                { appointments?.data?.upcoming_appointment?.proposed_date_start }&nbsp;
-                                { dayjs(appointments?.data?.upcoming_appointment?.proposed_month_start).format('MMM.') }&nbsp;
-                                { dayjs(appointments?.data?.upcoming_appointment?.proposed_year_start).format('YYYY') }&nbsp;
-                                { appointments?.data?.upcoming_appointment?.proposed_time_start }&nbsp;
+                                { dayjs(closestAppointment?.proposed_schedule_start)?.format('MMM. D YYYY, HH:mm') }&nbsp;
                             </span>
                         </div>
                         <div className="appointment-length d-flex align-items-center gap-1">
@@ -550,7 +714,7 @@ export default function Index() {
                                 </svg>
                             </span>
                             <span>
-                                { timeDifference !== null ? timeDifference : '0' }&nbsp;minute{ (timeDifference < 2) ? '' : 's' }
+                                { dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true) || '30 minutes' }&nbsp;minute{ ((dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true)) > 1) && 's' }
                             </span>
                         </div>
                     </section>
@@ -564,7 +728,7 @@ export default function Index() {
                 <section className="latest border border-1 border-tertiary border-radius-25 px-3 py-4">
                     <div className="d-flex justify-content-between">
                         <h2 className="fs-5">Latest Appointments</h2>
-                        <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0 my-0">
+                        <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold h-100 d-flex align-items-center py-0 my-0">
                             <span className="mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" className="bi bi-plus-lg"
                                     viewBox="0 0 16 16">
@@ -606,14 +770,7 @@ export default function Index() {
                                                             : (appointment?.patient?.phone ? appointment?.patient?.phone : appointment?.patient?.email) }
                                                     </td>
                                                     <td className="d-none d-md-table-cell">
-                                                        {/* { dayjs(appointment?.proposed_date_start).format('D') }&nbsp; */}
-                                                        { appointment?.proposed_date_start }&nbsp;
-                                                        { dayjs(appointment?.proposed_month_start).format('MMM.') }&nbsp;
-                                                        { dayjs(appointment?.proposed_year_start).format('YYYY') }&nbsp;
-                                                        {/* { dayjs(appointment?.proposed_time_start).format('h:mm') }&nbsp; */}
-                                                        { appointment?.proposed_time_start }&nbsp;
-                                                        {/* { appointment?.proposed_year_start }&nbsp;
-                                                        { appointment?.proposed_time_start }&nbsp; */}
+                                                        { dayjs(appointment?.proposed_schedule_start)?.format('MMM. D, YYYY, HH:mm') }&nbsp;
                                                     </td>
                                                     {/* { dayjs(diagnosisSegmentItem?.created_at).format('ddd, MMM D, YYYY h:mm A') } */}
                                                     <td>

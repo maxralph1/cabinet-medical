@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const chatUserSchema = new Schema({
         chat: { type: Schema.Types.ObjectId, ref: 'Chat' }, 
         user: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        // invited_by: { type: Schema.Types.ObjectId, ref: 'User' }, 
+        // invitee: { type: Schema.Types.ObjectId, ref: 'User' }, 
         invite_accepted: { type: Boolean, default: false }, 
         invite_accepted_date: { type: Date },
         leave_chat: { type: Boolean, default: false }, 

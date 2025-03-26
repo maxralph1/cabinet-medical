@@ -16,6 +16,10 @@ const routeNames = {
     'home.appointments.edit': '/home/appointments/:id/edit', 
     'home.appointments.create': '/home/appointments/create', 
     'home.appointments.index': '/home/appointments', 
+    
+    'home.appointment-requests.index': '/home/appointment-requests', 
+
+    'home.contact-us.index': '/home/contact-us', 
 
     /** Blog */
     'home.blog.index': '/home/blog', 
@@ -70,18 +74,20 @@ const routeNames = {
     'home.medical-bills.create': '/home/medical-bills/create', 
     'home.medical-bills.index': '/home/medical-bills', 
 
+    'home.notifications.index': '/home/notifications', 
+
     'home.patient-charts.show': '/home/patient-charts/:id/show', 
     'home.patient-charts.edit': '/home/patient-charts/:id/edit', 
     'home.patient-charts.create': '/home/patient-charts/create', 
     'home.patient-charts.index': '/home/patient-charts', 
 
-    'home.patients.show': '/home/patients/:id/show', 
-    'home.patients.edit': '/home/patients/:id/edit', 
+    'home.patients.show': '/home/patients/:username/show', 
+    'home.patients.edit': '/home/patients/:username/edit', 
     'home.patients.create': '/home/patients/create', 
     'home.patients.index': '/home/patients', 
 
-    'home.professionals.show': '/home/professionals/:id/show', 
-    'home.professionals.edit': '/home/professionals/:id/edit', 
+    'home.professionals.show': '/home/professionals/:username/show', 
+    'home.professionals.edit': '/home/professionals/:username/edit', 
     'home.professionals.create': '/home/professionals/create', 
     'home.professionals.index': '/home/professionals', 
 

@@ -138,6 +138,11 @@ export default function Index() {
                                                                                             </button>
                                                                                         </div>
                                                                                         <div className="modal-body">
+                                                                                            <span className="d-flex justify-content-end pb-3">
+                                                                                                <a href={ route('home.diagnoses.show', { id: diagnosis?._id }) }>
+                                                                                                    <small>Go to printable version</small>
+                                                                                                </a>
+                                                                                            </span>
                                                                                             <p>Patient:&nbsp;
                                                                                                 <span className="fw-semibold">
                                                                                                     { diagnosis?.patient ? ((diagnosis?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.first_name)?.slice(1)) + ' ' + ((diagnosis?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.last_name)?.slice(1)) : 'N/A' }
@@ -188,7 +193,7 @@ export default function Index() {
                                                                                             </section>
 
                                                                                             <section className="comments pt-3">
-                                                                                                <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(lab. Scientist):</h3>
+                                                                                                <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(Lab. Scientist):</h3>
                                                                                                 <p>{ diagnosis?.comments ? diagnosis?.comments : 'N/A' }</p>
                                                                                             </section>
 

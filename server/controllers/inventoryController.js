@@ -174,7 +174,7 @@ const restoreInventory = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Inventory
+ * Permanent-delete Inventory
  */ 
 const destroyInventory = asyncHandler(async (req, res) => {
     const inventory = await Inventory.findOne({ _id: req?.params?.id, deleted_at: null }); 

@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { formatISO, parseISO, startOfDay, endOfDay, subDays, 
         startOfMonth, endOfMonth, addMonths, subMonths, 
         startOfYear, endOfYear, addYears, subYears } from 'date-fns'; 
+import { addSeconds, addMinutes, addHours, addDays } from 'date-fns';
 import Regimen from '../models/Regimen.js'; 
 import RegimenAdministration from '../models/RegimenAdministration.js';
 
@@ -83,13 +84,21 @@ const getRegimens = asyncHandler(async (req, res) => {
  * Create Regimen
  */ 
 const createRegimen = asyncHandler(async (req, res) => {
-    const { patient, notes,
+    const { patient, notes, 
             administrations_count, date_time_start, frequency_value, frequency_unit, 
             proposed_administration_date_times } = req?.body; 
 
     console.log(req?.body)
 
-    // proposed_administration_date_times is an array
+    // proposed_administration_date_times is in JSON format
+    const proposed_administration_date_times_array = JSON.parse(proposed_administration_date_times);
+    if ((!proposed_administration_date_times_array?.length) && (!req?.body?.administrations_count && !req?.body?.date_time_start && !req?.body?.frequency_value && !req?.body?.frequency_unit)) {
+        return res.status(400).json({ message: "Please provide administration dates/times using either methods on the form below." });
+    };
+    // if ((!proposed_administration_date_times?.length) && 
+    //     (![administrations_count, date_time_start, frequency_value, frequency_unit].some(value => value))) {
+    //     return res.status(400).json({ message: "Please provide proposed administration date times or administration frequency" });
+    // };
 
     const regimen = new Regimen({
         patient, 
@@ -99,7 +108,7 @@ const createRegimen = asyncHandler(async (req, res) => {
 
     /** Proposed Administration Frequency */
     if (proposed_administration_date_times && (proposed_administration_date_times?.length > 0)) {
-        const proposed_administration_date_times_array = JSON.parse(proposed_administration_date_times);
+        // const proposed_administration_date_times_array = JSON.parse(proposed_administration_date_times);
         const proposedAdministrationdateTimesResolve = proposed_administration_date_times_array?.map(async (unit, index) => { 
             await RegimenAdministration.create({
                 authorizing_professional: req?.user_id, 
@@ -120,25 +129,29 @@ const createRegimen = asyncHandler(async (req, res) => {
             let proposed_date_time = new Date(date_time_start);
 
             for (let i = 0; i <= administrations_count; i++) {
+                
+                if (i > 0) {
+                    let createPromise = RegimenAdministration.create({
+                            authorizing_professional: req?.user_id, 
+                            patient, 
+                            regimen: regimen?._id, 
+                            proposed_administration_date_time: proposed_date_time,
+                        });
 
-                let createPromise = RegimenAdministration.create({
-                        authorizing_professional: req?.user_id, 
-                        patient, 
-                        regimen: regimen?._id, 
-                        proposed_administration_date_time: proposed_date_time?.toISOString(),
-                    });
-
-                promises.push(createPromise); 
+                    promises.push(createPromise); 
+                }
 
                 if (frequency_unit == 'per_second') {
-                    proposed_date_time.setSeconds(proposed_date_time.getSeconds() + frequency_value);
+                    proposed_date_time = addSeconds(proposed_date_time, Number(frequency_value));
                 } else if (frequency_unit == 'per_minute') {
-                    proposed_date_time.setMinutes(proposed_date_time.getMinutes() + frequency_value);
+                    proposed_date_time = addMinutes(proposed_date_time, Number(frequency_value));
                 } else if (frequency_unit == 'hourly') {
-                    proposed_date_time.setHours(proposed_date_time.getHours() + frequency_value);
+                    proposed_date_time = addHours(proposed_date_time, Number(frequency_value));
                 } else if (frequency_unit == 'daily') {
-                    proposed_date_time.setDate(proposed_date_time.getDate() + frequency_value);
-                };
+                    proposed_date_time = addDays(proposed_date_time, Number(frequency_value));
+                }
+
+                console.log((administrations_count, date_time_start, frequency_value, frequency_unit, proposed_date_time))
             }
 
             await Promise.all(promises);
@@ -148,6 +161,13 @@ const createRegimen = asyncHandler(async (req, res) => {
 
     };
     /** End of Proposed Administration Frequency */
+
+    const notification = await Notification.create({
+        user: regimen?.patient, 
+        regimen: regimen?._id, 
+        read: false,
+        type: 'regimen',
+    });
 
     regimen.save()
             .then(() => {
@@ -190,18 +210,76 @@ const getRegimen = asyncHandler(async (req, res) => {
  * Update Regimen
  */
 const updateRegimen = asyncHandler(async (req, res) => {
+    const { notes, comments,
+            administrations_count, date_time_start, frequency_value, frequency_unit, 
+            proposed_administration_date_times } = req?.body; 
+
+    console.log(req?.body)
+            
     const regimen = await Regimen.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
     if (!regimen) return res.status(404).json({ message: "Regimen not found!" }); 
 
-    // regimen.patient = req?.body?.patient || regimen?.patient; 
-    // regimen.authorizing_professional = req?.body?.authorizing_professional || regimen?.authorizing_professional; 
-    regimen.notes = req?.body?.notes || regimen?.notes; 
-    regimen.comments = req?.body?.comments || regimen?.comments; 
-    regimen.date_start = req?.body?.date_start || regimen?.date_start; 
-    regimen.time_start = req?.body?.time_start || regimen?.time_start; 
-    regimen.date_end = req?.body?.date_end || regimen?.date_end; 
-    regimen.time_end = req?.body?.time_end || regimen?.time_end; 
+    regimen.notes = notes || regimen?.notes; 
+    regimen.comments = comments || regimen?.comments; 
+
+    /** Proposed Administration Frequency */
+    if (proposed_administration_date_times && (proposed_administration_date_times?.length > 0)) {
+        const proposed_administration_date_times_array = JSON.parse(proposed_administration_date_times);
+        const proposedAdministrationdateTimesResolve = proposed_administration_date_times_array?.map(async (unit, index) => { 
+            await RegimenAdministration.create({
+                authorizing_professional: req?.user_id, 
+                patient: regimen?.patient, 
+                regimen: regimen?._id, 
+                proposed_administration_date_time: unit?.date_time, 
+            }); 
+        }); 
+
+        await Promise.all(proposedAdministrationdateTimesResolve); 
+    }; 
+
+    if ((administrations_count && date_time_start && frequency_value && frequency_unit)) {
+
+        const proposedAdministrationdateTimesResolve = async () => {
+            const promises = []; // Collect all promises to run them concurrently
+
+            let proposed_date_time = new Date(date_time_start); 
+
+            for (let i = 0; i <= administrations_count; i++) {
+                
+                if (i > 0) {
+                    let createPromise = RegimenAdministration.create({
+                            authorizing_professional: req?.user_id, 
+                            patient: regimen?.patient, 
+                            regimen: regimen?._id, 
+                            proposed_administration_date_time: proposed_date_time,
+                        });
+
+                    promises.push(createPromise); 
+                }
+
+                if (frequency_unit == 'per_second') {
+                    proposed_date_time = addSeconds(proposed_date_time, Number(frequency_value));
+                } else if (frequency_unit == 'per_minute') {
+                    proposed_date_time = addMinutes(proposed_date_time, Number(frequency_value));
+                } else if (frequency_unit == 'hourly') {
+                    proposed_date_time = addHours(proposed_date_time, Number(frequency_value));
+                } else if (frequency_unit == 'daily') {
+                    proposed_date_time = addDays(proposed_date_time, Number(frequency_value));
+                }
+
+                console.log((administrations_count, date_time_start, frequency_value, frequency_unit, proposed_date_time))
+            }
+
+            await Promise.all(promises);
+        };
+
+        await proposedAdministrationdateTimesResolve();
+
+    };
+    /** End of Proposed Administration Frequency */
+
+    regimen.updated_at = new Date();
 
     regimen.save()
             .then(() => {

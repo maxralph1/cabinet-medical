@@ -8,6 +8,7 @@ dayjs.extend(relativeTime);
 dayjs.extend(utc); 
 import swal from 'sweetalert2'; 
 import { useRegimen } from '@/hooks/useRegimen.jsx'; 
+import { useRegimenAdministration } from '@/hooks/useRegimenAdministration.jsx'; 
 import SelectedUserComponent from '@/components/protected/nested-components/SelectedUserComponent';
 import Layout from '@/components/protected/Layout.jsx'; 
 
@@ -16,6 +17,7 @@ export default function Edit() {
     const { id } = useParams(); 
     const { regimen, getRegimen, updateRegimen } = useRegimen(id); 
     console.log(regimen); 
+    const { deleteRegimenAdministration } = useRegimenAdministration();
 
     const [selectedUserItem, setSelectedUserItem] = useState(null); 
 
@@ -37,7 +39,7 @@ export default function Edit() {
     //     console.log('proposedAdministrationDateTimes updated:', proposedAdministrationDateTimes);
     // }, [proposedAdministrationDateTimes]);
 
-    const handleSubmit = async e => {
+    const handleUpdate = async e => {
         e.preventDefault(); 
 
         // if (selectedUserItem) {
@@ -56,14 +58,17 @@ export default function Edit() {
                 selectedUserItem && formData.append('patient', selectedUserItem?._id); 
                 regimen?.data?.notes && formData.append('notes', regimen?.data?.notes); 
                 regimen?.data?.comments && formData.append('comments', regimen?.data?.comments); 
-                regimen?.data?.date_time_start && formData.append('date_time_start', regimen?.data?.date_time_start); 
+                regimen?.data?.date_time_start && formData.append('date_time_start', new Date(regimen?.data?.date_time_start)); 
                 regimen?.data?.frequency_value && formData.append('frequency_value', regimen?.data?.frequency_value); 
-                regimen?.data?.frequency_unit && formData.append('frequency_unit', regimen?.data?.frequency_unit); 
+                e.target.frequency_unit.value && formData.append('frequency_unit', e.target.frequency_unit.value); 
+                // regimen?.data?.frequency_unit && formData.append('frequency_unit', regimen?.data?.frequency_unit); 
                 regimen?.data?.administrations_count && formData.append('administrations_count', regimen?.data?.administrations_count); 
                 (proposedAdministrationDateTimes) && formData.append('proposed_administration_date_times', JSON.stringify(proposedAdministrationDateTimes)); 
 
                 await updateRegimen(formData); 
                 await regimen?.setData({}); 
+
+                // console.log(e.target.frequency_unit.value)
             }
         // } else {
         //     // console.log('Please select a patient and at least one diagnosis type.'); 
@@ -88,12 +93,12 @@ export default function Edit() {
                         <path
                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
                     </svg>&nbsp;
-                    <span>Add Regimen</span>
+                    <span>Edit Regimen</span>
                 </h2>
             </div>
 
             <section className="pt-3">
-                <form onSubmit={ handleSubmit }>
+                <form onSubmit={ handleUpdate }>
                     { (regimen?.data?.patient) && (
                         <section className="selected-user pt-2 pb-4 px-3">
                             <article className="d-flex align-items-center gap-3">
@@ -127,8 +132,7 @@ export default function Edit() {
                                     ...regimen?.data,
                                     notes: e.target.value,
                                 }) } 
-                                placeholder="This is for the medication." 
-                                required></textarea>
+                                placeholder="This is for the medication."></textarea>
                             <label htmlFor="notes">Notes</label>
                         </div>
                     </div>
@@ -143,8 +147,7 @@ export default function Edit() {
                                     ...regimen?.data,
                                     comments: e.target.value,
                                 }) } 
-                                placeholder="This is for the medication." 
-                                required></textarea>
+                                placeholder="This is for the medication."></textarea>
                             <label htmlFor="comments">Comments</label>
                         </div>
                     </div>
@@ -186,6 +189,7 @@ export default function Edit() {
                                         type="number" 
                                         min="0"
                                         id="frequency_value" 
+                                        name="frequency_value" 
                                         className="form-control" 
                                         onChange={ e => regimen.setData({
                                             ...regimen?.data,
@@ -197,11 +201,12 @@ export default function Edit() {
                                 <div className="form-floating mb-3 col-sm-6 col-md-3">
                                     <select 
                                         id="frequency_unit" 
+                                        name="frequency_unit" 
                                         className="form-select" 
-                                        onChange={ e => regimen.setData({
-                                            ...regimen?.data,
-                                            frequency_unit: e.target.value,
-                                        }) }
+                                        // onChange={ e => regimen.setData({
+                                        //     ...regimen?.data,
+                                        //     frequency_unit: e.target.value,
+                                        // }) }
                                         placeholder="Hourly">
                                             <option>Choose one ...</option>
                                             <option value="per_second">Per Second</option>
@@ -290,12 +295,14 @@ export default function Edit() {
                             <section className="product-units pt-4">
                                 <h4 className="fs-5">Schedule:&nbsp;&nbsp;</h4>
                                 <ul className="list-unstyled pt-1">
-                                    { regimen?.data?.regimen_administrations?.map((item, index) => (
+                                    { regimen?.data?.regimen_administrations
+                                                    ?.sort((a, b) => new Date(a.proposed_administration_date_time) - new Date(b.proposed_administration_date_time))
+                                                    ?.map((item, index) => (
                                         <li key={index} className="product-unit pb-2 d-flex">
                                             <span>{ index+1 }.&nbsp;</span>
         
                                             <div className="d-flex flex-column">
-                                                <span>Administration Date & Time:&nbsp;<span className="fw-semibold">{ dayjs(item?.proposed_administration_date_time).format('ddd, MMM D, YYYY h:mm A') }</span></span>
+                                                <span>Administration Date & Time:&nbsp;<span className="fw-semibold">{ dayjs(item?.proposed_administration_date_time).utc().format('ddd, MMM D, YYYY h:mm A') }</span></span>
                                             </div>
         
                                             <div className="ms-2">
@@ -334,7 +341,7 @@ export default function Edit() {
                     </section>
 
                     <div className="d-flex justify-content-end pt-4">
-                        <button type="submit" className="btn btn-outline-secondary border-radius-25">Save</button>
+                        <button type="submit" className="btn btn-outline-secondary border-radius-25">Update</button>
                     </div>
                 </form>
             </section>

@@ -9,6 +9,7 @@ import { createOrder,
 import InventoryInvoice from '../../models/inventory/InventoryInvoice.js';
 import InventoryProductInvoice from '../../models/inventory/inventoryProductInvoice.js';
 import InventoryProductUnit from '../../models/inventory/InventoryProductUnit.js';
+import Notification from '../../models/Notification.js';
 
 
 /**
@@ -73,6 +74,13 @@ const createInvoicePayment = async (req, res) => {
         }) 
         if (!updatedInvoice) return res.status(404).json({ message: 'Invoice not found' });
         console.log('updated invoice', updatedInvoice); 
+
+        const notification = await Notification.create({
+            user: foundInvoice?.patient, 
+            inventory_invoice: foundInvoice?._id, 
+            read: false,
+            type: 'invoice-payment',
+        });
 
         res.status(httpStatusCode).json(jsonResponse); 
     } catch (error) {

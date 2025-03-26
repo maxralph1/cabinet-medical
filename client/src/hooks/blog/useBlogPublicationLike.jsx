@@ -33,7 +33,7 @@ export function useBlogPublicationLike(id = null) {
                 setData(response?.data?.data)
                 // swal.fire({
                 //     text: `Blog Publication liked.`,
-                //     color: '#f2f2f20', 
+                //     color: '#f2f2f2', 
                 //     width: 325, 
                 //     position: 'top', 
                 //     showConfirmButton: false 

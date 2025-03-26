@@ -34,7 +34,7 @@ export function useDiagnosisType(id = null) {
                 console.log(response); 
                 swal.fire({
                     text: `Diagnosis Type created.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

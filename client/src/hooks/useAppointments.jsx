@@ -23,7 +23,7 @@ export function useAppointments(appointmentQuery) {
         setAppointments([]); 
         setLoading(true); 
         // return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}`, { signal })
-        return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}&search_key=${appointmentQuery?.search_key}&year=${appointmentQuery?.year}&month=${appointmentQuery?.month}&date=${appointmentQuery?.date}&time_start=${appointmentQuery?.time_start}&time_end=${appointmentQuery?.time_end}`, { signal })
+        return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}&range=${appointmentQuery?.range}&search_key=${appointmentQuery?.search_key}`, { signal })
             .then(response => {
                 setAppointments(response?.data); 
                 // setLoading(false);
