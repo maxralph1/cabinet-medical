@@ -562,7 +562,7 @@ export default function Index() {
                 </section>
 
                 <section className="latest border border-1 border-tertiary border-radius-25 px-3 py-4">
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between align-items-center">
                         <h2 className="fs-5">Latest Appointments</h2>
                         <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0 my-0">
                             <span className="mb-1">
