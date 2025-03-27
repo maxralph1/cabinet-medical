@@ -75,12 +75,21 @@ export default function Index() {
     return (
         <Layout>
             <>
+<<<<<<< HEAD
                 <BackgroundImageComponent imageUrl={NazimWide} height='650px'>
                     <section className="hero h-100 px-3 row j d-flex flex-column pt-4 pb-3">
                         {/* <div className="col-12 col-md-6"> */}
                         <div className="col-sm-12 col-md-6">
                             <h2 className="text-center pr-3 pl-3 mt-5 text-md-start fs-1">
                                 {/* <span className="fw-light">Good&nbsp;
+=======
+                <section className="hero row align-items-center pt-5 pb-3 mt-0" style={{ backgroundImage: `url(${NazimWide})`, backgroundRepeat: 'no-repeat', objectFit: 'cover' }}>
+                    {/* <div className="col-12 col-md-6"> */}
+                    {/* <div className="col-sm-12 col-md-6"> */}
+                    <div className="col-12">
+                        <h2 className="text-center text-md-start fs-1">
+                            {/* <span className="fw-light">Good&nbsp;
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                 { hour < 12 
                                     ? 'morning' 
                                         : hour < 16 
@@ -90,6 +99,7 @@ export default function Index() {
                                                 : '' }
                             !</span>&nbsp; */}
 
+<<<<<<< HEAD
                                 <span className='brand-text'>Cabinet Medical Clinic.</span>
                             </h2>
                             <div className='align-self-center sub-dark-bg  mt-5 white-text card transparent  p-3'>
@@ -116,6 +126,15 @@ export default function Index() {
                 </BackgroundImageComponent>
 
                 {/* <section className="hero-2 row align-items-center pt-5">
+=======
+                    {/* <div className="d-none d-md-block col-md-6"> */}
+                    {/* <div className="col-sm-12 col-md-6">
+                        <img src={ NazimWide } alt="Dr. Nazim Subrottee" className="img-fluid border-radius-25 slide-in" />
+                    </div> */}
+                </section>
+
+                <section className="hero-2 row align-items-center pt-3">
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                     <div className="col-sm-12 col-md-6">
                         <img src="#" alt="" className="img-fluid" />
                     </div>
@@ -266,67 +285,94 @@ export default function Index() {
                     <div>
                         <span>The aim of medicine is to prevent disease and prolong life; the idea of medicine is to eliminate the need for a physician.</span>
                     </div>
+<<<<<<< HEAD
                     <section className="nav-scroller mt-2">
                         <ul className="doctors-list nav justify-content-between gap-6 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
+                    <section className="nav-scroller">
+                        <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
                                     <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
+                                    <p className="text-wrap" style={{ maxWidth: '275px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
                                         Mauritius.</p>
                                     <p className="">
                                         <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
                                     <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
+                                    <p className="text-wrap" style={{ maxWidth: '275px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
                                         Mauritius.</p>
                                     <p className="">
                                         <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
                                     <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
+                                    <p className="text-wrap" style={{ maxWidth: '275px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
                                         Mauritius.</p>
                                     <p className="">
                                         <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
                                     <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
+                                    <p className="text-wrap" style={{ maxWidth: '275px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
                                         Mauritius.</p>
                                     <p className="">
                                         <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
                                 <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
+                                <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
                                     <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
+                                    <p className="text-wrap" style={{ maxWidth: '275px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
                                         Mauritius.</p>
                                     <p className="">
                                         <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
@@ -387,8 +433,16 @@ export default function Index() {
                             <ul className="articles-list row justify-content-center align-items-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden', paddingInlineStart: '0px' }}>
                                 {(blogPublications?.data?.map((publication, index) => {
                                     return (
+<<<<<<< HEAD
                                         <li key={publication?._id} className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
                                             <img src={publication?.image_path?.url || NazimTransparent} alt="" className="border-radius-15 object-fit-cover"
+=======
+                                        <li key={ publication?._id } className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
+                                            <img 
+                                                src={ publication?.image_path?.url || NazimTransparent } 
+                                                alt="" 
+                                                className="border-radius-15 object-fit-cover"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                                 style={{ width: '250px', height: '250px' }} />
                                             <div className="pt-3 d-flex flex-column align-items-center">
                                                 <div className="d-flex flex-column-reverse">
