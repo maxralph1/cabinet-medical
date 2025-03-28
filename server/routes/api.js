@@ -27,7 +27,7 @@ router.use('/auth', authRouter);
 router.use('/appointments', appointmentRouter); 
 router.use('/appointment-requests', appointmentRequestRouter); 
 router.use('/blog', blogRouter); 
-router.use('/chat-messages', chatMessageRouter); 
+router.use('/chats', chatMessageRouter); 
 router.use('/chats', chatRouter); 
 router.use('/contact-us', contactUsRouter); 
 router.use('/dashboard', dashboardRouter); 

@@ -60,6 +60,9 @@ const getAppointments = asyncHandler(async (req, res) => {
                                             path: 'professional',
                                             select: 'first_name last_name username role'
                                         })
+                                        .populate({
+                                            path: 'appointment_request',
+                                        })
                                         .lean(); 
 
         total = await Appointment.countDocuments({ professional: req?.user_id, deleted_at: null }); 
@@ -75,6 +78,9 @@ const getAppointments = asyncHandler(async (req, res) => {
                                         .populate({
                                             path: 'professional',
                                             select: 'first_name last_name username role'
+                                        })
+                                        .populate({
+                                            path: 'appointment_request',
                                         })
                                         .lean(); 
 

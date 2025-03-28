@@ -132,8 +132,6 @@ export default function Create() {
                 </h2>
             </div>
 
-                
-
             <section className="pt-4">
                 <SelectedUserComponent 
                     selectedUserItem={ selectedUserItem } 

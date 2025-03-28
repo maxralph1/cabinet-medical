@@ -17,7 +17,7 @@ export default function Layout({ children }) {
     const { notifications, getNotifications, loading } = useNotifications(notificationQuery); 
     console.log(notifications);
 
-    // const location = useLocation(); 
+    const location = useLocation(); 
     const [toggleNav, setToggleNav] = useState(false); 
     const [toggleNotification, setToggleNotification] = useState(false); 
     const notificationRef = useRef(null); 
@@ -38,7 +38,10 @@ export default function Layout({ children }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, []); 
+
+    const tabletBreakpoint = 768; 
+    // (window.innerWidth >= tabletBreakpoint); 
 
 
     return (
@@ -70,7 +73,7 @@ export default function Layout({ children }) {
                         </span>
 
                         { toggleNotification && (
-                            <div ref={notificationRef} className="notifications-pop-up position-absolute card bg-white border-radius-25 border-tertiary border-1 p-3 shadow-lg" style={{ top: '3.5rem', right: '0rem', width: '185px' }}>
+                            <div ref={notificationRef} className="notifications-pop-up position-absolute card bg-white border-radius-25 border-tertiary border-1 p-3 shadow-lg z-3" style={{ top: '3.5rem', right: '0rem', width: '185px' }}>
                                 <section>
                                     { (notifications?.data?.length > 0) && (notifications?.data?.map(notification => {
                                         return (
@@ -261,6 +264,14 @@ export default function Layout({ children }) {
                         <li 
                             onClick={ () => setToggleNav(!toggleNav) } 
                             className="fw-semibold">
+                                <Link to={ route('home.chats.index') }>
+                                    Chats
+                                </Link>
+                        </li>
+                        <li className="border border-tertiary border-1 border-top" style={{ width: '7.5rem'}} />
+                        <li 
+                            onClick={ () => setToggleNav(!toggleNav) } 
+                            className="fw-semibold">
                                 <Link to={ route('home.inventory.index') }>
                                     Inventory
                                 </Link>
@@ -293,8 +304,15 @@ export default function Layout({ children }) {
             </main>
 
             <footer className="footer container-fluid pt-5 pb-3">
-                &copy; { new Date().getFullYear() }. Cabinet Medical.
+                { ((location?.pathname != route('home.chats.index'))) && (
+                    <span className="">&copy; { new Date().getFullYear() }. Cabinet Medical.</span>
+                )}
             </footer>
+            {/* <footer className={`footer container-fluid pt-5 pb-3 ${(location?.pathname == route('home.chats.index')) && 'position-fixed bottom-0'}`}> */}
+                {/* { ((location?.pathname != route('home.chats.index')) && ( */}
+                    {/* <span>&copy; { new Date().getFullYear() }. Cabinet Medical.</span> */}
+                {/* )) } */}
+            {/* </footer> */}
         </>
     )
 }

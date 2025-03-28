@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'; 
+import Chat from '../models/Chat.js'; 
 import ChatMessage from '../models/ChatMessage.js'; 
 import ChatUser from '../models/ChatUser.js';
 
@@ -7,31 +8,16 @@ import ChatUser from '../models/ChatUser.js';
  * Get Chat Messages
  */ 
 const getChatMessages = asyncHandler(async (req, res) => {
-    const current_page = parseInt(req?.query?.page) || 1;
-    const limit = parseInt(req?.query?.limit) || 10; 
-    const skip = (current_page - 1) * limit; 
-    const chat = req?.query?.chat;
+    const chat = req?.params?.chat;
+    console.log(chat)
 
-    const chatByUserExists = await ChatUser.findOne({ user: req?.user_id, chat: chat, deleted_at: null }); 
-
-    let chatMessages;
-    if (chatByUserExists) {
-        chatMessages = await ChatMessage.find({ chat: chat, deleted_at: null });
-    }; 
+    let chatMessages = await ChatMessage.find({ chat: chat, deleted_at: null });
 
     if (!chatMessages?.length) return res.status(404).json({ message: "No messages found!" }); 
 
     const total = await ChatMessage.countDocuments({ chat: chat, deleted_at: null }); 
 
-    res.json({ 
-                meta: {
-                    current_page, 
-                    limit, 
-                    total_pages: Math.ceil(total / limit), 
-                    total_results: total
-                }, 
-                data: chats 
-            }); 
+    res.json({ data: chatMessages }); 
 }); 
 
 /**
@@ -39,13 +25,21 @@ const getChatMessages = asyncHandler(async (req, res) => {
  */ 
 const createChatMessage = asyncHandler(async (req, res) => {
     const { chat } = req?.params; 
-    const { content } = req?.body; 
+    const { content, type } = req?.body; 
+
+    console.log(chat, content, type);
 
     const chatMessage = new ChatMessage({
         user: req?.user_id, 
-        chat,
-        content,
+        chat: req?.body?.chat,
+        content, 
+        type
     }); 
+
+    const foundChat = await Chat.findOne({ _id: req?.body?.chat });
+    foundChat.updated_at = new Date();
+
+    foundChat.save();
 
     chatMessage.save()
                 .then(() => {

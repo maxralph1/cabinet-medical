@@ -93,7 +93,7 @@ export default function Index() {
                                                                         </div>
                                                                     </Link>
                                                                     <div className="w-100 d-flex justify-content-end gap-2">
-                                                                        `<span>
+                                                                        <span>
                                                                             <Link to={ route('home.medical-bills.show', { id: medicalBill?._id }) }>
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-view-list text-info" viewBox="0 0 16 16">
                                                                                     <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2m0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14"/>
@@ -133,7 +133,7 @@ export default function Index() {
                                                                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
                                                                                 </svg>
                                                                         </span>
-                                                                    </div>`
+                                                                    </div>
                                                                 </div>
                                                                 <div className="w-100 pt-2">
                                                                     <span><span className="text-secondary">Ref #:</span>&nbsp;<span>{ (medicalBill?._id)?.toUpperCase() }</span></span>

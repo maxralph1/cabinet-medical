@@ -96,6 +96,17 @@ export default function Index() {
 
         // If no future appointments are found, return null
         return null;
+    }; 
+
+    const handleChatSubmit = async (e) => {
+        e.preventDefault(); 
+
+        const formData = new FormData(); 
+        // appointment?.data?.notes && formData.append('notes', appointment?.data?.notes); 
+        // appointment?.data?.purpose && formData.append('purpose', appointment?.data?.purpose); 
+
+        // await createAppointment(formData); 
+        // await appointment?.setData({}); 
     };
 
 
@@ -393,7 +404,7 @@ export default function Index() {
                 <section className="patient-meters align-items-center d-flex gap-3 flex-wrap pt-4">
                     { (widgets?.data?.widget?.length > 0) && (widgets?.data?.widget?.map((widget, index) => {
                         return (
-                            <article key={ index } className={`widget border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start`}>
+                            <article key={ index } className={`widget border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start`} style={{ width: '253.5px' }}>
                                 <div className="w-100 d-flex justify-content-between align-items-center">
                                     <span>{ (widget == 'heart_rate') ? 'Heart Rate' 
                                                 : (widget == 'liquid_volume') ? 'Liquid Volume' 
@@ -641,46 +652,104 @@ export default function Index() {
                     <section className="doctor w-100 gap-3">
                         <div className="info d-flex flex-column align-items-start gap-1">
                             {/* <span>Dr. Sasmita Ra&nbsp; */}
-                            <span>
-                                {/* Dr.{ appointments?.data?.upcoming_appointment?.patient?.first_name }&nbsp; */}
-                                <span>
-                                    { (user?.user?.role == 'patient') ? 'Dr. ' : '' }
-                                    {/* { (((user?.role == 'general_practitioner') || (user?.role == 'gynaecologist')) 
-                                            ? 'Dr. ' : '') } */}
-                                </span>
-                                <span>
-                                    { (user?.user?.role == 'patient') 
-                                        ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
-                                            + ' ' 
-                                            + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
-                                        : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
-                                            + ' ' 
-                                            + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
-                                </span>
-                                <span className="chat-with-doctor ms-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chat-left-text"
-                                        viewBox="0 0 16 16">
-                                        <path
-                                            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                                        <path
-                                            d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
-                                    </svg>
+                            <span className="d-flex flex-wrap row-gap-3 column-gap-4">
+                                <div className="d-flex flex-column align-items-start">
+                                    <div>
+                                        {/* Dr.{ appointments?.data?.upcoming_appointment?.patient?.first_name }&nbsp; */}
+                                        <span>
+                                            { (user?.user?.role == 'patient') ? 'Dr. ' : '' }
+                                            {/* { (((user?.role == 'general_practitioner') || (user?.role == 'gynaecologist')) 
+                                                    ? 'Dr. ' : '') } */}
+                                        </span>
+                                        <span>
+                                            { (user?.user?.role == 'patient') 
+                                                ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
+                                                    + ' ' 
+                                                    + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
+                                                : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
+                                                    + ' ' 
+                                                    + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
+                                        </span>
+                                    </div>
+                                    <span className="badge rounded-pill text-bg-info">
+                                        { (user?.user?.role == 'patient') 
+                                            ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
+                                            : ((user?.user?.role == 'general_practitioner')
+                                                || (user?.user?.role == 'gynaecologist') 
+                                                || (user?.user?.role == 'paediatrician')) 
+                                            ? 'Patient' 
+                                            : '' }
+                                    </span>
+                                </div>
+                                
+                                <span className="chat-with-doctor-patient justify-self-start">
+                                    <span 
+                                        type="button" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target={`#chatModal`}
+                                        className="btn btn-sm btn-outline-warning border-radius-25 py-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
+                                                <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                            </svg>&nbsp;
+                                            <span>Chat</span>
+                                    </span>
+                                    <section className="modal fade" id={`chatModal`} tabIndex="-1" aria-labelledby={`chatModalLabel`}>
+                                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div className="modal-content">
+                                                <div className="modal-header d-flex justify-content-between align-items-center">
+                                                    <h3 className="fs-6" id={`chatModalLabel`}>Quick Message to&nbsp;
+                                                        <span>
+                                                            { (user?.user?.role == 'patient') 
+                                                                ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
+                                                                    + ' ' 
+                                                                    + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
+                                                                : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
+                                                                    + ' ' 
+                                                                    + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
+                                                        </span>
+                                                    </h3>
+                                                    <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent" style={{ marginTop: '-0.25rem' }}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <section className="modal-body gap-2 pt-3">
+                                                    <form onSubmit={ handleChatSubmit } id="chat-form" className="chat-form">
+                                                        <div className="row">
+                                                            <div className="form-floating mb-3">
+                                                                <textarea 
+                                                                    // value={ blogCategory?.data?.description ?? '' }
+                                                                    // id="description"
+                                                                    className="form-control" 
+                                                                    style={{ height: '100px' }}  
+                                                                    // onChange={ e => blogCategory.setData({
+                                                                    //     ...blogCategory?.data,
+                                                                    //     description: e.target.value,
+                                                                    // }) } 
+                                                                    placeholder="Enter your message ..." 
+                                                                    required></textarea>
+                                                                <label htmlFor="message">Message</label>
+                                                            </div>
+                                                        </div>
+                                                        <div className="row">
+                                                            <div className="d-flex justify-content-end pt-3">
+                                                                <button type="submit" className="btn btn-outline-secondary border-radius-25">Send</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </span>
                             </span>
-                            <span className="badge rounded-pill text-bg-info">
-                                { (user?.user?.role == 'patient') 
-                                    ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
-                                    : ((user?.user?.role == 'general_practitioner')
-                                        || (user?.user?.role == 'gynaecologist') 
-                                        || (user?.user?.role == 'paediatrician')) 
-                                    ? 'Patient' 
-                                    : '' }
-                            </span>
+                            
                         </div>
                         <div className="image">
                             <picture>
                                 <source srcSet="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" media="(orientation: portrait)" />
-                                <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-25" alt="" />
+                                <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-25" alt="" style={{ width: '100%'}} />
                             </picture>
                         </div>
                     </section>

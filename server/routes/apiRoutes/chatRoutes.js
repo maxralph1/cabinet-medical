@@ -16,7 +16,7 @@ import { getChats,
 chatRouter.use(authenticated); 
 
 chatRouter.route('/')
-                .get(getChats,)
+                .get(getChats)
                 .post(createChat); 
 
 chatRouter.route('/:id')
