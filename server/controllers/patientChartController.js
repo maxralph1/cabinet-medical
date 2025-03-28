@@ -33,12 +33,13 @@ const getPatientCharts = asyncHandler(async (req, res) => {
  * Create Patient Chart
  */
 const createPatientChart = asyncHandler(async (req, res) => {
-    const { patient, professional, notes, comments } = req?.body; 
+    const { patient, /**professional,**/notes, comments } = req?.body; 
 
     const patientChart = new PatientChart({
         user: req?.user_id, 
         patient, 
-        professional: professional ? professional : req?.user_id, 
+        // professional: professional ? professional : req?.user_id, 
+        professional: req?.user_id, 
         notes, 
         comments
     }); 
@@ -128,7 +129,7 @@ const restorePatientChart = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Patient Chart
+ * Permanent-delete Patient Chart
  */
 const destroyPatientChart = asyncHandler(async (req, res) => {
     const patientChart = await PatientChart.findOne({ _id: req?.params?.id, deleted_at: null }); 

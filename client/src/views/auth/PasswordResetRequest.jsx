@@ -14,7 +14,7 @@ export default function PasswordResetRequest() {
         e.preventDefault(); 
 
         resetPasswordRequest(email); 
-    }
+    };
 
     return (
         <Layout>
@@ -27,12 +27,12 @@ export default function PasswordResetRequest() {
                     <div className="row">
                         <div className="form-floating mb-3 col-sm-12 col-md-12">
                             <input 
-                                type="password" 
-                                id="password" 
+                                type="email" 
+                                id="email" 
                                 className="form-control" 
-                                onChange={ e => setPassword(e.target.value) } 
+                                onChange={ e => setEmail(e.target.value) } 
                                 placeholder="Pfizer" />
-                            <label htmlFor="password">Password</label>
+                            <label htmlFor="email">Email</label>
                         </div>
                     </div>
                     <div className="d-flex justify-content-end pt-3">

@@ -40,7 +40,7 @@ export default function SelectedUserComponent({ selectedUserItem, setSelectedUse
         setResults([]); 
     };
 
-    const [selectedPatient, setSelectedPatient] = useState(null); 
+    const [selectedPatient, setSelectedPatient] = useState(selectedUserItem); 
     console.log(selectedPatient); 
 
     return (

@@ -188,7 +188,7 @@ export default function Show() {
                 ); 
                 swal.fire({
                     text: `Transaction processed.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

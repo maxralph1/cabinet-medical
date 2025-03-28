@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'; 
 import DiagnosisSegment from '../models/DiagnosisSegment.js'; 
+import Notification from '../models/Notification.js';
 
 
 /**
@@ -86,11 +87,12 @@ const getDiagnosisSegments = asyncHandler(async (req, res) => {
  * Create Diagnosis Segment
  */
 const createDiagnosisSegment = asyncHandler(async (req, res) => {
-    const { diagnosis, diagnosis_type } = req?.body; 
+    const { diagnosis, diagnosis_type, patient } = req?.body; 
 
     const diagnosis_segment = new DiagnosisSegment({
         diagnosis, 
-        diagnosis_type
+        diagnosis_type, 
+        patient
     }); 
 
     diagnosis_segment.save()
@@ -117,6 +119,7 @@ const getDiagnosisSegment = asyncHandler(async (req, res) => {
  * Update Diagnosis Segment
  */
 const updateDiagnosisSegment = asyncHandler(async (req, res) => {
+    console.log(req?.params?.id, req?.body?.result);
     const diagnosisSegment = await DiagnosisSegment.findOne({ _id: req?.params?.id, deleted_at: null }); 
 
     if (!diagnosisSegment) return res.status(404).json({ message: "Diagnosis Segment not found!" }); 
@@ -124,6 +127,13 @@ const updateDiagnosisSegment = asyncHandler(async (req, res) => {
     // diagnosisSegment.patient = req?.body?.patient || diagnosisSegment?.patient; 
     // diagnosisSegment.authorizing_professional = req?.body?.authorizing_professional || diagnosisSegment?.authorizing_professional; 
     diagnosisSegment.result = req?.body?.result || diagnosisSegment?.result; 
+
+    const notification = await Notification.create({
+        user: diagnosisSegment?.patient, 
+        diagnosis_segment: diagnosisSegment?._id, 
+        read: false,
+        type: 'diagnosis-result',
+    });
 
     diagnosisSegment.save()
                     .then(() => {
@@ -177,7 +187,7 @@ const restoreDiagnosisSegment = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete a Diagnosis Segment
+ * Permanent-delete Diagnosis Segment
  */
 const destroyDiagnosisSegment = asyncHandler(async (req, res) => {
     const diagnosisSegment = await DiagnosisSegment.findOne({ _id: req?.params?.id, deleted_at: null }); 

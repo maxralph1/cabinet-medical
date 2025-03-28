@@ -7,10 +7,14 @@ const signOutUser = asyncHandler(async (req, res) => {
     const cookies = req.cookies; 
     console.log("cookies:", cookies); 
 
-    // console.log('decoded', jwt.verify(req?.cookies?.jwt, process.env.JWT_SECRET));
-    console.log('Logged out')
+    /** Temorary Code */
+    const loggingOutUser = await User.findById(req?.user_id); 
 
-    if (!cookies?.jwt) return res.sendStatus(204);
+    loggingOutUser.online = false;
+    loggingOutUser.last_time_active = new Date().toISOString();
+
+    return res.sendStatus(204);
+    /** End of Temorary Code */
 
     try {
         const decoded = jwt.verify(req?.cookies?.jwt, process.env.JWT_SECRET); 
@@ -34,6 +38,14 @@ const signOutUser = asyncHandler(async (req, res) => {
         sameSite: 'None', 
         secure: false
     }); 
+
+    // console.log('decoded', jwt.verify(req?.cookies?.jwt, process.env.JWT_SECRET));
+    console.log('Logged out')
+
+    if (!cookies?.jwt) return res.sendStatus(204);
+
+
+
 
     res.json({ success: 'Logged out successfully' });
 

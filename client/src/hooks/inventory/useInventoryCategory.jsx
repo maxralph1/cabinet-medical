@@ -34,7 +34,7 @@ export function useInventoryCategory(id = null) {
                 console.log(response); 
                 swal.fire({
                     text: `Inventory Category created.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

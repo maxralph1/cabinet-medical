@@ -35,7 +35,7 @@ export function useDiagnosis(id = null) {
                 navigate(route('home.diagnoses.index'));
                 swal.fire({
                     text: `Diagnosis (tests) created for patient.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

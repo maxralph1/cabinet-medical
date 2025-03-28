@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import cloudinaryImageUpload from '../config/imageUpload/cloudinary.js'; 
 import User from '../models/User.js'; 
 import Appointment from '../models/Appointment.js';
+import PatientChart from '../models/PatientChart.js';
 
 
 /**
@@ -149,19 +150,35 @@ const getUser = asyncHandler(async (req, res) => {
     console.log(user);
 
     /** User Details: */
-    const userAppointments = await Appointment.countDocuments({ user: user?._id, deleted_at: null }); 
-    const userBlogPosts = await BlogPost.countDocuments({ user: user?._id, deleted_at: null }); 
-    const userDiagnoses = await Diagnosis.countDocuments({ user: user?._id, deleted_at: null }); 
-    const userMedicalBills = await MedicalBill.countDocuments({ user: user?._id, deleted_at: null }); 
-    const userNotifications = await Notification.countDocuments({ user: user?._id, deleted_at: null }); 
-    const userRegimens = await Regimen.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userAppointments = await Appointment.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userBlogPosts = await BlogPost.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userDiagnoses = await Diagnosis.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userMedicalBills = await MedicalBill.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userNotifications = await Notification.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userRegimens = await Regimen.countDocuments({ user: user?._id, deleted_at: null }); 
+    // const userCharts = await Regimen.find({ patient: user?._id, deleted_at: null }); 
+    const userCharts = await PatientChart.find({
+                                            $or: [
+                                                { patient: user?._id }, 
+                                                { professional: user?._id } 
+                                            ]
+                                        })
+                                        .populate({
+                                            path: 'patient',
+                                            select: 'first_name last_name username'
+                                        })
+                                        .populate({
+                                            path: 'professional',
+                                            select: 'first_name last_name username role'
+                                        });
 
-    user.appointments_count = userAppointments; 
-    user.blog_posts_count = userBlogPosts; 
-    user.diagnoses_count = userDiagnoses;
-    user.medical_bills_count = userMedicalBills; 
-    user.notifications_count = userNotifications; 
-    user.regimens_count = userRegimens; 
+    // user.appointments_count = userAppointments; 
+    // user.blog_posts_count = userBlogPosts; 
+    // user.diagnoses_count = userDiagnoses;
+    // user.medical_bills_count = userMedicalBills; 
+    // user.notifications_count = userNotifications; 
+    // user.regimens_count = userRegimens; 
+    user.charts = userCharts; 
 
     res.json({ data: user });
 }); 
@@ -175,7 +192,11 @@ const updateUser = asyncHandler(async (req, res) => {
             email, 
             phone, 
             password, 
-            account_type } = req?.body; 
+            account_type, 
+            receive_notifications, 
+            show_online_status,
+            verified,
+            banned } = req?.body; 
 
     const { username } = req?.params; 
 
@@ -188,9 +209,19 @@ const updateUser = asyncHandler(async (req, res) => {
         accountType = "patient";
     } else if (account_type && account_type == "patient") {
         accountType = "patient";
-    } else if (account_type && account_type == "doctor") {
-        accountType = "doctor"; 
-    }; 
+    } else if (account_type && account_type == "general_practitioner") {
+        accountType = "general_practitioner"; 
+    } else if (account_type && account_type == "gynaecologist") {
+        accountType = "gynaecologist"; 
+    } else if (account_type && account_type == "nurse") {
+        accountType = "nurse"; 
+    } else if (account_type && account_type == "laboratory_scientist") {
+        accountType = "laboratory_scientist"; 
+    } else if (account_type && account_type == "admin") {
+        accountType = "admin"; 
+    } else if (account_type && account_type == "super-admin") {
+        accountType = "super-admin"; 
+    }
 
     /** Image Upload */
     let userImageUpload = {};
@@ -212,6 +243,10 @@ const updateUser = asyncHandler(async (req, res) => {
     if (phone) user.phone = phone; 
     if (password) user.password = password; 
     if (account_type) user.role = accountType; 
+    if (receive_notifications) user.receive_notifications = receive_notifications; 
+    if (show_online_status) user.show_online_status = show_online_status; 
+    if (verified) user.verified = verified; 
+    if (banned) user.banned = banned; 
 
     user.save()
         .then(() => { 

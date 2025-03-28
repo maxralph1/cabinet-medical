@@ -22,9 +22,12 @@
     "froala-editor": "^4.4.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-calendar": "^5.1.0",
+    "react-datepicker": "^8.2.1",
     "react-dom": "^18.3.1",
     "react-froala-wysiwyg": "^4.4.0",
     "react-router-dom": "^7.1.1",
+    "react-time-picker": "^7.0.0",
     "recharts": "^2.15.0",
     "serve": "^14.2.4",
     "sweetalert2": "^11.15.10"

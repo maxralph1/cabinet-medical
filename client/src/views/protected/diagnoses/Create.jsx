@@ -75,7 +75,7 @@ export default function Create() {
                 <section className="diagnosis-types-selections">
                     <div className="row align-items-center">
                         <div className="form-floating mb-3 col-9">
-                            <select 
+                            <select
                                 id="diagnosis_type" 
                                 className="form-select" 
                                 onChange={ e => {

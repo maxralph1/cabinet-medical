@@ -34,7 +34,7 @@ app.use(limiter);
 
 let accessLogStream = createStream('access.log', {
     interval: '1d', // rotate daily
-    path: join(__dirname, 'log/access')
+    path: join(__dirname, 'logs/access')
 });
 app.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status ":res[content-length] - :response-time ms" ":referrer" ":user-agent"', { stream: accessLogStream }));
 

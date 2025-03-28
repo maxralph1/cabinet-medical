@@ -28,8 +28,8 @@ export default function UserComponent({ index, users, user }) {
                     <span className="fw-semibold">
                         <Link 
                             to={ (location.pathname == route('home.professionals.index')) 
-                                ? route('home.professionals.show', { id: user?._id })
-                                : route('home.patients.show', { id: user?._id }) }>
+                                ? route('home.professionals.show', { username: user?.username })
+                                : route('home.patients.show', { username: user?.username }) }>
                             { (((user?.role == 'general_practitioner') || (user?.role == 'gynaecologist')) 
                                 ? 'Dr. ' : '') }
                             { user.first_name + ' ' + user?.last_name }

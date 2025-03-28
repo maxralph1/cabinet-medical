@@ -34,7 +34,7 @@ export function useInventoryInvoice(id = null) {
                 console.log(response); 
                 swal.fire({
                     text: `Inventory Invoice created.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

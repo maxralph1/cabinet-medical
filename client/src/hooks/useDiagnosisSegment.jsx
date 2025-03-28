@@ -32,7 +32,7 @@ export function useDiagnosisSegment(id = null) {
                 console.log(response); 
                 swal.fire({
                     text: `Diagnosis Segment created.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false
@@ -82,9 +82,20 @@ export function useDiagnosisSegment(id = null) {
         // console.log(diagnosisSegment);
 
         // return axiosInstance.put(`diagnosis-segments/${id}`, diagnosisSegment)
-        return axiosInstance.put(`diagnosis-segments/${id}`, result)
-            .then(() => navigate(route('home.diagnosisSegments.index')))
-            .catch(error => setErrors(error?.response))
+        return axiosInstance.put(`diagnosis-segments/${id}`, { result:result })
+            .then(() => {
+                swal.fire({
+                    text: `Test result updated.`, 
+                    color: '#000000', 
+                    width: 325, 
+                    position: 'top', 
+                    showConfirmButton: false
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                setErrors(error?.response);
+            })
             .finally(() => {
                 setLoading(false); 
                 setData({}); 

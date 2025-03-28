@@ -61,6 +61,35 @@ a, Link {
     border-color: black;
 } */
 
+.react-calendar {
+    width: 285px !important;
+    max-width: 100% !important;
+    background: white;
+    /* border: 1px solid #a0a096; */
+    font-family: "DM Sans", serif !important;
+    line-height: 1.125em;
+}
+
+.react-calendar__navigation { border-radius: 25px; }
+
+.react-calendar__navigation__arrow.react-calendar__navigation__prev2-button { border-top-left-radius: 25px; }
+
+.react-calendar__navigation__arrow.react-calendar__navigation__next2-button { border-top-right-radius: 25px; }
+
+.react-calendar__tile--active {
+    background: #5fb2d3 !important;
+    color: white;
+}
+
+.react-time-picker__wrapper {
+    border-radius: 15px; 
+    padding: 0.5rem;
+}
+
+.react-time-picker__button svg {
+    display: none !important;
+}
+
 /* .form-control, .form-select {  }  */
 
 .form-floating .form-control, .form-floating .form-select { 
@@ -347,7 +376,17 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     }
 }
 
+@media screen and (min-width: 550px) {
+    .react-calendar {
+        width: 65vw !important; 
+    }
+}
+
 @media screen and (min-width: 768px) {
+    .react-calendar {
+        width: 60vw !important;
+    }
+
     .header .main-nav ul {
         flex-direction: row;
     }
@@ -376,6 +415,9 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
 }
 
 @media screen and (min-width: 900px) {
+    .react-calendar {
+        width: 45vw !important;
+    }
     /*------------*/
     /** Dashboard */
     /*------------*/

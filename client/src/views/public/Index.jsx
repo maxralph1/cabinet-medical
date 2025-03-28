@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { route } from '@/routes'; 
 import swal from 'sweetalert2'; 
 import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx'; 
+import { useAppointmentRequest } from '@/hooks/useAppointmentRequest.jsx'; 
+import { useContactUs } from '@/hooks/useContactUs.jsx'; 
 import Layout from '@/components/public/Layout.jsx'; 
 import NazimTransparent from '@/assets/images/nazim-transparent.png'; 
 import NazimWide from '@/assets/images/nazim-wide-background.jpg'; 
@@ -11,32 +13,54 @@ import ServicesImage from '@/assets/images/medicine-services.svg';
 
 
 export default function Index() {
-    const date = new Date();
-    const hour = date.getHours(); 
+    const { appointmentRequest, createAppointmentRequest } = useAppointmentRequest(); 
+    const { contactUs, createContactUs } = useContactUs(); 
 
-    function submitConsultationForm (e) {
+    // const date = new Date();
+    // const hour = date.getHours(); 
+
+    // const [startTime, setStartTime] = useState(''); 
+
+    const constructDate = (date, time) => {
+        const [hours, minutes] = time.split(':');
+        const newDate = new Date(date);
+        newDate.setHours(hours);
+        newDate.setMinutes(minutes);
+        return newDate.toISOString();
+    }; 
+
+    async function submitConsultationForm (e) {
         e.preventDefault(); 
 
-        swal.fire({
-            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided as soon as an available slot is booked. Thanks!`, 
-            color: '#f2f2f20', 
-            width: 325, 
-            position: 'top', 
-            showConfirmButton: false
-        });
+        const proposedDateTime = constructDate(appointmentRequest?.data?.date, appointmentRequest?.data?.time);
+
+        const formData = new FormData(); 
+        appointmentRequest?.data?.first_name && formData.append('first_name', appointmentRequest?.data?.first_name); 
+        appointmentRequest?.data?.last_name && formData.append('last_name', appointmentRequest?.data?.last_name); 
+        appointmentRequest?.data?.email && formData.append('email', appointmentRequest?.data?.email); 
+        appointmentRequest?.data?.phone && formData.append('phone', appointmentRequest?.data?.phone); 
+        appointmentRequest?.data?.comments && formData.append('comments', appointmentRequest?.data?.comments); 
+        ((appointmentRequest?.data?.date && appointmentRequest?.data?.time)) 
+            && formData.append('proposed_schedule_date_time', new Date(proposedDateTime)); 
+
+        await createAppointmentRequest(formData); 
+        await appointmentRequest?.setData({});
     };
 
-    function submitContactForm (e) {
+    async function submitContactForm(e) {
         e.preventDefault(); 
 
-        swal.fire({
-            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided.`, 
-            color: '#f2f2f20', 
-            width: 325, 
-            position: 'top', 
-            showConfirmButton: false
-        });
-    }; 
+        const formData = new FormData(); 
+        contactUs?.data?.first_name && formData.append('first_name', contactUs?.data?.first_name); 
+        contactUs?.data?.last_name && formData.append('last_name', contactUs?.data?.last_name); 
+        contactUs?.data?.email && formData.append('email', contactUs?.data?.email); 
+        contactUs?.data?.phone && formData.append('phone', contactUs?.data?.phone); 
+        contactUs?.data?.subject && formData.append('subject', contactUs?.data?.subject); 
+        contactUs?.data?.comments && formData.append('comments', contactUs?.data?.comments); 
+
+        await createContactUs(formData); 
+        await contactUs?.setData({});
+    }
 
     const [blogPublicationQuery, setBlogPublicationQuery] = useState({
         range: 'all', 
@@ -169,13 +193,35 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="first_name" placeholder="John" />
+                                        <input 
+                                            type="text" 
+                                            name="first_name" 
+                                            id="first_name" 
+                                            value={ appointmentRequest?.data?.first_name ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                first_name: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="John" 
+                                            required />
                                         <label htmlFor="first_name">First Name</label>
                                     </div>
                                 </div>
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="last_name" placeholder="Doe" />
+                                        <input 
+                                            type="text" 
+                                            name="last_name" 
+                                            id="last_name" 
+                                            value={ appointmentRequest?.data?.last_name ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                last_name: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="Doe"
+                                            required />
                                         <label htmlFor="last_name">Last Name</label>
                                     </div>
                                 </div>
@@ -183,13 +229,35 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="text" className="form-control" id="phone" placeholder="54818339" />
+                                        <input 
+                                            type="text" 
+                                            name="phone" 
+                                            id="phone" 
+                                            value={ appointmentRequest?.data?.phone ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                phone: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="54818339"
+                                            required />
                                         <label htmlFor="phone">Phone</label>
                                     </div>
                                 </div>
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="email" className="form-control" id="floatingInputGrid" placeholder="name@example.com" />
+                                        <input 
+                                            type="email" 
+                                            name="email" 
+                                            id="email" 
+                                            value={ appointmentRequest?.data?.email ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                email: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="name@example.com"
+                                            required />
                                         <label htmlFor="floatingInputGrid">Email address</label>
                                     </div>
                                 </div>
@@ -197,34 +265,53 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="date" className="form-control" id="date" placeholder="54818339" />
+                                        <input 
+                                            type="date" 
+                                            name="date" 
+                                            id="date" 
+                                            value={ appointmentRequest?.data?.date ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                date: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            style={{  }}
+                                            placeholder="2025-03-15"
+                                            required />
                                         <label htmlFor="date">Date</label>
                                     </div>
                                 </div>
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="time" className="form-control" id="time" placeholder="name@example.com" />
+                                        <input 
+                                            type="time" 
+                                            name="time" 
+                                            id="time" 
+                                            value={ appointmentRequest?.data?.time ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                time: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="11:15"
+                                            required />
                                         <label htmlFor="time">Time</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row g-2">
-                                <div className="col-md mb-3">
-                                    <div className="form-floating">
-                                        <select className="form-select" id="floatingSelectGrid">
-                                            <option>Select services ...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
-                                        <label htmlFor="floatingSelectGrid">Services</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="row g-2">
                                 <div className="mb-3">
                                     <div className="form-floating">
-                                        <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                                        <textarea 
+                                            name="comments" 
+                                            id="comments" 
+                                            value={ appointmentRequest?.data?.comments ?? '' }
+                                            onChange={ e => appointmentRequest.setData({
+                                                ...appointmentRequest?.data,
+                                                comments: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="Leave a comment here" 
                                             style={{ height: '100px' }}></textarea>
                                         <label htmlFor="floatingTextarea2">Comments</label>
                                     </div>
@@ -488,13 +575,35 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="name" placeholder="John" />
-                                        <label htmlFor="name">Name</label>
+                                        <input 
+                                            type="text" 
+                                            name="first_name" 
+                                            id="first_name" 
+                                            value={ contactUs?.data?.first_name ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                first_name: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="John" 
+                                            required />
+                                        <label htmlFor="first_name">First Name</label>
                                     </div>
                                 </div>
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="last_name" placeholder="Doe" />
+                                        <input 
+                                            type="text" 
+                                            name="last_name" 
+                                            id="last_name" 
+                                            value={ contactUs?.data?.last_name ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                last_name: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="Doe"
+                                            required />
                                         <label htmlFor="last_name">Last Name</label>
                                     </div>
                                 </div>
@@ -502,21 +611,54 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="text" className="form-control" id="phone" placeholder="54818339" />
+                                        <input 
+                                            type="text" 
+                                            name="phone" 
+                                            id="phone" 
+                                            value={ contactUs?.data?.phone ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                phone: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="54818339"
+                                            required />
                                         <label htmlFor="phone">Phone</label>
                                     </div>
                                 </div>
                                 <div className="col-md mb-3">
                                     <div className="form-floating">
-                                        <input type="email" className="form-control" id="floatingInputGrid" placeholder="name@example.com" />
+                                        <input 
+                                            type="email" 
+                                            name="email" 
+                                            id="email" 
+                                            value={ contactUs?.data?.email ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                email: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="name@example.com"
+                                            required />
                                         <label htmlFor="floatingInputGrid">Email address</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="row g-2">
-                                <div className="col-md mb-3">
+                                <div className="col-12 mb-3">
                                     <div className="form-floating">
-                                        <input type="text" className="form-control" id="subject" placeholder="This is the subject" />
+                                        <input 
+                                            type="text" 
+                                            name="subject" 
+                                            id="subject" 
+                                            value={ contactUs?.data?.subject ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                subject: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="This is a subject"
+                                            required />
                                         <label htmlFor="subject">Subject</label>
                                     </div>
                                 </div>
@@ -524,7 +666,16 @@ export default function Index() {
                             <div className="row g-2">
                                 <div className="mb-3">
                                     <div className="form-floating">
-                                        <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                                        <textarea 
+                                            name="comments" 
+                                            id="comments" 
+                                            value={ contactUs?.data?.comments ?? '' }
+                                            onChange={ e => contactUs.setData({
+                                                ...contactUs?.data,
+                                                comments: e.target.value,
+                                            }) }
+                                            className="form-control ps-4" 
+                                            placeholder="Leave a comment here" 
                                             style={{ height: '100px' }}></textarea>
                                         <label htmlFor="floatingTextarea2">Comments</label>
                                     </div>

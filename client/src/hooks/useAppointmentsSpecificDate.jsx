@@ -23,7 +23,7 @@ export function useAppointmentsSpecificDate(appointmentQuery) {
         setAppointments([]); 
         setLoading(true); 
         // return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}`, { signal })
-        return axiosInstance.get(`appointments/specific-date?year=${appointmentQuery?.year}&month=${appointmentQuery?.month}&date=${appointmentQuery?.date}`, { signal })
+        return axiosInstance.get(`appointments/specific-date?date=${appointmentQuery}`, { signal })
             .then(response => {
                 setAppointments(response?.data); 
                 // setLoading(false);

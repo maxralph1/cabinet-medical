@@ -4,6 +4,8 @@ import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import Constants from '@/utils/Constants.jsx'; 
+import swal from 'sweetalert2'; 
+import SwalAlert from '@/utils/SwalAlert.jsx';
 
 const AuthContext = createContext(); 
 
@@ -41,11 +43,14 @@ export const AuthProvider = ({ children }) => {
             .catch(error => { 
                 console.log(error); 
                 if (error?.response?.status == '400') {
-                    setAuthError(`${error?.response?.status}: Something went wrong!`)
+                    setAuthError(`${error?.response?.status}: Something went wrong!`); 
+                    SwalAlert('error', error?.response?.status, 'Something went wrong!'); 
                 } else if (error?.response?.status == '409') {
-                    setAuthError(`${error?.response?.status}: Username / Email already taken`)
+                    setAuthError(`${error?.response?.status}: Username / Email already taken`); 
+                    SwalAlert('error', error?.response?.status, 'Username / Email already taken'); 
                 } else {
                     setAuthError(`${error?.response?.status}: ${error?.response?.data?.message}`); 
+                    SwalAlert('error', error?.response?.status, error?.response?.data?.message); 
                 }
             });
     } 
@@ -63,9 +68,11 @@ export const AuthProvider = ({ children }) => {
                 // console.log(error); 
                 navigate(route('sign-in')); 
                 if (error?.response?.status == '400') {
-                    setAuthError(`${error?.response?.data}`)
+                    setAuthError(`${error?.response?.data}`); 
+                    SwalAlert('error', error?.response?.status, error?.response?.data); 
                 } else {
-                    setAuthError(`${error?.response?.status}: Something went wrong!`);
+                    setAuthError(`${error?.response?.status}: Something went wrong!`); 
+                    SwalAlert('error', error?.response?.status, 'Something went wrong!'); 
                 }
             });
     }
@@ -89,10 +96,9 @@ export const AuthProvider = ({ children }) => {
                 })
             .catch(error => { 
                 console.log(error);
-                if (error?.response?.status == '401') {
-                    setAuthError(`${error?.response?.data?.message}`);
-                } else if (error?.response?.status == '429') {
+                if ((error?.response?.status == '401') || (error?.response?.status == '429')) {
                     setAuthError(`${error?.response?.data?.message}`); 
+                    SwalAlert('error', error?.response?.status, error?.response?.data?.message); 
                 } else {
                     setAuthError(`Something went wrong!`);
                 }
@@ -107,9 +113,11 @@ export const AuthProvider = ({ children }) => {
             .catch(error => {
                 // console.log(error);
                 if (error?.response?.status == '401') {
-                    setAuthError(`${error?.response?.data?.message}`);
+                    setAuthError(`${error?.response?.data?.message}`); 
+                    SwalAlert('error', error?.response?.status, error?.response?.data?.message); 
                 } else {
-                    setAuthError(`${error?.response?.status}: Something went wrong!`);
+                    setAuthError(`${error?.response?.status}: Something went wrong!`); 
+                    SwalAlert('error', error?.response?.status, 'Something went wrong!'); 
                 }
             })
     } 
@@ -127,9 +135,11 @@ export const AuthProvider = ({ children }) => {
                 // console.log(error); 
                 navigate(route('sign-in')); 
                 if (error?.response?.status == '400') {
-                    setAuthError(`${error?.response?.data}`);
+                    setAuthError(`${error?.response?.data}`); 
+                    SwalAlert('error', error?.response?.status, error?.response?.data); 
                 } else {
-                    setAuthError(`${error?.response?.status}: Something went wrong!`);
+                    setAuthError(`${error?.response?.status}: Something went wrong!`); 
+                    SwalAlert('error', error?.response?.status, 'Something went wrong!'); 
                 }
             });
     }
@@ -151,8 +161,8 @@ export const AuthProvider = ({ children }) => {
                 setAuthTokens(null); 
                 setUser(null); 
                 localStorage?.removeItem('cabinet_medical_auth_tokens'); 
-                // navigate(route('sign-in'));
-            })
+                // navigate(route('sign-in')); 
+            });
     } 
     // const signOut = async () => {
     //     try {
@@ -191,11 +201,13 @@ export const AuthProvider = ({ children }) => {
     const resetPasswordRequest = async (email) => {
         await axios.post(`${ Constants?.serverURL }/api/v1/auth/password-reset`, { email }, { withCredentials: true })
             .then(response => {
-                setAuthSuccess('Email notification with reset link was sent to your email.');
+                setAuthSuccess('Email notification with reset link was sent to your email.'); 
+                SwalAlert('success', '', 'Email notification with reset link was sent to your email.'); 
                 // console.log(response); 
             })
             .catch(error => {
                 setAuthError(`${ error?.response?.data?.message }`); 
+                SwalAlert('error', error?.response?.status, error?.response?.data?.message); 
                 // console.log(error); 
                 // console.log(error?.response?.data?.message); 
             })
@@ -206,11 +218,13 @@ export const AuthProvider = ({ children }) => {
             .then(response => {
                 // console.log(response); 
                 navigate(route('sign-in')); 
-                setAuthSuccess('Password reset successful.');
+                setAuthSuccess('Password reset successful.'); 
+                SwalAlert('success', '', 'Password reset successful.'); 
             })
             .catch(error => {
                 // console.log(error); 
-                setAuthError(`${error?.response?.status}: ${error?.response?.data?.message}`);
+                setAuthError(`${error?.response?.status}: ${error?.response?.data?.message}`); 
+                SwalAlert('error', error?.response?.status, error?.response?.data?.message); 
             }); 
     }; 
 

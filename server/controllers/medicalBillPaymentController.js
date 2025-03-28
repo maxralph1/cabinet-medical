@@ -7,6 +7,7 @@ import { createOrder,
 } from '../utils/paypal-api.js'; 
 // import orderPlacedNoticationMailTemplate from '../mails/templates/orderNotificationMail.js'; 
 import MedicalBill from '../models/MedicalBill.js'; 
+import Notification from '../models/Notification.js';
 
 
 /**
@@ -36,6 +37,13 @@ const createMedicalBillPayment = async (req, res) => {
         }) 
         if (!updatedMedicalBill) return res.status(404).json({ message: 'MedicalBill not found' });
         console.log('updated medicalBill', updatedMedicalBill); 
+
+        const notification = await Notification.create({
+            user: foundMedicalBill?.patient, 
+            medical_bill: foundMedicalBill?._id, 
+            read: false,
+            type: 'medical-bill-payment',
+        });
 
         res.status(httpStatusCode).json(jsonResponse); 
     } catch (error) {

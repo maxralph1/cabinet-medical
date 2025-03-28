@@ -30,7 +30,8 @@ export function useAppointment(id = null) {
         // console.log(appointment); 
         return axiosInstance.post('appointments', appointment)
             .then(response => {
-                setData(response?.data)
+                setData(response?.data); 
+                navigate(route('home.appointments.index'));
                 console.log(response);
             })
             .catch(error => {
@@ -45,7 +46,7 @@ export function useAppointment(id = null) {
                     });
                 } else {
                     swal.fire({
-                        text: `${error?.response?.status}: An error occured!`, 
+                        text: `${error?.response?.status ?? '500'}: An error occured!`, 
                         color: '#900000', 
                         width: 325, 
                         position: 'top', 
@@ -57,12 +58,12 @@ export function useAppointment(id = null) {
             .finally(() => setLoading(false));
     } 
 
-    async function getAppointment(id, page, limit) {
+    async function getAppointment(id) {
         // setLoading(true); 
-        // console.log(id, page, limit);
+        // console.log(id);
 
-        return axios.get(`${ Constants?.serverURL }/api/v1/appointments/${id}?page=${page}&limit=${limit}`)
-            .then(response => setData(response?.data))
+        return axiosInstance.get(`appointments/${id}`)
+            .then(response => setData(response?.data?.data))
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false));
     } 
@@ -74,7 +75,27 @@ export function useAppointment(id = null) {
 
         return axiosInstance.put(`appointments/${id}`, appointment)
             .then(() => navigate(route('home.appointments.index')))
-            .catch(error => setErrors(error?.response))
+            .catch(error => {
+                setErrors(error?.response); 
+                if (error?.response?.status == 409) {
+                    swal.fire({
+                        text: `${error?.response?.data?.message}`, 
+                        color: '#900000', 
+                        width: 325, 
+                        position: 'top', 
+                        showConfirmButton: false
+                    });
+                } else {
+                    swal.fire({
+                        text: `${error?.response?.status ?? '500'}: An error occured!`, 
+                        color: '#900000', 
+                        width: 325, 
+                        position: 'top', 
+                        showConfirmButton: false
+                    });
+                }
+                console.log(error);
+            })
             .finally(() => {
                 setLoading(false); 
                 setData({}); 
@@ -86,7 +107,7 @@ export function useAppointment(id = null) {
         return axiosInstance.patch(`appointments/${appointment}`)
             .then(() => {})
             .catch(error => {
-                // console.log(error?.response); 
+                console.log(error?.response); 
                 setErrors(error?.response); 
             })
             .finally(() => setLoading(false)); 
