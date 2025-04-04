@@ -647,151 +647,158 @@ export default function Index() {
 
             <section className="appointments pt-4 gap-3">
                 <section className="upcoming border border-1 border-tertiary border-radius-25 px-3 py-4 d-flex flex-column gap-2 align-items-start">
-                    {/* { console.log(appointments) } */}
-                    <h2 className="fs-5">Upcoming appointment</h2>
-                    <section className="doctor w-100 gap-3">
-                        <div className="info d-flex flex-column align-items-start gap-1">
-                            {/* <span>Dr. Sasmita Ra&nbsp; */}
-                            <span className="d-flex flex-wrap row-gap-3 column-gap-4">
-                                <div className="d-flex flex-column align-items-start">
-                                    <div>
-                                        {/* Dr.{ appointments?.data?.upcoming_appointment?.patient?.first_name }&nbsp; */}
-                                        <span>
-                                            { (user?.user?.role == 'patient') ? 'Dr. ' : '' }
-                                            {/* { (((user?.role == 'general_practitioner') || (user?.role == 'gynaecologist')) 
-                                                    ? 'Dr. ' : '') } */}
+                    { closestAppointment ? (
+                        <>
+                            <h2 className="fs-5">Upcoming appointment</h2>
+                            <section className="doctor w-100 gap-3">
+                                <div className="info d-flex flex-column align-items-start gap-1">
+                                    {/* <span>Dr. Sasmita Ra&nbsp; */}
+                                    <span className="d-flex flex-wrap row-gap-3 column-gap-4">
+                                        <div className="d-flex flex-column align-items-start">
+                                            <div>
+                                                {/* Dr.{ appointments?.data?.upcoming_appointment?.patient?.first_name }&nbsp; */}
+                                                <span>
+                                                    { (user?.user?.role == 'patient') ? 'Dr. ' : '' }
+                                                    {/* { (((user?.role == 'general_practitioner') || (user?.role == 'gynaecologist')) 
+                                                            ? 'Dr. ' : '') } */}
+                                                </span>
+                                                <span>
+                                                    { (user?.user?.role == 'patient') 
+                                                        ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
+                                                            + ' ' 
+                                                            + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
+                                                        : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
+                                                            + ' ' 
+                                                            + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
+                                                </span>
+                                            </div>
+                                            <span className="badge rounded-pill text-bg-info">
+                                                { (user?.user?.role == 'patient') 
+                                                    ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
+                                                    : ((user?.user?.role == 'general_practitioner')
+                                                        || (user?.user?.role == 'gynaecologist') 
+                                                        || (user?.user?.role == 'paediatrician')) 
+                                                    ? 'Patient' 
+                                                    : '' }
+                                            </span>
+                                        </div>
+                                        
+                                        <span className="chat-with-doctor-patient justify-self-start">
+                                            <span 
+                                                type="button" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target={`#chatModal`}
+                                                className="btn btn-sm btn-outline-warning border-radius-25 py-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
+                                                        <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                    </svg>&nbsp;
+                                                    <span>Chat</span>
+                                            </span>
+                                            <section className="modal fade" id={`chatModal`} tabIndex="-1" aria-labelledby={`chatModalLabel`}>
+                                                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header d-flex justify-content-between align-items-center">
+                                                            <h3 className="fs-6" id={`chatModalLabel`}>Quick Message to&nbsp;
+                                                                <span>
+                                                                    { (user?.user?.role == 'patient') 
+                                                                        ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
+                                                                            + ' ' 
+                                                                            + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
+                                                                        : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
+                                                                            + ' ' 
+                                                                            + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
+                                                                </span>
+                                                            </h3>
+                                                            <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent" style={{ marginTop: '-0.25rem' }}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                        <section className="modal-body gap-2 pt-3">
+                                                            <form onSubmit={ handleChatSubmit } id="chat-form" className="chat-form">
+                                                                <div className="row">
+                                                                    <div className="form-floating mb-3">
+                                                                        <textarea 
+                                                                            // value={ blogCategory?.data?.description ?? '' }
+                                                                            // id="description"
+                                                                            className="form-control" 
+                                                                            style={{ height: '100px' }}  
+                                                                            // onChange={ e => blogCategory.setData({
+                                                                            //     ...blogCategory?.data,
+                                                                            //     description: e.target.value,
+                                                                            // }) } 
+                                                                            placeholder="Enter your message ..." 
+                                                                            required></textarea>
+                                                                        <label htmlFor="message">Message</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div className="d-flex justify-content-end pt-3">
+                                                                        <button type="submit" className="btn btn-outline-secondary border-radius-25">Send</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </section>
+                                                    </div>
+                                                </div>
+                                            </section>
                                         </span>
-                                        <span>
-                                            { (user?.user?.role == 'patient') 
-                                                ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
-                                                    + ' ' 
-                                                    + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
-                                                : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
-                                                    + ' ' 
-                                                    + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
-                                        </span>
-                                    </div>
-                                    <span className="badge rounded-pill text-bg-info">
-                                        { (user?.user?.role == 'patient') 
-                                            ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
-                                            : ((user?.user?.role == 'general_practitioner')
-                                                || (user?.user?.role == 'gynaecologist') 
-                                                || (user?.user?.role == 'paediatrician')) 
-                                            ? 'Patient' 
-                                            : '' }
+                                    </span>
+                                    
+                                </div>
+                                <div className="image">
+                                    <picture>
+                                        <source srcSet="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" media="(orientation: portrait)" />
+                                        <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-25" alt="" style={{ width: '100%'}} />
+                                    </picture>
+                                </div>
+                            </section>
+                            <section className="about-doctor-patient pt-3">
+                                <p>
+                                    { (user?.user?.role == 'patient') 
+                                        ? (closestAppointment?.professional?.bio) 
+                                        : (closestAppointment?.patient?.bio)}
+                                </p>
+                            </section> 
+                            <section className="appointment-schedule w-100 d-flex justify-content-between">
+                                <div className="appointment-date-time d-flex align-items-center gap-1">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-event"
+                                        viewBox="0 0 16 16">
+                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                            <path
+                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        { dayjs(closestAppointment?.proposed_schedule_start)?.format('MMM. D YYYY, HH:mm') }&nbsp;
                                     </span>
                                 </div>
-                                
-                                <span className="chat-with-doctor-patient justify-self-start">
-                                    <span 
-                                        type="button" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target={`#chatModal`}
-                                        className="btn btn-sm btn-outline-warning border-radius-25 py-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-fill" viewBox="0 0 16 16">
-                                                <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                            </svg>&nbsp;
-                                            <span>Chat</span>
+                                <div className="appointment-length d-flex align-items-center gap-1">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stopwatch-fill"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0" />
+                                        </svg>
                                     </span>
-                                    <section className="modal fade" id={`chatModal`} tabIndex="-1" aria-labelledby={`chatModalLabel`}>
-                                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                            <div className="modal-content">
-                                                <div className="modal-header d-flex justify-content-between align-items-center">
-                                                    <h3 className="fs-6" id={`chatModalLabel`}>Quick Message to&nbsp;
-                                                        <span>
-                                                            { (user?.user?.role == 'patient') 
-                                                                ? ((closestAppointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.first_name)?.slice(1)) 
-                                                                    + ' ' 
-                                                                    + ((closestAppointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.last_name)?.slice(1))
-                                                                : ((closestAppointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.first_name)?.slice(1)) 
-                                                                    + ' ' 
-                                                                    + ((closestAppointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (closestAppointment?.patient?.last_name)?.slice(1)) }
-                                                        </span>
-                                                    </h3>
-                                                    <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent" style={{ marginTop: '-0.25rem' }}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <section className="modal-body gap-2 pt-3">
-                                                    <form onSubmit={ handleChatSubmit } id="chat-form" className="chat-form">
-                                                        <div className="row">
-                                                            <div className="form-floating mb-3">
-                                                                <textarea 
-                                                                    // value={ blogCategory?.data?.description ?? '' }
-                                                                    // id="description"
-                                                                    className="form-control" 
-                                                                    style={{ height: '100px' }}  
-                                                                    // onChange={ e => blogCategory.setData({
-                                                                    //     ...blogCategory?.data,
-                                                                    //     description: e.target.value,
-                                                                    // }) } 
-                                                                    placeholder="Enter your message ..." 
-                                                                    required></textarea>
-                                                                <label htmlFor="message">Message</label>
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="d-flex justify-content-end pt-3">
-                                                                <button type="submit" className="btn btn-outline-secondary border-radius-25">Send</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </section>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </span>
-                            </span>
-                            
+                                    <span>
+                                        { dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true) }&nbsp;minute{ ((dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true)) > 1) && 's' }
+                                    </span>
+                                </div>
+                            </section>
+                            <section className="w-100 d-flex justify-content-end pt-3">
+                                <Link 
+                                    to={ route('home.appointments.index') } 
+                                    className="btn btn-sm btn-warning border-radius-35 text-decoration-none">Check Appointments</Link>
+                            </section>
+                        </>
+                    ) : (
+                        <div className="h-100 w-100 d-flex justify-content-center align-items-center">
+                            <p>You have no upcoming appointment.</p>
                         </div>
-                        <div className="image">
-                            <picture>
-                                <source srcSet="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" media="(orientation: portrait)" />
-                                <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-25" alt="" style={{ width: '100%'}} />
-                            </picture>
-                        </div>
-                    </section>
-                    <section className="about-doctor-patient pt-3">
-                        <p>
-                            { (user?.user?.role == 'patient') 
-                                ? (closestAppointment?.professional?.bio) 
-                                : (closestAppointment?.patient?.bio)}
-                        </p>
-                    </section> 
-                    <section className="appointment-schedule w-100 d-flex justify-content-between">
-                        <div className="appointment-date-time d-flex align-items-center gap-1">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-event"
-                                viewBox="0 0 16 16">
-                                    <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                    <path
-                                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                                </svg>
-                            </span>
-                            <span>
-                                { dayjs(closestAppointment?.proposed_schedule_start)?.format('MMM. D YYYY, HH:mm') }&nbsp;
-                            </span>
-                        </div>
-                        <div className="appointment-length d-flex align-items-center gap-1">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stopwatch-fill"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0" />
-                                </svg>
-                            </span>
-                            <span>
-                                { dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true) || '30 minutes' }&nbsp;minute{ ((dayjs(closestAppointment?.proposed_schedule_end)?.diff(closestAppointment?.proposed_schedule_start, 'minute', true)) > 1) && 's' }
-                            </span>
-                        </div>
-                    </section>
-                    <section className="w-100 d-flex justify-content-end pt-3">
-                        <Link 
-                            to={ route('home.appointments.index') } 
-                            className="btn btn-sm btn-warning border-radius-35 text-decoration-none">Check Appointments</Link>
-                    </section>
+                    ) }
                 </section>
 
                 <section className="latest border border-1 border-tertiary border-radius-25 px-3 py-4">

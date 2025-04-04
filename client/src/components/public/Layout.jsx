@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'; 
+import { useContext, useState } from 'react'; 
 import AuthContext from '@/context/AuthContext.jsx'; 
 import { Link, useLocation } from 'react-router-dom'; 
 import { route } from '@/routes'; 
@@ -14,7 +14,7 @@ export default function Layout({ children }) {
 
     return (
         <>
-            <section className="container-fluid d-none d-md-flex justify-content-between pt-1 pb-2 bg-info text-white">
+            <section className="container-fluid d-none d-md-flex justify-content-between align-items-center pt-1 pb-2 bg-info text-white">
                 <span className="d-flex align-items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-phone-fill"
                         viewBox="0 0 16 16">
@@ -34,12 +34,12 @@ export default function Layout({ children }) {
                 </span>
                 { !user 
                     ? (
-                        <div className="d-flex gap-3">
-                            <Link to={ route('sign-in') } className="text-uppercase">
+                        <div className="d-flex align-items-center gap-3">
+                            <Link to={ route('sign-in') } className="text-uppercase fw-bold fs-5">
                                 Sign In
                             </Link>
                             <span>|</span>
-                            <Link to={ route('sign-up') } className="text-uppercase">
+                            <Link to={ route('sign-up') } className="text-uppercase fw-bold fs-5">
                                 Sign Up
                             </Link>
                         </div>
@@ -113,7 +113,7 @@ export default function Layout({ children }) {
                                         <a href="#contact-us" className="nav-link text-dark fw-bold">Contact</a>
                                     </li>
                                     <li className="nav-item text-end text-md-start btn btn-outline-info border-radius-35 p-0">
-                                        <a href="#book-appointment" className="nav-link text-dark fw-bold">Book Appointment</a>
+                                        <a href="#book-appointment" className="nav-link text-dark fw-bold">Book Consultation</a>
                                     </li>
                                 </>
                             ) }

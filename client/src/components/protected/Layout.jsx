@@ -290,9 +290,10 @@ export default function Layout({ children }) {
                                     Contact Us Requests
                                 </Link>
                         </li>
+                        <li className="border border-tertiary border-1 border-top my-2" style={{ width: '7.5rem'}} />
                         <li 
                             onClick={ signOut }
-                            className="text-danger cursor-pointer border-top pt-3 mt-2">Sign Out</li>
+                            className="text-danger cursor-pointer">Sign Out</li>
                     </ul>
                 </nav>
             }

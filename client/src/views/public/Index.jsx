@@ -115,12 +115,12 @@ export default function Index() {
                                 <span>Cabinet Medical Clinic</span>
                             </h2>
                             <p className="text-center text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
-                                <span>Ready to enhance your health and wellness?</span>
-                                <span>We can be of help.</span>
+                                <span className="text-dark">Ready to enhance your health and wellness?</span>
+                                <span className="text-dark">We can be of help.</span>
                             </p>
 
                             <p className="d-flex justify-content-center justify-content-md-start align-items-center gap-3 flex-wrap mt-4">
-                                <a href="#book-appointment" className="btn btn-info border-radius-35 fs-3 fw-bold px-3 text-white">Book consultation</a>
+                                <a href="#book-appointment" className="btn btn-dark border-radius-35 fs-3 fw-bold px-3 text-white">Book consultation</a>
                                 <a href="#contact-us" className="btn btn-danger border-radius-35 fs-3 fw-bold px-3">Contact Us</a>
                             </p>
                         </div>
@@ -345,7 +345,7 @@ export default function Index() {
                 <section id="doctors" className="doctors px-1 px-md-4 px-lg-5 pt-5 mt-3">
                     <h2 className="border-bottom d-inline-block pb-2 fw-bold">Our Qualified Doctors</h2>
                     <div>
-                        <span>The aim of medicine is to prevent disease and prolong life; the idea of medicine is to eliminate the need for a physician.</span>
+                        <span>The aim of medicine is to prevent disease and prolong life; the idea of having a physician is to administer the medicine.</span>
                     </div>
                     <section className="nav-scroller">
                         <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
@@ -394,7 +394,7 @@ export default function Index() {
 
                 <section className="stats px-1 px-md-4 px-lg-5 pt-5 mt-5 fw-bold glass-effect" style={{ backgroundImage: `url(${NazimWide})` }}>
                     <h2 className="border-bottom pb-2 d-inline-block text-uppercase fs-4 fw-bold pt-3">Fun Facts</h2>
-                    <section className="row align-items-center px-3">
+                    <section className="row align-items-center px-3 pb-5 pt-3">
                         <div className="col-sm-12 col-md-6 text-center text-md-start">
                             <p>Over 5,100 patients trust us.</p>
                             <p className="">
@@ -438,12 +438,13 @@ export default function Index() {
                         <p>Important tips about your health and fitness</p>
 
                         <section className="articles w-100 pt-3">
-                            <div className="articles-list py-3 w-100" style={{ overflowY: 'hidden' }}>
+                            <div className="articles-list w-100" style={{ overflowY: 'hidden' }}>
                                 { (blogPublications?.data?.map((publication, index) => {
                                     return (
-                                        <article key={ publication?._id } className="w-100 mb-3 text-center" style={{ width: '300px', height: '400px' }}>
-                                            <img src={ publication?.image_path?.url || NazimTransparent } alt="" className="border-radius-15 object-fit-cover"
-                                                style={{ width: '250px', height: '250px' }} />
+                                        <article key={ publication?._id } className="mb-3 text-center" style={{ height: '500px', minWidth: '300px', minHeight: '400px' }}>
+                                            <img src={ publication?.image_path?.url || NazimTransparent } alt="" className="border-radius-15 object-fit-cover" style={{ width: '100%', height: '70%' }} />
+                                                {/* style={{ width: '250px', height: '250px' }} /> */}
+                                                {/* style={{ minWidth: '250px', minHeight: '250px', maxWidth: '600px', maxHeight: '600px' }} /> */}
                                             <div className="pt-3">
                                                 <div className="d-flex flex-column-reverse">
                                                     <h3 className="fs-5 text-wrap">{ publication?.title }</h3>
@@ -488,7 +489,7 @@ export default function Index() {
                 }
 
                 <section className="testimonials text-center px-1 px-md-4 px-lg-5 pt-5 mt-3">
-                    <h2 className="text-uppercase fs-6">Testimonials</h2>
+                    <h2 className="text-uppercase border-bottom pb-2 fs-6 d-inline-block">Testimonials</h2>
 
                     <section className="w-100 row justify-content-md-between align-items-md-center row-gap-3 pt-3">
                         <div className="col-sm-12 col-md-6 text-center text-md-start">
@@ -524,9 +525,9 @@ export default function Index() {
                 </section>
 
                 <section id="contact-us" className="contact px-1 px-md-4 px-lg-5 pt-5 mt-3">
-                    <h2 className="text-center">Contact Us</h2>
+                    <h2 className="border-bottom d-inline-block pb-2 fw-bold">Contact Us</h2>
 
-                    <section className="row justify-content-center align-items-center gap-3 pt-3">
+                    <section className="row justify-content-center justify-content-md-between align-items-center gap-3 pt-4">
                         <article className="bg-body-tertiary border-radius-25 col-sm-12 col-md-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-geo-alt-fill"
                                 viewBox="0 0 16 16">
