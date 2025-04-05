@@ -127,7 +127,12 @@ export default function Index() {
     return (
         <Layout>
             <div className="salutation d-flex flex-column">
-                <span className="text-secondary fs-4">Hi { user?.user?.first_name + ' ' + user?.user?.last_name}</span>
+                <span className="text-secondary fs-4">Hi&nbsp;
+                    {/* { user?.user?.first_name + ' ' + user?.user?.last_name} */}
+                    { ((user?.user?.first_name)?.slice(0,1)?.toUpperCase() + user?.user?.first_name?.slice(1))
+                                                                + ' ' 
+                                                                + ((user?.user?.last_name)?.slice(0,1)?.toUpperCase() + user?.user?.last_name?.slice(1)) }
+                </span>
                 {/* <span className="text-secondary fs-5">Hi { user?.user?.first_name + ' ' + user?.user?.last_name},</span>
                 <span className="fs-1 fw-light">Good&nbsp;
                     { hour < 12 
