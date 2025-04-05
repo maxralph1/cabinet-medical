@@ -347,7 +347,7 @@ main.auth .auth-side-quotes .slide-section h2::after {
 main.dashboard .dashboard-meters .admin-meters {
     display: grid;
     grid-template-areas:
-        "revenue appointments" 
+        "appointments revenue" 
         "doctors patients";
 }
 
@@ -410,7 +410,7 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
-            "revenue appointments" 
+            "appointments revenue" 
             "doctors patients";
     }
 }
@@ -467,7 +467,7 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
-            "revenue appointments doctors patients";
+            "appointments revenue doctors patients";
     } 
 
     main.dashboard .appointments .upcoming .doctor .image picture img {

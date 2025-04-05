@@ -20,7 +20,7 @@ export function useAppointments(appointmentQuery) {
     async function getAppointments(appointmentQuery, { signal } = {}) { 
         console.log(appointmentQuery);
 
-        // setAppointments([]); 
+        setAppointments([]); 
         setLoading(true); 
         // return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}`, { signal })
         return axiosInstance.get(`appointments?page=${appointmentQuery?.page}&limit=${appointmentQuery?.limit}&status=${appointmentQuery?.status}&type=${appointmentQuery?.type}&search_key=${appointmentQuery?.search_key}`, { signal })

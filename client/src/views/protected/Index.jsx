@@ -170,85 +170,88 @@ export default function Index() {
             
             <section className="dashboard-meters w-100">
                 <section className="admin-meters gap-3 pt-4">
-                    <article className="revenue border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <div className="w-100 d-flex justify-content-between">
-                            <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
-                            style={{ backgroundColor: '#f2f2f2' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-currency-dollar"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z" />
-                                </svg>
-                            </span>
-                            <div className="dropdown">
-                                <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+
+                    { (user?.user?.role != 'patient') && (
+                        <article className="revenue border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
+                            <div className="w-100 d-flex justify-content-between">
+                                <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                                style={{ backgroundColor: '#f2f2f2' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-currency-dollar"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z" />
                                     </svg>
                                 </span>
-                                <ul class="dropdown-menu border-radius-25 px-3">
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setRevenueRange('today'); 
-                                                await getRevenue(revenueRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                Today
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setRevenueRange('this-week'); 
-                                                await getRevenue(revenueRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                This Week
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setRevenueRange('this-month');
-                                                await getRevenue(revenueRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                This Month
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setRevenueRange('this-year'); 
-                                                await getRevenue(revenueRange);  
-                                            }}
-                                            className="dropdown-item">
-                                                This Year
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setRevenueRange(''); 
-                                                await getRevenue(revenueRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                All
-                                        </span>
-                                    </li>
-                                </ul>
+                                <div className="dropdown">
+                                    <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                        </svg>
+                                    </span>
+                                    <ul class="dropdown-menu border-radius-25 px-3">
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setRevenueRange('today'); 
+                                                    await getRevenue(revenueRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    Today
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setRevenueRange('this-week'); 
+                                                    await getRevenue(revenueRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    This Week
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setRevenueRange('this-month');
+                                                    await getRevenue(revenueRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    This Month
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setRevenueRange('this-year'); 
+                                                    await getRevenue(revenueRange);  
+                                                }}
+                                                className="dropdown-item">
+                                                    This Year
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setRevenueRange(''); 
+                                                    await getRevenue(revenueRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    All
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <span>Total Revenue</span>
-                        <span className="fs-4 fw-semibold">{ (Number(revenue?.data?.total_medical_bills_amount) + Number(revenue?.data?.total_invoice_paid)) || '0.00' }<span className="fs-5">MUR</span></span>
-                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(revenue?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
-                    </article>
+                            <span>Total Revenue</span>
+                            <span className="fs-4 fw-semibold">{ (Number(revenue?.data?.total_medical_bills_amount) + Number(revenue?.data?.total_invoice_paid)) || '0.00' }<span className="fs-5">MUR</span></span>
+                            <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(revenue?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
+                        </article>
+                    ) }
                     
                     <article className="appointments border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
                         <div className="w-100 d-flex justify-content-between">
@@ -331,104 +334,108 @@ export default function Index() {
                         <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(appointments?.data?.latest_update?.updated_at).format('MMMM D, YYYY') }</small></span>
                     </article>
                     
-                    <article className="doctors border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
-                            style={{ backgroundColor: '#f2f2f2' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-file-medical" viewBox="0 0 16 16">
-                                <path d="M8.5 4.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L7 6l-.549.317a.5.5 0 1 0 .5.866l.549-.317V7.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L9 6l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zM5.5 9a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
-                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
-                            </svg>
-                        </span>
-                        <span>Total Doctors</span>
-                        <span className="fs-4 fw-semibold">
-                            { Number(userCount?.data?.general_practitioners 
-                                || userCount?.data?.gynaecologists
-                            ) || 0 }
-                        </span>
-                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
-                    </article>
-                    
-                    <article className="patients border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
-                        <div className="w-100 d-flex justify-content-between">
+                    { (user?.user?.role != 'patient') && (
+                        <article className="doctors border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
                             <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
-                            style={{ backgroundColor: '#f2f2f2' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-standing"
-                                viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0" />
+                                style={{ backgroundColor: '#f2f2f2' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-file-medical" viewBox="0 0 16 16">
+                                    <path d="M8.5 4.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L7 6l-.549.317a.5.5 0 1 0 .5.866l.549-.317V7.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L9 6l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zM5.5 9a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
                                 </svg>
                             </span>
-                            <div className="dropdown">
-                                <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                            <span>Total Doctors</span>
+                            <span className="fs-4 fw-semibold">
+                                { Number(userCount?.data?.general_practitioners 
+                                    || userCount?.data?.gynaecologists
+                                ) || 0 }
+                            </span>
+                            <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
+                        </article>
+                    ) }
+                    
+                    { (user?.user?.role != 'patient') && (
+                        <article className="patients border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start">
+                            <div className="w-100 d-flex justify-content-between">
+                                <span className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                                style={{ backgroundColor: '#f2f2f2' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-standing"
+                                    viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0" />
                                     </svg>
                                 </span>
-                                <ul class="dropdown-menu border-radius-25 px-3">
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setUserCountRange('today'); 
-                                                await getUserCount(userCountRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                Today
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setUserCountRange('this-week'); 
-                                                await getUserCount(userCountRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                This Week
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setUserCountRange('this-month');
-                                                await getUserCount(userCountRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                This Month
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setUserCountRange('this-year'); 
-                                                await getUserCount(userCountRange);  
-                                            }}
-                                            className="dropdown-item">
-                                                This Year
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span 
-                                            type="button" 
-                                            onClick={ async () => { 
-                                                setUserCountRange(''); 
-                                                await getUserCount(userCountRange); 
-                                            }}
-                                            className="dropdown-item">
-                                                All
-                                        </span>
-                                    </li>
-                                </ul>
+                                <div className="dropdown">
+                                    <span type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                        </svg>
+                                    </span>
+                                    <ul class="dropdown-menu border-radius-25 px-3">
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setUserCountRange('today'); 
+                                                    await getUserCount(userCountRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    Today
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setUserCountRange('this-week'); 
+                                                    await getUserCount(userCountRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    This Week
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setUserCountRange('this-month');
+                                                    await getUserCount(userCountRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    This Month
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setUserCountRange('this-year'); 
+                                                    await getUserCount(userCountRange);  
+                                                }}
+                                                className="dropdown-item">
+                                                    This Year
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span 
+                                                type="button" 
+                                                onClick={ async () => { 
+                                                    setUserCountRange(''); 
+                                                    await getUserCount(userCountRange); 
+                                                }}
+                                                className="dropdown-item">
+                                                    All
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <span>Total Patients</span>
-                        <span className="fs-4 fw-semibold">
-                            { Number(userCount?.data?.patients) || 0 }
-                        </span>
-                        <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
-                    </article>
+                            <span>Total Patients</span>
+                            <span className="fs-4 fw-semibold">
+                                { Number(userCount?.data?.patients) || 0 }
+                            </span>
+                            <span className="bg-body-tertiary"><small>Updated&nbsp;{ dayjs(userCount?.data?.latest_update?.created_at).format('MMMM D, YYYY') }</small></span>
+                        </article>
+                    ) }
                 </section>
 
                 <section className="patient-meters align-items-center d-flex gap-3 flex-wrap pt-4">

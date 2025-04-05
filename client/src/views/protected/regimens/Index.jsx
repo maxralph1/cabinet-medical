@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'; 
+import { useContext, useEffect, useState } from 'react'; 
+import AuthContext from '@/context/AuthContext.jsx'; 
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import dayjs from 'dayjs';
@@ -15,6 +16,8 @@ import Layout from '@/components/protected/Layout.jsx';
 
 
 export default function Index() {
+    const { user } = useContext(AuthContext); 
+
     const [regimenQuery, setRegimenQuery] = useState({
         range: 'all', 
         page: 1, 
@@ -36,16 +39,18 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">Regimens</h2>
-                <Link to={ route('home.regimens.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
-                    <span className="mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
-                            className="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fillRule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                    </span>
-                    <span>Add</span>
-                </Link>
+                { (user?.user?.role != 'patient') && (
+                    <Link to={ route('home.regimens.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
+                        <span className="mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
+                        </span>
+                        <span>Add</span>
+                    </Link>
+                ) }
             </div>
 
             <div className="d-flex justify-content-end pt-3">
@@ -143,11 +148,18 @@ export default function Index() {
                                                                     </div>
                                                                 </div>
                                                                 <div className="w-100 pt-2">
-                                                                    <span><span className="text-secondary">Ref #:</span>&nbsp;<span>{ (regimen?._id)?.toUpperCase() }</span></span>
-                                                                    <div className="d-flex flex-column column-gap-4">
-                                                                        <span className="text-secondary">Notes:&nbsp;<span className="fw-semibold">{ regimen?.notes ? regimen?.notes : 'N/A' }</span></span>
-                                                                        <span className="text-secondary">Comments:&nbsp;<span className="fw-semibold">{ regimen?.comments ? regimen?.comments : 'N/A' }</span></span>
-                                                                    </div>
+                                                                    <Link 
+                                                                        to={ route('home.regimens.show', { id: regimen?._id })} 
+                                                                        className="text-decoration-none d-flex flex-column">
+                                                                            <span>
+                                                                                <span className="text-secondary">Ref #:</span>&nbsp;
+                                                                                <span>{ (regimen?._id)?.toUpperCase() }</span>
+                                                                            </span>
+                                                                            <div className="d-flex flex-column column-gap-4">
+                                                                                <span className="text-secondary">Notes:&nbsp;<span className="fw-semibold">{ regimen?.notes ? regimen?.notes : 'N/A' }</span></span>
+                                                                                <span className="text-secondary">Comments:&nbsp;<span className="fw-semibold">{ regimen?.comments ? regimen?.comments : 'N/A' }</span></span>
+                                                                            </div>
+                                                                    </Link>
                                                                 </div>
 
                                                                 {/* <div className="d-flex justify-content-end pt-2">
@@ -158,23 +170,27 @@ export default function Index() {
                                                                     </Link>
                                                                 </div> */}
 
-                                                                <div className="regimen w-100 d-flex justify-content-end gap-1 flex-wrap pt-3">
-                                                                    <div>
-                                                                        <small className="text-secondary">Last activity:&nbsp;</small>
-                                                                    </div>
-                                                                    <div className="regimen-date-time d-flex align-items-center gap-1">
-                                                                        <span>
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                                                className="bi bi-calendar-event" viewBox="0 0 16 16">
-                                                                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                                                                <path
-                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        <span>
-                                                                            { dayjs(regimen?.updated_at).format('ddd, MMM D, YYYY h:mm A') }
-                                                                        </span>
-                                                                    </div>
+                                                                <div className="regimen w-100">
+                                                                    <Link 
+                                                                        to={ route('home.regimens.show', { id: regimen?._id })} 
+                                                                        className="text-decoration-none d-flex justify-content-end gap-1 flex-wrap pt-3">
+                                                                            <div>
+                                                                                <small className="text-secondary">Last activity:&nbsp;</small>
+                                                                            </div>
+                                                                            <div className="regimen-date-time d-flex align-items-center gap-1">
+                                                                                <span>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                                                        className="bi bi-calendar-event" viewBox="0 0 16 16">
+                                                                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                                                                                        <path
+                                                                                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                <span>
+                                                                                    { dayjs(regimen?.updated_at).format('ddd, MMM D, YYYY h:mm A') }
+                                                                                </span>
+                                                                            </div>
+                                                                    </Link>
                                                                 </div>
                                                             </li>
                                                         )

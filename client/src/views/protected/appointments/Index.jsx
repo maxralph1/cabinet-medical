@@ -111,59 +111,67 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">Appointments</h2>
-                <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
-                    <span className="mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
-                            className="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fillRule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                    </span>
-                    <span>Add</span>
-                </Link>
+                { (user?.user?.role != 'patient') && (
+                    <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
+                        <span className="mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
+                        </span>
+                        <span>Add</span>
+                    </Link>
+                ) }
             </div>
 
             <div className={`d-flex ${(appointmentView == 'list') ? 'justify-content-between' : 'justify-content-end'} align-items-center gap-3 pt-3`}>
                 { (appointmentView == 'list') && (
                     <div className="py-3 d-flex flex-column align-items-start gap-3">
-                        <section className="fs-6 d-flex justify-content-start align-items-center gap-2 flex-wrap">
-                            <span className="fw-light text-start"><small>Type:</small></span>
-                            <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
-                                <span 
-                                    type="button" 
-                                    onClick={ async () => {
-                                        await setAppointmentType('');
-                                        await getAppointments(); 
-                                    } }
-                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
-                                    <span className={`btn btn-sm ${(appointmentType == '') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
-                                        All
-                                    </span>
-                                </span>
-                                <span 
-                                    type="button" 
-                                    onClick={ async () => {
-                                        await setAppointmentType('internal');
-                                        await getAppointments(); 
-                                    } }
-                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
-                                    <span className={`btn btn-sm ${(appointmentType == 'internal') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
-                                        Internal
-                                    </span>
-                                </span>
-                                <span 
-                                    type="button" 
-                                    onClick={ async () => {
-                                        await setAppointmentType('external');
-                                        await getAppointments(); 
-                                    } }
-                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
-                                    <span className={`btn btn-sm ${(appointmentType == 'external') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
-                                        External
-                                    </span>
-                                </span>
-                            </div>
-                        </section>
+
+                        { (user?.user?.role != 'patient') && (
+                            <>
+                                <section className="fs-6 d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                                    <span className="fw-light text-start"><small>Type:</small></span>
+                                    <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == '') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                All
+                                            </span>
+                                        </span>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('internal');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == 'internal') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                Internal
+                                            </span>
+                                        </span>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('external');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == 'external') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                External
+                                            </span>
+                                        </span>
+                                    </div>
+                                </section>
+                            </>
+                        ) }
+                        
                         <section className="fs-6 d-flex justify-content-start align-items-center gap-2 flex-wrap">
                             <span className="fw-light text-start"><small>Status:</small></span>
                             <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
@@ -325,7 +333,10 @@ export default function Index() {
                                                                                     <button className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Remind</button>
                                                                                 ) } */}
                                                                                 {/* { (appointmentUnit?.status == 'approved' && currentDate.diff(appointmentUnit?.created_at, 'hour') > 0.5) && ( */}
-                                                                                { (appointmentUnit?.status == 'pending-approval' && currentDate.diff(appointmentUnit?.created_at, 'hour') > 72) && (
+                                                                                { ((appointmentUnit?.status == 'pending-approval') 
+                                                                                    && (currentDate.diff(appointmentUnit?.created_at, 'hour') > 72) 
+                                                                                    && (currentDate.isBefore(dayjs(appointmentUnit?.proposed_schedule_start)))) 
+                                                                                        && (
                                                                                     <button 
                                                                                         onClick={ async () => {
                                                                                             await sendReminderAppointment(appointmentUnit?._id); 

@@ -194,11 +194,13 @@ export default function Index() {
                 { ((toggleChatsNav == false) && (window.innerWidth <= tabletBreakpoint) || (window.innerWidth >= tabletBreakpoint)) && (
                     <section className="chats col-sm-12 col-md-4">
                         <h3 className="visually-hidden">Chats</h3>
-                        <div>
-                            <SelectedUserChatComponent 
-                                selectedUserItem={ selectedUserItem } 
-                                setSelectedUserItem={ setSelectedUserItem } />
-                        </div>
+                        { (user?.user?.role != 'patient') && (
+                            <div>
+                                <SelectedUserChatComponent 
+                                    selectedUserItem={ selectedUserItem } 
+                                    setSelectedUserItem={ setSelectedUserItem } />
+                            </div>
+                        ) }
                         <div>
                             { (chats?.data?.length > 0) && (chats?.data
                                                                 ?.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
@@ -312,10 +314,10 @@ export default function Index() {
                                         
                             { (chatMessages?.data?.length > 0) && (
                                 <section className="h-100 pb-5">
-                                    <div className="h-100 w-100 overflow-y-auto d-flex flex-column justify-content-end align-items-end row-gap-2 px-2" ref={messageContainerRef}>
+                                    <div className={`h-100 w-100 overflow-y-auto d-flex flex-column justify-content-end align-items-end row-gap-2 px-2`} ref={messageContainerRef}>
                                         { (chatMessages?.data?.map(chatMessage => {
                                             return (
-                                                <article key={ chatMessage?._id } className="d-flex flex-column justify-content-end align-items-end py-1 px-2 border border-tertiary border-radius-15 w-75 w-md-50">
+                                                <article key={ chatMessage?._id } className={`d-flex flex-column ${(user?.user?.user_id == chatMessage?.user) ? 'justify-content-end align-items-end' : 'justify-content-start align-items-start'} py-1 px-2 border border-tertiary border-radius-15 w-100 w-md-50`}>
                                                     <p className="mb-0">{ chatMessage?.content }</p>
                                                     <span style={{ fontSize: 'x-small' }}>{ dayjs(chatMessage?.created_at)?.format("HH:mm") }</span>
                                                 </article>
