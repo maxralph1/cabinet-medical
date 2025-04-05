@@ -10,7 +10,10 @@ import { getAppointments,
         deleteAppointment, 
         restoreAppointment, 
         destroyAppointment, 
-        getAppointmentsSpecificDate
+        getAppointmentsSpecificDate, 
+        approveAppointment,     
+        declineAppointment, 
+        sendReminderAppointment
 } from '../../controllers/appointmentController.js'; 
 
 
@@ -29,6 +32,10 @@ appointmentRouter.route('/:id')
                 .delete(destroyAppointment); 
 
 appointmentRouter.patch('/:id/restore', restoreAppointment); 
+
+appointmentRouter.patch('/:id/approve', approveAppointment); 
+appointmentRouter.patch('/:id/decline', declineAppointment); 
+appointmentRouter.patch('/:id/send-appointment-reminder', declineAppointment); 
 
 
 export default appointmentRouter; 

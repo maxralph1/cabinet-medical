@@ -44,6 +44,7 @@ export default function PasswordlessSignInRequest() {
                 </form>
 
                 <section className="auth-options px-1 pt-3 gap-3 d-flex flex-column align-items-sm-start align-items-md-center gap-3">
+                    <span className=""><Link to={ route('sign-in')} className="text-dark fw-bold">Sign in with password instead</Link></span> 
                     <span className=""><Link to={ route('sign-up') } className="text-dark fw-bold">Sign Up</Link>&nbsp;if you do not already have an account</span> 
                     <span className="">Forgot your password?<Link to={ route('password-reset-request') } className="text-dark fw-bold">&nbsp;Reset Password</Link></span> 
                 </section>

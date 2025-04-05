@@ -45,58 +45,72 @@ export default function Index() {
     const [closestAppointment, setClosestAppointment] = useState(null); 
     console.log(closestAppointment)
 
-    // Set upcoming appointments when appointments data changes
     useEffect(() => {
         if (appointments?.data?.upcoming_appointments) {
             setUpcomingAppointments(appointments?.data?.upcoming_appointments);
         }
-    }, [appointments]); // Runs when 'appointments' prop changes
+    }, [appointments]); 
 
-    // Get the closest appointment whenever the upcomingAppointments changes
+    // const getClosestAppointment = (appointments) => {
+    //     const now = new Date();
+    //     const currentDateTime = now.toISOString().slice(0, 16); // 'YYYY-MM-DDTHH:mm' format
+
+    //     // Find the appointment happening today
+    //     const todayAppointment = appointments?.find((appointment) => {
+    //         const proposedStartDateTime = appointment?.proposed_schedule_start;
+    //         return proposedStartDateTime === currentDateTime;
+    //     });
+
+    //     if (todayAppointment) {
+    //         // If an appointment is happening today, return it
+    //         return todayAppointment;
+    //     }
+
+    //     // If no appointment is happening today, find the closest future appointment
+    //     const futureAppointments = appointments?.filter((appointment) => {
+    //         const proposedStartDateTime = appointment?.proposed_schedule_start;
+    //         return proposedStartDateTime > currentDateTime;
+    //     });
+
+    //     // If there are future appointments, return the closest one
+    //     if (futureAppointments?.length > 0) {
+    //         const closestFutureAppointment = futureAppointments?.reduce((closest, appointment) => {
+    //             const proposedStartDateTime = appointment?.proposed_schedule_start;
+    //             return !closest || proposedStartDateTime < closest ? proposedStartDateTime : closest;
+    //         });
+
+    //         return futureAppointments?.find((appointment) => {
+    //             const proposedStartDateTime = appointment?.proposed_schedule_start;
+    //             return proposedStartDateTime === closestFutureAppointment;
+    //         });
+    //     }
+
+    //     // If no future appointments are found, return null
+    //     return null;
+    // }; 
+
+    /** Get only the number of future(upcoming) appointments */
+    const currentDate = dayjs();
+
+    const futureAppointments = appointments?.data?.upcoming_appointments?.filter(futureAppointment => dayjs(futureAppointment?.proposed_schedule_start).isAfter(currentDate));
+    /** End of Get only the number of future(upcoming) appointments */
+
+    /** Get the next (immediate) upcoming appointment */
     useEffect(() => {
-        if (upcomingAppointments.length > 0) {
-            const closest = getClosestAppointment(upcomingAppointments);
+        // if (upcomingAppointments.length > 0) {
+        //     const closest = getClosestAppointment(upcomingAppointments);
+        //     setClosestAppointment(closest);
+        // }
+
+        if (futureAppointments?.length > 0) {
+            const closest = futureAppointments?.sort((a, b) => 
+                dayjs(a?.proposed_schedule_start).isBefore(dayjs(b.proposed_schedule_start)) ? -1 : 1
+            )[0];
             setClosestAppointment(closest);
         }
-    }, [upcomingAppointments]); // Runs when 'upcomingAppointments' state changes
-
-    const getClosestAppointment = (appointments) => {
-        const now = new Date();
-        const currentDateTime = now.toISOString().slice(0, 16); // 'YYYY-MM-DDTHH:mm' format
-
-        // Find the appointment happening today
-        const todayAppointment = appointments?.find((appointment) => {
-            const proposedStartDateTime = appointment?.proposed_schedule_start;
-            return proposedStartDateTime === currentDateTime;
-        });
-
-        if (todayAppointment) {
-            // If an appointment is happening today, return it
-            return todayAppointment;
-        }
-
-        // If no appointment is happening today, find the closest future appointment
-        const futureAppointments = appointments?.filter((appointment) => {
-            const proposedStartDateTime = appointment?.proposed_schedule_start;
-            return proposedStartDateTime > currentDateTime;
-        });
-
-        // If there are future appointments, return the closest one
-        if (futureAppointments?.length > 0) {
-            const closestFutureAppointment = futureAppointments?.reduce((closest, appointment) => {
-                const proposedStartDateTime = appointment?.proposed_schedule_start;
-                return !closest || proposedStartDateTime < closest ? proposedStartDateTime : closest;
-            });
-
-            return futureAppointments?.find((appointment) => {
-                const proposedStartDateTime = appointment?.proposed_schedule_start;
-                return proposedStartDateTime === closestFutureAppointment;
-            });
-        }
-
-        // If no future appointments are found, return null
-        return null;
-    }; 
+    // }, [upcomingAppointments]); 
+    }, [futureAppointments]); 
+    /** End of Get the next (immediate) upcoming appointment */
 
     const handleChatSubmit = async (e) => {
         e.preventDefault(); 
@@ -126,15 +140,31 @@ export default function Index() {
                 </span> */}
                 <div className="d-flex flex-column gap-2 pt-2 align-items-end">
                     <span>You have&nbsp;
-                        <Link to={ route('home.appointments.index') } className="fw-semibold text-warning">
-                            { appointments?.data?.upcoming_appointments?.length }&nbsp;
-                            appointment{ appointments?.data?.upcoming_appointments?.length>1 && 's' }&nbsp;
-                        </Link>in the coming days<span className="fw-semibold"></span>.</span>
+                        { (futureAppointments?.length<1) && <span className="fw-semibold">no appointments in the coming days.</span> }
+
+                        { (futureAppointments?.length>0) && (
+                            <>
+                                <Link to={ route('home.appointments.index') } className="fw-semibold text-warning">
+                                    { futureAppointments?.length }&nbsp;
+                                    appointment{ futureAppointments?.length>1 && 's' }
+                                </Link>
+                                <span className="">&nbsp;in the coming days.</span>
+                            </>
+                        ) }
+                    </span>
 
                     <span>You have&nbsp;
-                        <Link to={ route('home.regimens.index') } className="fw-semibold text-warning">{ regimens?.data?.length } uncompleted regimen{ regimens?.data?.length>1 && 's' }</Link>&nbsp;
-                        { regimens?.data?.length>1 && '. Ensure to take your medication.' }
-                        <span className="fw-semibold"></span>.</span>
+                        { (regimens?.data?.length<1) && <span className="fw-semibold">no uncompleted regimen in the coming days.</span> }
+
+                        { (regimens?.data?.length>0) && (
+                            <>
+                                <Link to={ route('home.regimens.index') } className="fw-semibold text-warning">
+                                    { regimens?.data?.length } uncompleted regimen{ regimens?.data?.length>1 && 's' }
+                                </Link>
+                                <span>&nbsp;{ regimens?.data?.length>1 && '. Ensure to take your medication.' }</span>
+                            </>
+                        ) }
+                    </span>
                 </div>
             </div>
             
@@ -673,13 +703,18 @@ export default function Index() {
                                                 </span>
                                             </div>
                                             <span className="badge rounded-pill text-bg-info">
-                                                { (user?.user?.role == 'patient') 
-                                                    ? ((closestAppointment?.professional?.role)?.slice(0,1)?.toUpperCase() + (closestAppointment?.professional?.role)?.slice(1))  
-                                                    : ((user?.user?.role == 'general_practitioner')
-                                                        || (user?.user?.role == 'gynaecologist') 
-                                                        || (user?.user?.role == 'paediatrician')) 
-                                                    ? 'Patient' 
-                                                    : '' }
+                                                { ((user?.user?.role == 'patient') && (closestAppointment?.professional?.role == 'general_practitioner')) 
+                                                    ? 'General Practitioner' 
+                                                        : ((user?.user?.role == 'patient') && (closestAppointment?.professional?.role == 'gynaecologist'))
+                                                            ? 'Gynaecologist' 
+                                                        : ((user?.user?.role == 'patient') && (closestAppointment?.professional?.role == 'laboratory_scientist'))
+                                                            ? 'Laboratory Scientist' 
+                                                        : ((user?.user?.role == 'patient') && (closestAppointment?.professional?.role == 'nurse'))
+                                                            ? 'Nurse' 
+                                                        : (user?.user?.role == 'patient')
+                                                            ? 'Patient'
+                                                        : ''
+                                                }
                                             </span>
                                         </div>
                                         
@@ -832,34 +867,73 @@ export default function Index() {
                                         { (appointments?.data?.latest_appointments?.map((appointment, index) => {
                                             return (
                                                 <tr key={ appointment?._id }>
-                                                    <th scope="row">{ index + 1 }</th>
-                                                    <td>{ (user?.user?.role == 'patient') 
-                                                            ? ((appointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (appointment?.professional?.first_name)?.slice(1)) 
-                                                                + ' ' 
-                                                                + ((appointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (appointment?.professional?.last_name)?.slice(1))
-                                                            : ((appointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (appointment?.patient?.first_name)?.slice(1)) 
-                                                                + ' ' 
-                                                                + ((appointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (appointment?.patient?.last_name)?.slice(1)) }</td>
-                                                    <td className="d-none d-md-table-cell">
-                                                        { (user?.user?.role == 'patient') 
-                                                            ? (appointment?.professional?.phone ? appointment?.professional?.phone : appointment?.professional?.email) 
-                                                            : (appointment?.patient?.phone ? appointment?.patient?.phone : appointment?.patient?.email) }
+                                                    <th scope="row">
+                                                        <Link 
+                                                            to={ route('home.appointments.show', { id: appointment?._id }) } 
+                                                            className="text-decoration-none">
+                                                                { index + 1 }
+                                                        </Link>
+                                                    </th>
+                                                    <td>
+                                                        <Link
+                                                            to={ route('home.appointments.show', { id: appointment?._id }) } 
+                                                            className="text-decoration-none">
+                                                                { (appointment?.appointment_request) && (
+                                                                    ((appointment?.appointment_request?.patient_first_name)?.slice(0,1)?.toUpperCase() + (appointment?.appointment_request?.patient_first_name)?.slice(1)) 
+                                                                        + ' ' 
+                                                                        + ((appointment?.appointment_request?.patient_last_name)?.slice(0,1)?.toUpperCase() + (appointment?.appointment_request?.patient_last_name)?.slice(1))
+                                                                ) }
+
+                                                                { ((!appointment?.appointment_request) && (user?.user?.role == 'patient')) 
+                                                                    ? ((appointment?.professional?.first_name)?.slice(0,1)?.toUpperCase() + (appointment?.professional?.first_name)?.slice(1)) 
+                                                                        + ' ' 
+                                                                        + ((appointment?.professional?.last_name)?.slice(0,1)?.toUpperCase() + (appointment?.professional?.last_name)?.slice(1))
+                                                                    : ((!appointment?.appointment_request) && (user?.user?.role != 'patient'))
+                                                                        ? ((appointment?.patient?.first_name)?.slice(0,1)?.toUpperCase() + (appointment?.patient?.first_name)?.slice(1)) 
+                                                                        + ' ' 
+                                                                        + ((appointment?.patient?.last_name)?.slice(0,1)?.toUpperCase() + (appointment?.patient?.last_name)?.slice(1)) 
+                                                                    : '' }
+                                                        </Link>
                                                     </td>
                                                     <td className="d-none d-md-table-cell">
-                                                        { dayjs(appointment?.proposed_schedule_start)?.format('MMM. D, YYYY, HH:mm') }&nbsp;
+                                                        <Link 
+                                                            to={ route('home.appointments.show', { id: appointment?._id }) } 
+                                                            className="text-decoration-none">
+                                                                { (appointment?.appointment_request) && (
+                                                                    appointment?.appointment_request?.patient_phone ?? appointment?.appointment_request?.patient_email
+                                                                ) }
+
+                                                                { ((!appointment?.appointment_request) && (user?.user?.role == 'patient')) 
+                                                                    ? (appointment?.professional?.phone ? appointment?.professional?.phone : appointment?.professional?.email) 
+                                                                    : (appointment?.patient?.phone ? appointment?.patient?.phone : appointment?.patient?.email) }
+                                                        </Link>
+                                                    </td>
+                                                    <td className="d-none d-md-table-cell">
+                                                        <Link
+                                                            to={ route('home.appointments.show', { id: appointment?._id }) } 
+                                                            className="text-decoration-none">
+                                                                { dayjs(appointment?.proposed_schedule_start)?.format('MMM. D, YYYY, HH:mm') }&nbsp;
+                                                        </Link>
                                                     </td>
                                                     {/* { dayjs(diagnosisSegmentItem?.created_at).format('ddd, MMM D, YYYY h:mm A') } */}
                                                     <td>
-                                                        { (appointment?.status == 'cancelled') 
-                                                            ? <span className="badge rounded-pill text-bg-danger">Cancelled</span> 
-                                                            : (appointment?.status == 'ongoing') 
-                                                            ? <span className="badge rounded-pill text-bg-success">Ongoing</span> 
-                                                            : (appointment?.status == 'pending') 
-                                                            ? <span className="badge rounded-pill text-bg-warning">Pending</span> 
-                                                            : (appointment?.status == 'took-place') 
-                                                            ? <span className="badge rounded-pill text-bg-secondary">Took place</span> 
-                                                            : '' }
-                                                        
+                                                        <Link
+                                                            to={ route('home.appointments.show', { id: appointment?._id }) } 
+                                                            className="text-decoration-none">
+                                                                { (appointment?.status == 'cancelled') 
+                                                                    ? <span className="badge rounded-pill text-bg-danger">Cancelled</span> 
+                                                                    : (appointment?.status == 'pending-approval') 
+                                                                    ? <span className="badge rounded-pill text-bg-warning">Pending Approval</span> 
+                                                                    : (appointment?.status == 'declined-approval') 
+                                                                    ? <span className="badge rounded-pill text-bg-danger">Declined Approval</span> 
+                                                                    : (appointment?.status == 'approved') 
+                                                                    ? <span className="badge rounded-pill text-bg-warning">Scheduled</span> 
+                                                                    : (appointment?.status == 'ongoing') 
+                                                                    ? <span className="badge rounded-pill text-bg-success">Ongoing</span> 
+                                                                    : (appointment?.status == 'took-place') 
+                                                                    ? <span className="badge rounded-pill text-bg-secondary">Took place</span> 
+                                                                    : '' }
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             )
