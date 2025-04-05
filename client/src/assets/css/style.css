@@ -28,20 +28,13 @@ a, Link {
 } 
 
 .glass-effect {
-    position: relative;
     background: rgba(255, 255, 255, 0.1);
-    /* semi-transparent background */
     backdrop-filter: blur(10px);
-    /* blur effect on the background */
     border-radius: 10px;
-    /* rounded corners */
     padding: 20px;
     color: #fff;
-    /* white text for better contrast */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* subtle shadow for depth */
     overflow: hidden;
-    /* ensures content doesn't overflow rounded corners */
 }
 
 .box-shadow {
@@ -265,6 +258,52 @@ main {
     display: flex; 
     flex-direction: column;
 } */
+.hero { height: 85vh; }
+
+.service-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    height: 250px;
+}
+
+.service-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.service-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.service-description {
+    font-size: 14px;
+    color: #777;
+}
+
+.blog .articles .articles-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center; 
+    justify-content: center;
+    /* row-gap: 3rem; */
+    gap: 3rem;
+}
+
+.blog .articles .articles-list article { 
+    /* align-self: end; */
+    width: 100%;
+ }
+
 .slide-in {
     opacity: 0;
     transform: translateY(100px);
@@ -308,7 +347,7 @@ main.auth .auth-side-quotes .slide-section h2::after {
 main.dashboard .dashboard-meters .admin-meters {
     display: grid;
     grid-template-areas:
-        "revenue appointments" 
+        "appointments revenue" 
         "doctors patients";
 }
 
@@ -371,7 +410,7 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
-            "revenue appointments" 
+            "appointments revenue" 
             "doctors patients";
     }
 }
@@ -392,6 +431,10 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     }
     
     .header .main-nav ul li {} 
+
+    .blog .articles .articles-list {
+        grid-template-columns: 1fr 1fr;
+    }
 
     /*------------*/
     /** Dashboard */
@@ -424,11 +467,15 @@ main.dashboard .appointments .upcoming .doctor .image picture img {
     main.dashboard .dashboard-meters .admin-meters {
         display: grid;
         grid-template-areas:
-            "revenue appointments doctors patients";
+            "appointments revenue doctors patients";
     } 
 
     main.dashboard .appointments .upcoming .doctor .image picture img {
         min-width: 200px;
         max-width: 220px;
     }
+}
+
+@media screen and (min-width: 1000px) {
+    .hero { height: 82.5vh; }
 }

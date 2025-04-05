@@ -221,10 +221,12 @@ export default function Edit() {
                                                 }) }
                                                 placeholder="pending">
                                                     <option value="" disabled={appointment?.data?.status !== ''}>Choose one ...</option>
-                                                    <option value="cancelled">Cancelled</option>
+                                                    <option value="pending-approval">Approval Pending</option> 
+                                                    <option value="declined-approval">Approval Declined&nbsp;&nbsp;</option> 
+                                                    <option value="approved">Approved</option> 
                                                     <option value="ongoing">Ongoing</option> 
-                                                    <option value="pending">Pending</option> 
                                                     <option value="took-place">Took Place</option> 
+                                                    <option value="cancelled">Cancelled</option>
                                             </select>
                                             <label htmlFor="status" style={{ marginLeft: '0' }}>Status</label>
                                         </div>

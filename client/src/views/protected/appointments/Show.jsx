@@ -49,9 +49,15 @@ export default function Show() {
                                                 ?   <div className="d-flex flex-column">
                                                         <p className="pt-0 d-flex flex-column">
                                                             <span className="fw-semibold ">
-                                                                { ((appointment?.data?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.patient?.first_name)?.slice(1)) + ' ' + ((appointment?.data?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.patient?.last_name)?.slice(1)) }
+                                                                { (appointment?.data?.appointment_request) && (
+                                                                    ((appointment?.data?.appointment_request?.patient_first_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.appointment_request?.patient_first_name)?.slice(1)) + ' ' + ((appointment?.data?.appointment_request?.patient_last_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.appointment_request?.patient_last_name)?.slice(1))
+                                                                )}
+
+                                                                { (!appointment?.data?.appointment_request) && ((appointment?.data?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.patient?.first_name)?.slice(1)) + ' ' + ((appointment?.data?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointment?.data?.patient?.last_name)?.slice(1)) }
                                                             </span>
-                                                            <span className="fw-light">Patient</span>
+                                                            <span className="fw-light">
+                                                                <small>{ (appointment?.data?.appointment_request) ? 'External Client' : 'Patient' }</small>
+                                                            </span>
                                                         </p>
                                                         <p className="pt-2 py-0">Schedule:&nbsp;
                                                             <span className="fw-semibold">
@@ -62,10 +68,14 @@ export default function Show() {
                                                             <span className="">
                                                                 { (appointment?.data?.status == 'cancelled') 
                                                                     ? <span className="badge rounded-pill text-bg-danger">Cancelled</span> 
+                                                                    : (appointment?.data?.status == 'pending-approval') 
+                                                                    ? <span className="badge rounded-pill text-bg-warning">Pending Approval</span> 
+                                                                    : (appointment?.data?.status == 'declined-approval') 
+                                                                    ? <span className="badge rounded-pill text-bg-danger">Declined Approval</span> 
+                                                                    : (appointment?.data?.status == 'approved') 
+                                                                    ? <span className="badge rounded-pill text-bg-warning">Scheduled</span> 
                                                                     : (appointment?.data?.status == 'ongoing') 
                                                                     ? <span className="badge rounded-pill text-bg-success">Ongoing</span> 
-                                                                    : (appointment?.data?.status == 'pending') 
-                                                                    ? <span className="badge rounded-pill text-bg-warning">Pending</span> 
                                                                     : (appointment?.data?.status == 'took-place') 
                                                                     ? <span className="badge rounded-pill text-bg-secondary">Took place</span> 
                                                                     : '' }

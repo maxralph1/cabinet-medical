@@ -10,81 +10,242 @@ const getAppointments = asyncHandler(async (req, res) => {
     const current_page = parseInt(req?.query?.page) || 1;
     const limit = parseInt(req?.query?.limit) || 10; 
     const skip = (current_page - 1) * limit; 
-    const yearQuery = req?.query?.year; 
-    const monthQuery = req?.query?.month; 
-    const dateQuery = req?.query?.date; 
+    const statusQuery = req?.query?.status; 
+    const typeQuery = req?.query?.type; 
 
     console.log(req?.query); 
     console.log(req?.user_role); 
 
-    // const selectedYear = req?.query?.year;
-    // const selectedMonth = req?.query?.month;
-    // const selectedDate = req?.query?.date;
-    // const selectedTimeStart = req?.query?.time_start; 
-    // const selectedTimeEnd = req?.query?.time_end; 
-
     let appointments, total; 
 
     if ((req?.user_role == 'admin') || (req?.user_role == 'superadmin')) {
-        appointments = await Appointment.find({ deleted_at: null })
-                                        .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
-                                        .skip(skip)
-                                        .limit(limit)
-                                        .populate({
-                                            path: 'patient',
-                                            select: 'first_name last_name username'
-                                        })
-                                        .populate({
-                                            path: 'professional',
-                                            select: 'first_name last_name username role'
-                                        })
-                                        .populate({
-                                            path: 'appointment_request',
-                                        })
+        if (statusQuery?.length && typeQuery?.length) {
+            appointments = await Appointment.find({ status: statusQuery, type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
                                         .lean(); 
+            total = await Appointment.countDocuments({ status: statusQuery, type: typeQuery, deleted_at: null }); 
+        } else if (statusQuery?.length && !typeQuery) {
+            appointments = await Appointment.find({ status: statusQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean();
+            total = await Appointment.countDocuments({ status: statusQuery, deleted_at: null }); 
+        } else if (!statusQuery && typeQuery) {
+            appointments = await Appointment.find({ type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean(); 
+            total = await Appointment.countDocuments({ type: typeQuery, deleted_at: null }); 
+        } else {
+            appointments = await Appointment.find({ deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                            .lean(); 
+            total = await Appointment.countDocuments({ deleted_at: null });
+        }
 
-        total = await Appointment.countDocuments({ deleted_at: null });
     } else if ((req?.user_role == 'general_practitioner') 
             || (req?.user_role == 'gynaecologist') 
             || (req?.user_role == 'nurse') 
             || (req?.user_role == 'laboratory_scientist')) {
-        appointments = await Appointment.find({ professional: req?.user_id, deleted_at: null })
-                                        .sort({ proposed_month_start: -1, proposed_date_start: -1, proposed_time_start: -1 })
-                                        .skip(skip)
-                                        .limit(limit)
-                                        .populate({
-                                            path: 'patient',
-                                            select: 'first_name last_name username'
-                                        })
-                                        .populate({
-                                            path: 'professional',
-                                            select: 'first_name last_name username role'
-                                        })
-                                        .populate({
-                                            path: 'appointment_request',
-                                        })
+        
+        if (statusQuery?.length && typeQuery?.length) {
+            appointments = await Appointment.find({ professional: req?.user_id, status: statusQuery, type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
                                         .lean(); 
+            total = await Appointment.countDocuments({ professional: req?.user_id, status: statusQuery, type: typeQuery, deleted_at: null }); 
+        } else if (statusQuery?.length && !typeQuery?.length) {
+            appointments = await Appointment.find({ professional: req?.user_id, status: statusQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean(); 
+            total = await Appointment.countDocuments({ professional: req?.user_id, status: statusQuery, deleted_at: null }); 
+        } else if (!statusQuery?.length && typeQuery?.length) {
+            appointments = await Appointment.find({ professional: req?.user_id, type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean(); 
+            total = await Appointment.countDocuments({ professional: req?.user_id, type: typeQuery, deleted_at: null }); 
+        } else {
+            appointments = await Appointment.find({ professional: req?.user_id, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                            .lean(); 
+            total = await Appointment.countDocuments({ professional: req?.user_id, deleted_at: null }); 
+        }
 
-        total = await Appointment.countDocuments({ professional: req?.user_id, deleted_at: null }); 
     } else {
-        appointments = await Appointment.find({ patient: req?.user_id, deleted_at: null })
-                                        .sort({ proposed_schedule_start: -1 })
-                                        .skip(skip)
-                                        .limit(limit)
-                                        .populate({
-                                            path: 'patient',
-                                            select: 'first_name last_name username'
-                                        })
-                                        .populate({
-                                            path: 'professional',
-                                            select: 'first_name last_name username role'
-                                        })
-                                        .populate({
-                                            path: 'appointment_request',
-                                        })
+        if (statusQuery?.length && typeQuery?.length) {
+            appointments = await Appointment.find({ patient: req?.user_id, status: statusQuery, type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
                                         .lean(); 
-
-        total = await Appointment.countDocuments({ patient: req?.user_id, deleted_at: null }); 
+            total = await Appointment.countDocuments({ patient: req?.user_id, status: statusQuery, type: typeQuery, deleted_at: null }); 
+        } else if (statusQuery?.length && !typeQuery?.length) {
+            appointments = await Appointment.find({ patient: req?.user_id, status: statusQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean(); 
+            total = await Appointment.countDocuments({ patient: req?.user_id, status: statusQuery, deleted_at: null }); 
+        } else if (!statusQuery?.length && typeQuery?.length) {
+            appointments = await Appointment.find({ patient: req?.user_id, type: typeQuery, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                        .lean(); 
+            total = await Appointment.countDocuments({ patient: req?.user_id, type: typeQuery, deleted_at: null }); 
+        } else {
+            appointments = await Appointment.find({ patient: req?.user_id, deleted_at: null })
+                                            .sort({ proposed_schedule_start: -1 })
+                                            .skip(skip)
+                                            .limit(limit)
+                                            .populate({
+                                                path: 'patient',
+                                                select: 'first_name last_name username'
+                                            })
+                                            .populate({
+                                                path: 'professional',
+                                                select: 'first_name last_name username role'
+                                            })
+                                            .populate({
+                                                path: 'appointment_request',
+                                            })
+                                            .lean(); 
+            total = await Appointment.countDocuments({ patient: req?.user_id, deleted_at: null }); 
+        }
     }
     if (!appointments?.length) return res.status(404).json({ message: "No appointments found!" }); 
 
@@ -154,6 +315,7 @@ const createAppointment = asyncHandler(async (req, res) => {
         professional: professional ? professional : req?.user_id, 
         notes, 
         purpose,
+        // status: 'pending-approval',
         proposed_schedule_date, 
         proposed_schedule_start, 
         proposed_schedule_end,
@@ -187,6 +349,9 @@ const getAppointment = asyncHandler(async (req, res) => {
                                         .populate({
                                             path: 'professional',
                                             select: 'first_name last_name username role'
+                                        })
+                                        .populate({
+                                            path: 'appointment_request',
                                         })
                                         .lean(); 
 
@@ -364,6 +529,86 @@ const getAppointmentsSpecificDate = asyncHandler(async (req, res) => {
     res.json({ data: appointments });
 });
 
+/**
+ * Approve Appointment
+ */
+const approveAppointment = asyncHandler(async (req, res) => {
+    const appointment = await Appointment.findOne({ _id: req?.params?.id, deleted_at: null }); 
+
+    if (!appointment) return res.status(404).json({ message: "Appointment not found!" }); 
+
+    appointment.status = 'approved'; 
+
+    const notification = await Notification.create({
+        user: appointment?.patient, 
+        appointment: appointment._id,
+        read: false,
+        type: (appointment.status == 'approved') ? 'appointment-approved' : 'appointment-modified'
+    });
+
+    appointment.save()
+                .then(() => {
+                    res.json({ success: `Appointment ${appointment?._id} approved` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                }); 
+}); 
+
+/**
+ * Decline Appointment
+ */
+const declineAppointment = asyncHandler(async (req, res) => {
+    const appointment = await Appointment.findOne({ _id: req?.params?.id, deleted_at: null }); 
+
+    if (!appointment) return res.status(404).json({ message: "Appointment not found!" }); 
+
+    appointment.status = 'declined-approval'; 
+
+    const notification = await Notification.create({
+        user: appointment?.patient, 
+        appointment: appointment._id,
+        read: false,
+        type: (appointment.status == 'declined') ? 'appointment-declined' : 'appointment-modified'
+    });
+
+    appointment.save()
+                .then(() => {
+                    res.json({ success: `Appointment ${appointment?._id} declined` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                }); 
+}); 
+
+/**
+ * Decline Appointment
+ */
+const sendReminderAppointment = asyncHandler(async (req, res) => {
+    const appointment = await Appointment.findOne({ _id: req?.params?.id, deleted_at: null }); 
+
+    if (!appointment) return res.status(404).json({ message: "Appointment not found!" }); 
+
+    let notification; 
+
+    if (appointment.status == 'pending-approval') {
+        notification = await Notification.create({
+            user: appointment?.patient, 
+            appointment: appointment._id,
+            read: false,
+            type: 'appointment-reminder'
+        });
+    }
+
+    appointment.save()
+                .then(() => {
+                    res.json({ success: `Appointment ${appointment?._id} declined` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                }); 
+}); 
+
 
 export { getAppointments, 
         createAppointment, 
@@ -372,4 +617,7 @@ export { getAppointments,
         deleteAppointment, 
         restoreAppointment, 
         destroyAppointment, 
-        getAppointmentsSpecificDate, }; 
+        getAppointmentsSpecificDate,
+        approveAppointment, 
+        declineAppointment, 
+        sendReminderAppointment }; 

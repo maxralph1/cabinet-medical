@@ -2,4 +2,8 @@ node_modules
 .env
 dev-notes.txt
 tmp
+logs
+logs/access
+logs/access/access.log
 log
+access.log

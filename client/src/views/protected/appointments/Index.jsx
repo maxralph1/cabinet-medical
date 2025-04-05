@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from 'react'; 
+import { useContext, useEffect, useRef, useState } from 'react'; 
+import AuthContext from '@/context/AuthContext.jsx'; 
 import { Link } from 'react-router-dom'; 
 import { route } from '@/routes'; 
 import Calendar from 'react-calendar'; 
@@ -18,6 +19,8 @@ import Layout from '@/components/protected/Layout.jsx';
 
 
 export default function Index() {
+    const { user } = useContext(AuthContext); 
+
     const scrollToElement = useRef(null);
 
     const [selectedDate, setSelectedDate] = useState(new Date()); 
@@ -45,28 +48,46 @@ export default function Index() {
         }, 2000); 
     }; 
 
-    const [appointmentView, setAppointmentView] = useState('calendar');
+    const [appointmentView, setAppointmentView] = useState('list');     /** 'list', 'calendar' */
+    const [appointmentStatus, setAppointmentStatus] = useState(''); /** '', 'pending-approval', 'declined-approval', 'approved', 'ongoing', 'took-place', 'cancelled' */
+    const [appointmentType, setAppointmentType] = useState(''); /** '', 'internal', 'external' */
     const [appointmentQuery, setAppointmentQuery] = useState({
-        range: 'all', 
+        status: appointmentStatus, /** '', 'pending-approval', 'declined-approval', 'approved', 'ongoing', 'took-place', 'cancelled' */
+        type: appointmentType, /** '', 'internal', 'external' */
         page: 1, 
         limit: 10, 
     }); 
+    console.log(appointmentQuery);
+
+    useEffect(() => {
+        // if (appointmentStatus) {
+        //     console.log('Appointments status has changed:', appointmentStatus);
+        //     // You can perform additional actions when appointments change
+        // }
+        // if (appointmentType) {
+        //     console.log('Appointments type has changed:', appointmentType);
+        //     // You can perform additional actions when appointments change
+        // }
+        // if (appointmentView) {
+        //     console.log('Appointments view has changed:', appointmentView);
+        //     // You can perform additional actions when appointments change
+        // }
+
+        setAppointmentQuery(prev => ({
+            ...prev,
+            status: appointmentStatus,
+            type: appointmentType,
+        }));
+    }, [appointmentView, appointmentStatus, appointmentType]);
 
     let appointments, getAppointments, loading; 
 
     if (appointmentView === 'list') {
         ({ appointments, getAppointments, loading } = useAppointments(appointmentQuery));
-    } else {
+    } else if (appointmentView === 'calendar') {
         ({ appointments, getAppointments, loading } = useAppointmentsSpecificDate());
     }
     console.log(appointments); 
-
-    useEffect(() => {
-        if (appointmentView) {
-            console.log('Appointments have changed:', appointmentView);
-            // You can perform additional actions when appointments change
-        }
-    }, [appointmentView, appointments]);
 
     // const { appointments, getAppointments, loading } =
     //     appointmentView === 'calendar'
@@ -80,23 +101,198 @@ export default function Index() {
     //     }
     // }, [appointments]);
 
-    const { deleteAppointment } = useAppointment(); 
+    const { deleteAppointment, approveAppointment, declineAppointment, sendReminderAppointment } = useAppointment(); 
+
+    const currentDate = dayjs();
+    const seventyTwoHoursAgo = dayjs().subtract(72, 'hour');
 
 
     return (
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">Appointments</h2>
-                <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
-                    <span className="mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
-                            className="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fillRule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                    </span>
-                    <span>Add</span>
-                </Link>
+                { (user?.user?.role != 'patient') && (
+                    <Link to={ route('home.appointments.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
+                        <span className="mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
+                        </span>
+                        <span>Add</span>
+                    </Link>
+                ) }
+            </div>
+
+            <div className={`d-flex ${(appointmentView == 'list') ? 'justify-content-between' : 'justify-content-end'} align-items-center gap-3 pt-3`}>
+                { (appointmentView == 'list') && (
+                    <div className="py-3 d-flex flex-column align-items-start gap-3">
+
+                        { (user?.user?.role != 'patient') && (
+                            <>
+                                <section className="fs-6 d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                                    <span className="fw-light text-start"><small>Type:</small></span>
+                                    <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == '') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                All
+                                            </span>
+                                        </span>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('internal');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == 'internal') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                Internal
+                                            </span>
+                                        </span>
+                                        <span 
+                                            type="button" 
+                                            onClick={ async () => {
+                                                await setAppointmentType('external');
+                                                await getAppointments(); 
+                                            } }
+                                            className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                            <span className={`btn btn-sm ${(appointmentType == 'external') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                                External
+                                            </span>
+                                        </span>
+                                    </div>
+                                </section>
+                            </>
+                        ) }
+                        
+                        <section className="fs-6 d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                            <span className="fw-light text-start"><small>Status:</small></span>
+                            <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == '') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        All
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('pending-approval');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'pending-approval') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Approval Pending
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('approved');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'approved') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Approved
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('declined-approval');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'declined') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Declined
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('ongoing');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'ongoing') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Ongoing
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('took-place');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'took-place') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Took Place
+                                    </span>
+                                </span>
+                                <span 
+                                    type="button" 
+                                    onClick={ async () => {
+                                        await setAppointmentStatus('cancelled');
+                                        await getAppointments(); 
+                                    } }
+                                    className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                    <span className={`btn btn-sm ${(appointmentStatus == 'cancelled') ? 'btn-secondary' : 'btn-outline-secondary'} border-radius-35 py-0 px-2`}>
+                                        Cancelled
+                                    </span>
+                                </span>
+                            </div>
+                        </section>
+                    </div> 
+                ) }
+                <section className="fs-6 d-flex justify-content-end align-items-center gap-1 flex-wrap py-3">
+                    {/* <div> */}
+                        <span className="fw-light text-end"><small>Switch View:</small></span>
+                    {/* </div> */}
+                    <div className="">
+                        { (appointmentView == 'list') && (
+                            <span 
+                                type="button" 
+                                onClick={ async () => {
+                                    await setAppointmentView('calendar')
+                                    await getAppointments(); 
+                                } }
+                                className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0 px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-range-fill" viewBox="0 0 16 16">
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5M10 7a1 1 0 0 0 0 2h5V7zm-4 4a1 1 0 0 0-1-1H1v2h4a1 1 0 0 0 1-1"/>
+                                    </svg>
+                                </span>
+                            </span>
+                        ) }
+                        { (appointmentView == 'calendar') && (
+                            <span 
+                                type="button" 
+                                onClick={ async () => {
+                                    await setAppointmentView('list')
+                                    await getAppointments(appointmentQuery);
+                                } }
+                                className="d-flex flex-wrap column-gap-3 row-gap-2">
+                                <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0 px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                    </svg>
+                                </span>
+                            </span>
+                        ) }
+                    </div>
+                </section>
             </div>
 
             <div className="d-flex justify-content-end pt-3">
@@ -109,31 +305,6 @@ export default function Index() {
                                 total_results={ appointments?.meta?.total_results } /> } 
                 </span> 
             </div>
-
-            <div className="fs-6 d-flex align-items-center row-gap-1 column-gap-2 flex-wrap">
-                <span 
-                    type="button" 
-                    onClick={ async () => {
-                        await setAppointmentView('calendar')
-                        await getAppointments(); 
-                    } }
-                    className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
-                    <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
-                        Calendar View
-                    </span>
-                </span>
-                <span 
-                    type="button" 
-                    onClick={ async () => {
-                        await setAppointmentView('list')
-                        await getAppointments(appointmentQuery);
-                    } }
-                    className="d-flex flex-wrap column-gap-3 row-gap-2 pt-2 pb-3">
-                    <span className="btn btn-sm btn-outline-secondary border-radius-35 py-0">
-                        List View
-                    </span>
-                </span>
-            </div> 
 
             <div className="view-options">
                 { (appointmentView == 'list') 
@@ -158,6 +329,20 @@ export default function Index() {
                                                                     return (
                                                                         <li key={ appointmentUnit?._id } className="appointment w-100 border border-1 border-radius-25 d-flex flex-column px-3 py-4">
                                                                             <section className="cta d-flex justify-content-end gap-2">
+                                                                                {/* { (appointmentUnit?.user == user?.user?.user_id) && (
+                                                                                    <button className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Remind</button>
+                                                                                ) } */}
+                                                                                {/* { (appointmentUnit?.status == 'approved' && currentDate.diff(appointmentUnit?.created_at, 'hour') > 0.5) && ( */}
+                                                                                { ((appointmentUnit?.status == 'pending-approval') 
+                                                                                    && (currentDate.diff(appointmentUnit?.created_at, 'hour') > 72) 
+                                                                                    && (currentDate.isBefore(dayjs(appointmentUnit?.proposed_schedule_start)))) 
+                                                                                        && (
+                                                                                    <button 
+                                                                                        onClick={ async () => {
+                                                                                            await sendReminderAppointment(appointmentUnit?._id); 
+                                                                                        }}
+                                                                                        className="btn btn-sm btn-outline-secondary border-radius-25 py-0">Remind</button>
+                                                                                ) }
                                                                                 <div>
                                                                                     <span 
                                                                                         type="button" 
@@ -191,47 +376,84 @@ export default function Index() {
                                                                                                     </button>
                                                                                                 </div>
                                                                                                 <div className="modal-body pt-3">
-                                                                                                    <h4 className="fs-6">
-                                                                                                        <span>
-                                                                                                            { (appointmentUnit?.user == appointmentUnit?.patient?._id) 
-                                                                                                                ?   <span className="d-flex flex-column">
-                                                                                                                        <span className="fw-semibold">{ ((appointmentUnit?.professional?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.professional?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.last_name)?.slice(1)) }</span>
-                                                                                                                        <span>{ appointmentUnit?.professional?.role }</span>
-                                                                                                                    </span>
-                                                                                                                    : (appointmentUnit?.user == appointmentUnit?.professional?._id) 
-                                                                                                                        ?   <div className="d-flex flex-column">
-                                                                                                                                <p className="pt-0 d-flex flex-column">
-                                                                                                                                    <span className="fw-semibold ">
-                                                                                                                                        { ((appointmentUnit?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.last_name)?.slice(1)) }
-                                                                                                                                    </span>
-                                                                                                                                    <span className="fw-light">Patient</span>
-                                                                                                                                </p>
-                                                                                                                                <p className="pt-2 py-0">Schedule:&nbsp;
-                                                                                                                                    <span className="fw-semibold">
-                                                                                                                                        { dayjs(appointmentUnit?.proposed_schedule_start).format('MMM D, YYYY (HH:mm') + ' - ' + dayjs(appointmentUnit?.proposed_schedule_end).format('HH:mm)') }
-                                                                                                                                    </span>
-                                                                                                                                </p>
-                                                                                                                                <p className="pt-2 py-0">Status:&nbsp;
-                                                                                                                                    <span className="">
-                                                                                                                                        { (appointmentUnit?.status == 'cancelled') 
-                                                                                                                                            ? <span className="badge rounded-pill text-bg-danger">Cancelled</span> 
-                                                                                                                                            : (appointmentUnit?.status == 'ongoing') 
-                                                                                                                                            ? <span className="badge rounded-pill text-bg-success">Ongoing</span> 
-                                                                                                                                            : (appointmentUnit?.status == 'pending') 
-                                                                                                                                            ? <span className="badge rounded-pill text-bg-warning">Pending</span> 
-                                                                                                                                            : (appointmentUnit?.status == 'took-place') 
-                                                                                                                                            ? <span className="badge rounded-pill text-bg-secondary">Took place</span> 
-                                                                                                                                            : '' }
-                                                                                                                                    </span>
-                                                                                                                                </p>
-                                                                                                                                <p className="pt-2 py-0">Purpose:&nbsp;<span className="fw-semibold">{ appointmentUnit?.purpose ?? 'N/A' }</span></p>
-                                                                                                                                <p className="pt-2 py-0">Notes:&nbsp;<span className="fw-semibold">{ appointmentUnit?.notes ?? 'N/A' }</span></p>
-                                                                                                                            </div> 
-                                                                                                                                : 'N/A' 
-                                                                                                            }
-                                                                                                        </span>
-                                                                                                    </h4>
-                                                                                                        
+                                                                                                    <h4 className="fs-6"></h4>
+                                                                                                    { ((user?.user?.user_id != appointmentUnit?.user) && appointmentUnit?.status == 'pending-approval') && (
+                                                                                                        <div className="d-flex justify-content-end align-items-center gap-2 flex-wrap">
+                                                                                                            <btn 
+                                                                                                                onClick={ async() => {
+                                                                                                                    await approveAppointment(appointmentUnit?._id);
+                                                                                                                    await getAppointments();
+                                                                                                                    await window.location.reload();  
+                                                                                                                }}
+                                                                                                                className="btn btn-sm btn-success border-radius-25 py-0">Approve</btn>
+                                                                                                            <btn 
+                                                                                                                onClick={ async() => {
+                                                                                                                    await swal.fire({
+                                                                                                                        title: 'Are you sure?',
+                                                                                                                        text: "You won't be able to revert this!",
+                                                                                                                        icon: 'warning',
+                                                                                                                        showCancelButton: true,
+                                                                                                                        confirmButtonColor: "#FF0000",
+                                                                                                                        cancelButtonColor: "#414741",
+                                                                                                                        confirmButtonText: 'Yes, decline it!'
+                                                                                                                    }).then(async (result) => {
+                                                                                                                        if (result.isConfirmed) {
+                                                                                                                            await declineAppointment(appointmentUnit?._id); 
+                                                                                                                            await getAppointments(); 
+                                                                                                                            await window.location.reload();  
+                                                                                                                            swal.fire(
+                                                                                                                                'Declined!',
+                                                                                                                                'Appointment has been declined.',
+                                                                                                                                'danger'
+                                                                                                                            )
+                                                                                                                        }
+                                                                                                                    })
+                                                                                                                }}
+                                                                                                                className="btn btn-sm btn-danger border-radius-25 py-0">Decline</btn>
+                                                                                                        </div>
+                                                                                                    ) }
+                                                                                                    <div className="pt-3">
+                                                                                                        { (appointmentUnit?.user == appointmentUnit?.patient?._id) 
+                                                                                                            ?   <span className="d-flex flex-column">
+                                                                                                                    <span className="fw-semibold">{ ((appointmentUnit?.professional?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.professional?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.last_name)?.slice(1)) }</span>
+                                                                                                                    <span>{ appointmentUnit?.professional?.role }</span>
+                                                                                                                </span>
+                                                                                                                : (appointmentUnit?.user == appointmentUnit?.professional?._id) 
+                                                                                                                    ?   <div className="d-flex flex-column">
+                                                                                                                            <p className="pt-0 d-flex flex-column">
+                                                                                                                                <span className="fw-semibold ">
+                                                                                                                                    { ((appointmentUnit?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.last_name)?.slice(1)) }
+                                                                                                                                </span>
+                                                                                                                                <span className="fw-light">Patient</span>
+                                                                                                                            </p>
+                                                                                                                            <p className="pt-2 py-0">Schedule:&nbsp;
+                                                                                                                                <span className="fw-semibold">
+                                                                                                                                    { dayjs(appointmentUnit?.proposed_schedule_start).format('MMM D, YYYY (HH:mm') + ' - ' + dayjs(appointmentUnit?.proposed_schedule_end).format('HH:mm)') }
+                                                                                                                                </span>
+                                                                                                                            </p>
+                                                                                                                            <p className="pt-2 py-0">Status:&nbsp;
+                                                                                                                                <span className="">
+                                                                                                                                    { (appointmentUnit?.status == 'cancelled') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-danger">Cancelled</span> 
+                                                                                                                                    : (appointmentUnit?.status == 'pending-approval') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-warning">Pending Approval</span> 
+                                                                                                                                    : (appointmentUnit?.status == 'declined-approval') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-danger">Declined Approval</span> 
+                                                                                                                                    : (appointmentUnit?.status == 'approved') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-warning">Scheduled</span> 
+                                                                                                                                    : (appointmentUnit?.status == 'ongoing') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-success">Ongoing</span> 
+                                                                                                                                    : (appointmentUnit?.status == 'took-place') 
+                                                                                                                                        ? <span className="badge rounded-pill text-bg-secondary">Took place</span> 
+                                                                                                                                    : '' }
+                                                                                                                                </span>
+                                                                                                                            </p>
+                                                                                                                            <p className="pt-2 py-0">Purpose:&nbsp;<span className="fw-semibold">{ appointmentUnit?.purpose ?? 'N/A' }</span></p>
+                                                                                                                            <p className="pt-2 py-0">Notes:&nbsp;<span className="fw-semibold">{ appointmentUnit?.notes ?? 'N/A' }</span></p>
+                                                                                                                        </div> 
+                                                                                                                            : 'N/A' 
+                                                                                                        }
+                                                                                                    </div>  
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
@@ -277,31 +499,48 @@ export default function Index() {
                                                                                     <img src="https://th.bing.com/th/id/OIP.TyacMdkJZmaA3p9btptQ8wHaIA?rs=1&pid=ImgDetMain" className="object-fit-cover border-radius-50" style={{ width: '50px', height: '50px' }} alt="" />
                                                                                 </picture>
                                                                                 <div className="d-flex flex-column">
+                                                                                    { console.log(appointmentUnit)}
                                                                                     { (appointmentUnit?.type == 'external')
                                                                                         ? 
                                                                                             (
-                                                                                                <span>
-                                                                                                    { ((appointmentUnit?.patient_first_name) && (appointmentUnit?.patient_last_name))
-                                                                                                        ? (
-                                                                                                            <span>
-                                                                                                            { ((appointmentUnit?.patient_first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient_first_name)?.slice(1)) + ' ' + ((appointmentUnit?.patient_last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient_last_name)?.slice(1)) }
-                                                                                                        </span>
-                                                                                                        ) : <span>(External Client)</span> }
+                                                                                                <span className="d-flex flex-column">
+                                                                                                    { ((appointmentUnit?.appointment_request?.patient_first_name) && (appointmentUnit?.appointment_request?.patient_last_name))
+                                                                                                        && (
+                                                                                                            <span className="fw-semibold">
+                                                                                                                { ((appointmentUnit?.appointment_request?.patient_first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.appointment_request?.patient_first_name)?.slice(1)) + ' ' + ((appointmentUnit?.appointment_request?.patient_last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.appointment_request?.patient_last_name)?.slice(1)) }
+                                                                                                            </span>
+                                                                                                        ) }
+                                                                                                        <span>(External Client)</span>
                                                                                                 </span>
                                                                                                 
                                                                                             )
                                                                                         : (
                                                                                             <span>
-                                                                                                { (appointmentUnit?.user == appointmentUnit?.patient?._id) 
+                                                                                                { (user?.user?.user_id == appointmentUnit?.patient?._id) 
                                                                                                     ?   <span className="d-flex flex-column">
                                                                                                             <span className="fw-semibold">{ ((appointmentUnit?.professional?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.professional?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.professional?.last_name)?.slice(1)) }</span>
-                                                                                                            <span>{ appointmentUnit?.professional?.role }</span>
+                                                                                                            <span>
+                                                                                                                { (appointmentUnit?.professional?.role == 'general_practitioner') 
+                                                                                                                    ? 'General Practitioner' 
+                                                                                                                        : (appointmentUnit?.professional?.role == 'gynaecologist')
+                                                                                                                            ? 'Gynaecologist' 
+                                                                                                                        : (appointmentUnit?.professional?.role == 'laboratory_scientist')
+                                                                                                                            ? 'Laboratory Scientist' 
+                                                                                                                        : (appointmentUnit?.professional?.role == 'nurse')
+                                                                                                                            ? 'Nurse' 
+                                                                                                                        : ''
+                                                                                                                }
+                                                                                                            </span>
                                                                                                         </span>
-                                                                                                        : (appointmentUnit?.user == appointmentUnit?.professional?._id) 
+                                                                                                        : (user?.user?.user_id == appointmentUnit?.professional?._id) 
                                                                                                             ?   <span className="d-flex flex-column">
                                                                                                                     <span className="fw-semibold">{ ((appointmentUnit?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.first_name)?.slice(1)) + ' ' + ((appointmentUnit?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(appointmentUnit?.patient?.last_name)?.slice(1)) }</span>
                                                                                                                     <span>Patient</span>
-                                                                                                                    <span className="pt-2">Purpose:&nbsp;<span className="fw-semibold">{ appointmentUnit?.purpose ?? 'N/A' }</span></span>
+                                                                                                                    <span className="pt-2">Purpose:&nbsp;
+                                                                                                                        <span className="fw-semibold">
+                                                                                                                        { (appointmentUnit?.purpose && (appointmentUnit?.purpose?.slice(0,30) + (appointmentUnit?.purpose?.length>30 ? '...' : ''))) 
+                                                                                                                            ?? 'N/A' }</span>
+                                                                                                                    </span>
                                                                                                                 </span> 
                                                                                                                     : 'N/A' 
                                                                                                 }

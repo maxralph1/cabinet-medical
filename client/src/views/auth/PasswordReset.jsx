@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { route } from '@/routes'; 
 import swal from 'sweetalert2'; 
 import Layout from '@/components/auth/Layout.jsx'; 
+import Logo from '@/assets/images/logo.jpg'; 
 
 
 export default function PasswordReset() {
@@ -37,7 +38,9 @@ export default function PasswordReset() {
         <Layout>
             <section className="auth-form col-sm-12 col-md-6 d-flex flex-column justify-content-center py-2 gap-3">
                 <div className="d-flex flex-column align-items-center gap-3">
-                    <span>Logo</span>
+                    <span className="" style={{ width: '100px', height: '100px' }}>
+                        <img src={ Logo } alt="Logo" className="h-100 w-100 object-fit-cover border-radius-15" />
+                    </span>
                     <h2>Password Reset</h2>
                 </div>
                 <form onSubmit={ handleSubmit } id="auth-form" className="auth-form">

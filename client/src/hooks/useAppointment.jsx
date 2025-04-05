@@ -125,6 +125,39 @@ export function useAppointment(id = null) {
             .then(() => {})
             .catch(error => setErrors(error?.response))
             .finally(() => setLoading(false)); 
+    }
+
+    async function approveAppointment(appointment) { 
+        console.log('appointment:', appointment); 
+        return axiosInstance.patch(`appointments/${appointment}/approve`)
+            .then(() => {})
+            .catch(error => {
+                console.log(error?.response); 
+                setErrors(error?.response); 
+            })
+            .finally(() => setLoading(false)); 
+    } 
+
+    async function declineAppointment(appointment) { 
+        console.log('appointment:', appointment); 
+        return axiosInstance.patch(`appointments/${appointment}/decline`)
+            .then(() => {})
+            .catch(error => {
+                console.log(error?.response); 
+                setErrors(error?.response); 
+            })
+            .finally(() => setLoading(false)); 
+    } 
+
+    async function sendReminderAppointment(appointment) { 
+        console.log('appointment:', appointment); 
+        return axiosInstance.patch(`appointments/${appointment}/send-appointment-reminder`)
+            .then(() => {})
+            .catch(error => {
+                console.log(error?.response); 
+                setErrors(error?.response); 
+            })
+            .finally(() => setLoading(false)); 
     } 
 
 
@@ -135,6 +168,9 @@ export function useAppointment(id = null) {
         updateAppointment, 
         deleteAppointment, 
         restoreAppointment, 
-        destroyAppointment
+        destroyAppointment, 
+        approveAppointment, 
+        declineAppointment, 
+        sendReminderAppointment
     }
 }

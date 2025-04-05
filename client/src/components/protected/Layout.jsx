@@ -11,7 +11,7 @@ export default function Layout({ children }) {
     const [notificationQuery, setNotificationQuery] = useState({
         range: 'all', 
         page: 1, 
-        limit: 2, 
+        limit: 3, 
     }); 
 
     const { notifications, getNotifications, loading } = useNotifications(notificationQuery); 
@@ -212,20 +212,26 @@ export default function Layout({ children }) {
                                     Appointments
                                 </Link>
                         </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.appointment-requests.index') }>
-                                    Appointment Requests
-                                </Link>
-                        </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.diagnosis-types.index') }>
-                                    Diagnosis Types
-                                </Link>
-                        </li>
+
+                        { (user?.user?.role != 'patient') && (
+                            <>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.appointment-requests.index') }>
+                                            Appointment Requests
+                                        </Link>
+                                </li>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.diagnosis-types.index') }>
+                                            Diagnosis Types
+                                        </Link>
+                                </li>
+                            </>
+                        ) }
+                        
                         <li 
                             onClick={ () => setToggleNav(!toggleNav) } 
                             className="fw-semibold">
@@ -247,20 +253,26 @@ export default function Layout({ children }) {
                                     Medical Bills
                                 </Link>
                         </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.patients.index') }>
-                                    Patients
-                                </Link>
-                        </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.professionals.index') }>
-                                    Professionals
-                                </Link>
-                        </li>
+
+                        { (user?.user?.role != 'patient') && (
+                            <>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.patients.index') }>
+                                            Patients
+                                        </Link>
+                                </li>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.professionals.index') }>
+                                            Professionals
+                                        </Link>
+                                </li>
+                            </>
+                        ) }
+
                         <li 
                             onClick={ () => setToggleNav(!toggleNav) } 
                             className="fw-semibold">
@@ -268,31 +280,38 @@ export default function Layout({ children }) {
                                     Chats
                                 </Link>
                         </li>
-                        <li className="border border-tertiary border-1 border-top" style={{ width: '7.5rem'}} />
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.inventory.index') }>
-                                    Inventory
-                                </Link>
-                        </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                            <Link to={ route('home.blog.index') }>
-                                Blog
-                            </Link>
-                        </li>
-                        <li 
-                            onClick={ () => setToggleNav(!toggleNav) } 
-                            className="fw-semibold">
-                                <Link to={ route('home.contact-us.index') }>
-                                    Contact Us Requests
-                                </Link>
-                        </li>
+
+                        { (user?.user?.role != 'patient') && (
+                            <>
+                                <li className="border border-tertiary border-1 border-top" style={{ width: '7.5rem'}} />
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.inventory.index') }>
+                                            Inventory
+                                        </Link>
+                                </li>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                    <Link to={ route('home.blog.index') }>
+                                        Blog
+                                    </Link>
+                                </li>
+                                <li 
+                                    onClick={ () => setToggleNav(!toggleNav) } 
+                                    className="fw-semibold">
+                                        <Link to={ route('home.contact-us.index') }>
+                                            Contact Us Requests
+                                        </Link>
+                                </li>
+                            </>
+                        ) }
+                
+                        <li className="border border-tertiary border-1 border-top my-2" style={{ width: '7.5rem'}} />
                         <li 
                             onClick={ signOut }
-                            className="text-danger cursor-pointer border-top pt-3 mt-2">Sign Out</li>
+                            className="text-danger cursor-pointer">Sign Out</li>
                     </ul>
                 </nav>
             }

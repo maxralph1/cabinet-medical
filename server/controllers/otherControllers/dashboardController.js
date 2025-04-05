@@ -188,7 +188,7 @@ const getAppointments = asyncHandler(async (req, res) => {
                                                     } : {}) 
                                                 })
                                                 .sort({ proposed_schedule_start: -1 })
-                                                .limit(10)
+                                                .limit(7)
                                                 .populate({
                                                     path: 'patient',
                                                     select: 'first_name last_name username role phone email'
@@ -196,6 +196,9 @@ const getAppointments = asyncHandler(async (req, res) => {
                                                 .populate({
                                                     path: 'professional',
                                                     select: 'first_name last_name username role phone email'
+                                                })
+                                                .populate({
+                                                    path: 'appointment_request',
                                                 })
                                                 .lean(); 
 
@@ -224,6 +227,9 @@ const getAppointments = asyncHandler(async (req, res) => {
             path: 'professional',
             select: 'first_name last_name username role phone email'
         })
+        .populate({
+            path: 'appointment_request',
+        })
         .lean();;
 
     } else {
@@ -235,7 +241,7 @@ const getAppointments = asyncHandler(async (req, res) => {
                                                     } : {}) 
                                                 })
                                                 .sort({ proposed_schedule_start: -1 })
-                                                .limit(10)
+                                                .limit(7)
                                                 .populate({
                                                     path: 'patient',
                                                     select: 'first_name last_name username role phone email'
@@ -243,6 +249,9 @@ const getAppointments = asyncHandler(async (req, res) => {
                                                 .populate({
                                                     path: 'professional',
                                                     select: 'first_name last_name username role phone email'
+                                                })
+                                                .populate({
+                                                    path: 'appointment_request',
                                                 })
                                                 .lean(); 
 
@@ -271,6 +280,9 @@ const getAppointments = asyncHandler(async (req, res) => {
             path: 'professional',
             select: 'first_name last_name username role phone email'
         })
+        .populate({
+            path: 'appointment_request',
+        })
         .lean();
 
         // console.log(upcomingAppointments)
@@ -286,6 +298,9 @@ const getAppointments = asyncHandler(async (req, res) => {
         .populate({
             path: 'professional',
             select: 'first_name last_name username role phone email'
+        })
+        .populate({
+            path: 'appointment_request',
         })
         .lean();
 

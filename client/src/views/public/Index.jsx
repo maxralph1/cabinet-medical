@@ -98,95 +98,111 @@ export default function Index() {
     return (
         <Layout>
             <>
-                <section className="hero row align-items-center pt-4 pb-3">
+                <section className="hero row align-items-center position-relative mt-0 pt-0 pb-3" style={{ width: '100vw' }}>
                     {/* <div className="col-12 col-md-6"> */}
-                    <div className="col-sm-12 col-md-6">
-                        <h2 className="text-center text-md-start fs-1">
-                            {/* <span className="fw-light">Good&nbsp;
-                                { hour < 12 
-                                    ? 'morning' 
-                                        : hour < 16 
-                                        ? 'afternoon' 
-                                            : hour >= 16 
-                                            ? 'evening' 
-                                                : '' }
-                            !</span>&nbsp; */}
-                            <span>Welcome to Cabinet Medical Clinic.</span>
-                        </h2>
-                        <p className="text-center text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
-                            <span>Ready to enhance your health and wellness?</span>
-                            <span>We can be of help.</span></p>
-                        <p className="text-center text-md-start">
-                            <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
-                        </p>
-                        <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p>
+                    <div className="col-sm-12 col-md-6 z-1 position-relative">
+                        <div className="glass-effect mx-2">
+                            <h2 className="text-center text-md-start fs-1 fw-bold">
+                                {/* <span className="fw-light">Good&nbsp;
+                                    { hour < 12 
+                                        ? 'morning' 
+                                            : hour < 16 
+                                            ? 'afternoon' 
+                                                : hour >= 16 
+                                                ? 'evening' 
+                                                    : '' }
+                                !</span>&nbsp; */}
+                                <span>Cabinet Medical Clinic</span>
+                            </h2>
+                            <p className="text-center text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
+                                <span className="text-dark">Ready to enhance your health and wellness?</span>
+                                <span className="text-dark">We can be of help.</span>
+                            </p>
+
+                            <p className="d-flex justify-content-center justify-content-md-start align-items-center gap-3 flex-wrap mt-4">
+                                <a href="#book-appointment" className="btn btn-dark border-radius-35 fs-3 fw-bold px-3 text-white">Book consultation</a>
+                                <a href="#contact-us" className="btn btn-danger border-radius-35 fs-3 fw-bold px-3">Contact Us</a>
+                            </p>
+                        </div>
                     </div>
 
                     {/* <div className="d-none d-md-block col-md-6"> */}
-                    <div className="col-sm-12 col-md-6">
-                        <img src={ NazimWide } alt="Dr. Nazim Subrottee" className="img-fluid border-radius-25 slide-in" />
+                    <div className="position-absolute h-100 w-100" >
+                        <img src={ NazimWide } alt="Dr. Nazim Subrottee" className="h-100 w-100 object-fit-cover border-radius-15 slide-in " />
                     </div>
                 </section>
 
-                <section className="hero-2 row align-items-center pt-5">
-                    <div className="col-sm-12 col-md-6">
-                        <img src="#" alt="" className="img-fluid" />
-                    </div>
-                    <div className="col-sm-12 col-md-6">
-                        <h2 className="text-center text-md-start text-uppercase fs-3">
-                            <span className="text-info">Cabinet Medical:&nbsp;</span>
-                            <span>Your Health, Our Priority</span>
-                        </h2>
-                        <p className="text-center text-md-start">Experience compassionate, top-tier care at Cabinet Médical, where your well-being comes first. Under the expert guidance of <a href="#">Dr. Nazim Subrottee</a>, a committed and dynamic General Practitioner, we provide personalized medical services for all
-                        ages. From consultations and home visits to specialized care, we are dedicated to delivering exceptional treatment
-                        tailored to your needs.</p>
-                        <p className="justify-content-center justify-content-md-start align-items-center d-flex flex-wrap gap-3">
-                            <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
-                            <a href="#contact-us" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
-                        </p>
-                    </div>
-                </section>
-
-                <section className="services pt-4">
-                    <h2>Our Services</h2>
-                    <div className="row align-items-center row-gap-4">
-                        <div className="col-sm-12 col-md-6 px-3">
+                <section className="services px-1 px-md-4 px-lg-5 pt-5 mt-3">
+                    <h2 className="border-bottom d-inline-block pb-2 fw-bold">Our Services</h2>
+                    <section className="row align-items-center row-gap-4 pt-4">
+                        <div className="col-sm-12 col-md-6 px-3 order-1">
                             <img src={ ServicesImage } className="w-100 slide-in" alt="" />
                         </div>
-                        <ul className="list-unstyled col-sm-12 col-md-6">
-                            <li className="border-bottom border-top pt-3">
-                                <h3 className="fs-5">General Consultation and Follow-Up</h3>
-                                <p>Get comprehensive medical care for all your health concerns. Our general consultations cover a wide range of health issues, from common illnesses to chronic conditions. We offer expert advice and thororugh follow-ups to ensure your health goals are met.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Point of Care Blood Tests</h3>
-                                <p>On-the-spot testing for anemia, cholesterol, gout, and diabetes.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Home Visit</h3>
-                                <p>Convenient care at the comfort of your home for patients unable to visit the clinic.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Elderly Care</h3>
-                                <p>Specialized services to support the health and wellbeing of elderly patients.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Prescriptions and Administrations Tracking</h3>
-                                <p>Accurate and prompt medical documentation.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Medical and Fitness Certificates</h3>
-                                <p>Issuance of certificates for work, travel, or fitness.</p>
-                            </li>
-                            <li className="border-bottom pt-3">
-                                <h3 className="fs-5">Death Certificates</h3>
-                                <p>Compassionate and timely assistance with medical documentation.</p>
-                            </li>
-                        </ul>
-                    </div>
+                        <div className="d-none d-md-block col-md-6 px-3 order-4">
+                            <img src={ ServicesImage } className="w-100 slide-in" alt="" />
+                        </div>
+                        <div className="col-sm-12 col-md-6 row align-items-center row-gap-4 order-2">
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">🩺</div>
+                                    <h3 className="service-title">Medical Consultation and Follow-Up</h3>
+                                    <p className="service-description">Expert medical advice and thorough follow-ups.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">🩸</div>
+                                    <h3 className="service-title">Point of Care Blood Tests</h3>
+                                    <p className="service-description">On-the-spot testing for anemia, cholesterol, gout, and diabetes.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">🏠</div>
+                                    <h3 className="service-title">Home Visit</h3>
+                                    <p className="service-description">Convenient care at the comfort of your home for patients unable to visit the clinic.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">👴</div>
+                                    <h3 className="service-title">Elderly Care</h3>
+                                    <p className="service-description">A specialized service to support the health and well-being of elderly patients.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-12 col-md-6 row align-items-center row-gap-4 order-3">
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">📄</div>
+                                    <h3 className="service-title">Prescriptions and Referral Letters</h3>
+                                    <p className="service-description">Accurate and prompt medical documentation.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">📜</div>
+                                    <h3 className="service-title">Medical and Fitness Certificates</h3>
+                                    <p className="service-description">Issuance of certificates for work, travel, or fitness.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm">
+                                    <div className="service-icon">🩹</div>
+                                    <h3 className="service-title">Wound Care and Dressing</h3>
+                                    <p className="service-description">Professional care for injuries to promote healing.</p>
+                                </div>
+                            </div>
+                            <div className="col-6 mb-4">
+                                <div className="service-card p-4 shadow-sm h-100 d-flex flex-column align-items-center">
+                                    <div className="service-title">... and so much more.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </section>
 
-                <section id="book-appointment" className="book-consultation py-4 text-center bg-body-tertiary">
+                <section id="book-appointment" className="book-consultation pt-5 mt-3 text-center bg-body-tertiary">
                     <div className="card p-3 mx-2 mx-md-3 mx-lg-5">
                         <h2 className="text-uppercase fs-4 fw-bold pt-3">Book Consultation</h2>
                         <form onSubmit={ submitConsultationForm } className="form pt-3">
@@ -319,21 +335,21 @@ export default function Index() {
                             </div>
                             <div className="row g-2 my-3">
                                 <p className="text-center text-md-start">
-                                    <button type="submit" className="btn btn-outline-info border-radius-35">Book an appointment</button>
+                                    <button type="submit" className="btn btn-outline-info border-radius-35">Submit</button>
                                 </p>
                             </div>
                         </form>
                     </div>
                 </section>
 
-                <section id="doctors" className="doctors text-center pt-5">
-                    <h2 className="fw-bold">Our Qualified Doctors</h2>
+                <section id="doctors" className="doctors px-1 px-md-4 px-lg-5 pt-5 mt-3">
+                    <h2 className="border-bottom d-inline-block pb-2 fw-bold">Our Qualified Doctors</h2>
                     <div>
-                        <span>The aim of medicine is to prevent disease and prolong life; the idea of medicine is to eliminate the need for a physician.</span>
+                        <span>The aim of medicine is to prevent disease and prolong life; the idea of having a physician is to administer the medicine.</span>
                     </div>
                     <section className="nav-scroller">
                         <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
-                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -346,7 +362,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -359,33 +375,7 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
-                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimTransparent } alt="" className="border-radius-15"
-                                    style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
-                                <div className="pt-3 d-flex flex-column align-items-center">
-                                    <h3 className="fs-5">Dr. Nazim Subrottee</h3>
-                                    <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
-                                        Mauritius.</p>
-                                    <p className="">
-                                        <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
-                                    </p>
-                                </div>
-                            </li>
-                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
-                                <img src={ NazimTransparent } alt="" className="border-radius-15"
-                                    style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
-                                <div className="pt-3 d-flex flex-column align-items-center">
-                                    <h3 className="fs-5">Dr. Nazim Subrottee</h3>
-                                    <p className="text-uppercase text-info fw-bold" style={{ fontSize: 'smaller' }}>General Practitioner</p>
-                                    <p className="text-wrap" style={{ maxWidth: '310px' }}>General practitioner who studied at UCT (Cape Town, South Africa) and obtained clinical experience in
-                                        Mauritius.</p>
-                                    <p className="">
-                                        <a href="#" className="btn btn-outline-info border-radius-35">Book now</a>
-                                    </p>
-                                </div>
-                            </li>
-                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                            <li className="d-flex flex-column align-items-center mb-3" style={{ maxWidth: '310px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
@@ -402,13 +392,13 @@ export default function Index() {
                     </section>
                 </section>
 
-                <section className="stats pt-4">
-                    <h2 className="text-uppercase fs-6 fw-bold">Fun Facts</h2>
-                    <section className="row align-items-center">
+                <section className="stats px-1 px-md-4 px-lg-5 pt-5 mt-5 fw-bold glass-effect" style={{ backgroundImage: `url(${NazimWide})` }}>
+                    <h2 className="border-bottom pb-2 d-inline-block text-uppercase fs-4 fw-bold pt-3">Fun Facts</h2>
+                    <section className="row align-items-center px-3 pb-5 pt-3">
                         <div className="col-sm-12 col-md-6 text-center text-md-start">
                             <p>Over 5,100 patients trust us.</p>
                             <p className="">
-                                <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an Appointment</a>
+                                <a href="#book-appointment" className="btn btn-info border-radius-35 text-white">Book consultation</a>
                             </p>
                         </div>
                         <div className="col-sm-12 col-md-6">
@@ -443,18 +433,19 @@ export default function Index() {
                 </section>
 
                 { (blogPublications?.data?.length > 0) && 
-                    <section className="blog text-center pt-4">
-                        <h2>Health Tips</h2>
+                    <section className="blog px-1 px-md-4 px-lg-5 pt-5 mt-3 w-100">
+                        <h2 className="border-bottom d-inline-block pb-2 pt-3 mb-3 fw-bold">Health Tips</h2>
                         <p>Important tips about your health and fitness</p>
 
-                        <section className="articles">
-                            <ul className="articles-list row justify-content-center align-items-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden', paddingInlineStart: '0px' }}>
+                        <section className="articles w-100 pt-3">
+                            <div className="articles-list w-100" style={{ overflowY: 'hidden' }}>
                                 { (blogPublications?.data?.map((publication, index) => {
                                     return (
-                                        <li key={ publication?._id } className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
-                                            <img src={ publication?.image_path?.url || NazimTransparent } alt="" className="border-radius-15 object-fit-cover"
-                                                style={{ width: '250px', height: '250px' }} />
-                                            <div className="pt-3 d-flex flex-column align-items-center">
+                                        <article key={ publication?._id } className="mb-3 text-center" style={{ height: '500px', minWidth: '300px', minHeight: '400px' }}>
+                                            <img src={ publication?.image_path?.url || NazimTransparent } alt="" className="border-radius-15 object-fit-cover" style={{ width: '100%', height: '70%' }} />
+                                                {/* style={{ width: '250px', height: '250px' }} /> */}
+                                                {/* style={{ minWidth: '250px', minHeight: '250px', maxWidth: '600px', maxHeight: '600px' }} /> */}
+                                            <div className="pt-3">
                                                 <div className="d-flex flex-column-reverse">
                                                     <h3 className="fs-5 text-wrap">{ publication?.title }</h3>
                                                     <p className="fw-bold" style={{ fontSize: 'smaller' }}>
@@ -478,27 +469,27 @@ export default function Index() {
                                                         </span>
                                                     </p>
                                                 </div>
-                                                <div 
+                                                {/* <div 
                                                     className="preview text-wrap" 
                                                     style={{ maxWidth: '310px' }}
                                                     dangerouslySetInnerHTML={{ __html: (publication?.content?.slice(0, 100)) + (publication?.content?.length > 99 ? '...' : '') }} 
-                                                />
-                                                <p className="">
+                                                /> */}
+                                                <p className="mt-3">
                                                     <Link 
                                                         to={ route('blog.publications.show', { id: publication?._id }) } 
                                                         className="btn btn-outline-info border-radius-35">Read more</Link>
                                                 </p>
                                             </div>
-                                        </li>
+                                        </article>
                                     )
                                 }) )}
-                            </ul>
+                            </div>
                         </section>
                     </section> 
                 }
 
-                <section className="testimonials text-center pt-4">
-                    <h2 className="text-uppercase fs-6">Testimonials</h2>
+                <section className="testimonials text-center px-1 px-md-4 px-lg-5 pt-5 mt-3">
+                    <h2 className="text-uppercase border-bottom pb-2 fs-6 d-inline-block">Testimonials</h2>
 
                     <section className="w-100 row justify-content-md-between align-items-md-center row-gap-3 pt-3">
                         <div className="col-sm-12 col-md-6 text-center text-md-start">
@@ -533,25 +524,25 @@ export default function Index() {
                     </section>
                 </section>
 
-                <section id="contact-us" className="contact pt-5">
-                    <h2 className="text-center">Contact Us</h2>
+                <section id="contact-us" className="contact px-1 px-md-4 px-lg-5 pt-5 mt-3">
+                    <h2 className="border-bottom d-inline-block pb-2 fw-bold">Contact Us</h2>
 
-                    <section className="row justify-content-center align-items-center gap-3 pt-3">
-                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
+                    <section className="row justify-content-center justify-content-md-between align-items-center gap-3 pt-4">
+                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-md-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-geo-alt-fill"
                                 viewBox="0 0 16 16">
                                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                             </svg>
                             <span className="text-center">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa quibusdam adipisci voluptas. Et, quae vero.</span>
                         </article>
-                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
+                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-md-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-phone-fill"
                                 viewBox="0 0 16 16">
                                 <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0" />
                             </svg>
                             <a href="tel:+23054818339">+230 5481 8339</a>
                         </article>
-                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
+                        <article className="bg-body-tertiary border-radius-25 col-sm-12 col-md-12 col-lg-4 d-flex flex-column align-items-center justify-content-center gap-3 p-3" style={{ width: '250px', height: '225px' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-envelope-at-fill"
                                 viewBox="0 0 16 16">
                                 <path
