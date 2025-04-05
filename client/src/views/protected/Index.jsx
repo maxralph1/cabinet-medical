@@ -438,248 +438,250 @@ export default function Index() {
                     ) }
                 </section>
 
-                <section className="patient-meters align-items-center d-flex gap-3 flex-wrap pt-4">
-                    { (widgets?.data?.widget?.length > 0) && (widgets?.data?.widget?.map((widget, index) => {
-                        return (
-                            <article key={ index } className={`widget border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start`} style={{ width: '253.5px' }}>
-                                <div className="w-100 d-flex justify-content-between align-items-center">
-                                    <span>{ (widget == 'heart_rate') ? 'Heart Rate' 
-                                                : (widget == 'liquid_volume') ? 'Liquid Volume' 
-                                                : (widget == 'rbc') ? 'Red Blood Cells' 
-                                                : (widget == 'blood_glucose_level') ? 'Blood Glucose' 
-                                                // : (widget == 'water_level') ? 'Water Level' 
-                                                : (widget == 'wbc') ? 'White Blood Cells' 
-                                                : '' }</span>
-                                    <span 
-                                        className="d-flex justify-content-center align-items-center border-radius-50 p-2"
-                                        style={{ backgroundColor: '#f2f2f2' }}>
-                                            { (widget == 'heart_rate') 
-                                                ? (
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-heart-pulse"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053.918 3.995.78 5.323 1.508 7H.43c-2.128-5.697 4.165-8.83 7.394-5.857q.09.083.176.171a3 3 0 0 1 .176-.17c3.23-2.974 9.522.159 7.394 5.856h-1.078c.728-1.677.59-3.005.108-3.947C13.486.878 10.4.28 8.717 2.01zM2.212 10h1.315C4.593 11.183 6.05 12.458 8 13.795c1.949-1.337 3.407-2.612 4.473-3.795h1.315c-1.265 1.566-3.14 3.25-5.788 5-2.648-1.75-4.523-3.434-5.788-5" />
-                                                        <path
-                                                            d="M10.464 3.314a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.5a.5.5 0 0 0 0 1H4a.5.5 0 0 0 .416-.223l1.473-2.209 1.647 4.118a.5.5 0 0 0 .945-.049l1.598-5.593 1.457 3.642A.5.5 0 0 0 12 9h3.5a.5.5 0 0 0 0-1h-3.162z" />
-                                                    </svg>
-                                                ) : (widget == 'liquid_volume') 
+                { (user?.user?.role == 'patient') && (
+                    <section className="patient-meters align-items-center d-flex gap-3 flex-wrap pt-4">
+                        { (widgets?.data?.widget?.length > 0) && (widgets?.data?.widget?.map((widget, index) => {
+                            return (
+                                <article key={ index } className={`widget border border-1 border-tertiary border-radius-25 p-3 d-flex flex-column gap-2 align-items-start`} style={{ width: '253.5px' }}>
+                                    <div className="w-100 d-flex justify-content-between align-items-center">
+                                        <span>{ (widget == 'heart_rate') ? 'Heart Rate' 
+                                                    : (widget == 'liquid_volume') ? 'Liquid Volume' 
+                                                    : (widget == 'rbc') ? 'Red Blood Cells' 
+                                                    : (widget == 'blood_glucose_level') ? 'Blood Glucose' 
+                                                    // : (widget == 'water_level') ? 'Water Level' 
+                                                    : (widget == 'wbc') ? 'White Blood Cells' 
+                                                    : '' }</span>
+                                        <span 
+                                            className="d-flex justify-content-center align-items-center border-radius-50 p-2"
+                                            style={{ backgroundColor: '#f2f2f2' }}>
+                                                { (widget == 'heart_rate') 
                                                     ? (
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moisture"
-                                                                        viewBox="0 0 16 16">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-heart-pulse"
+                                                            viewBox="0 0 16 16">
                                                             <path
-                                                                d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267" />
+                                                                d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053.918 3.995.78 5.323 1.508 7H.43c-2.128-5.697 4.165-8.83 7.394-5.857q.09.083.176.171a3 3 0 0 1 .176-.17c3.23-2.974 9.522.159 7.394 5.856h-1.078c.728-1.677.59-3.005.108-3.947C13.486.878 10.4.28 8.717 2.01zM2.212 10h1.315C4.593 11.183 6.05 12.458 8 13.795c1.949-1.337 3.407-2.612 4.473-3.795h1.315c-1.265 1.566-3.14 3.25-5.788 5-2.648-1.75-4.523-3.434-5.788-5" />
+                                                            <path
+                                                                d="M10.464 3.314a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.5a.5.5 0 0 0 0 1H4a.5.5 0 0 0 .416-.223l1.473-2.209 1.647 4.118a.5.5 0 0 0 .945-.049l1.598-5.593 1.457 3.642A.5.5 0 0 0 12 9h3.5a.5.5 0 0 0 0-1h-3.162z" />
                                                         </svg>
-                                                    ) : (widget == 'rbc') 
+                                                    ) : (widget == 'liquid_volume') 
                                                         ? (
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet-fill" viewBox="0 0 16 16">
-                                                                <path d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6M6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13"/>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moisture"
+                                                                            viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267" />
                                                             </svg>
-                                                        ) : (widget == 'blood_glucose_level') 
+                                                        ) : (widget == 'rbc') 
                                                             ? (
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-boxes" viewBox="0 0 16 16">
-                                                                    <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434zM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567zM7.5 9.933l-2.75 1.571v3.134l2.75-1.571zm1 3.134 2.75 1.571v-3.134L8.5 9.933zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567zm2.242-2.433V3.504L8.5 5.076V8.21zM7.5 8.21V5.076L4.75 3.504v3.134zM5.258 2.643 8 4.21l2.742-1.567L8 1.076zM15 9.933l-2.75 1.571v3.134L15 13.067zM3.75 14.638v-3.134L1 9.933v3.134z"/>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet-fill" viewBox="0 0 16 16">
+                                                                    <path d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6M6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13"/>
                                                                 </svg>
-                                                            ) : (widget == 'wbc') 
-                                                                    ? (
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet" viewBox="0 0 16 16">
-                                                                            <path fillRule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
-                                                                            <path fillRule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
-                                                                        </svg>
-                                                                    ) : ''}
-                                                    
-                                    </span>
+                                                            ) : (widget == 'blood_glucose_level') 
+                                                                ? (
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-boxes" viewBox="0 0 16 16">
+                                                                        <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434zM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567zM7.5 9.933l-2.75 1.571v3.134l2.75-1.571zm1 3.134 2.75 1.571v-3.134L8.5 9.933zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567zm2.242-2.433V3.504L8.5 5.076V8.21zM7.5 8.21V5.076L4.75 3.504v3.134zM5.258 2.643 8 4.21l2.742-1.567L8 1.076zM15 9.933l-2.75 1.571v3.134L15 13.067zM3.75 14.638v-3.134L1 9.933v3.134z"/>
+                                                                    </svg>
+                                                                ) : (widget == 'wbc') 
+                                                                        ? (
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-droplet" viewBox="0 0 16 16">
+                                                                                <path fillRule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
+                                                                                <path fillRule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
+                                                                            </svg>
+                                                                        ) : ''}
+                                                        
+                                        </span>
 
-                                </div>
-                                {/* { console.log(widgetValues?.data?.length > 0) && widgetValues?.data?.find(foundWidget => foundWidget?.blood_glucose_level?.result)} */}
-                                <span className="fs-6 fw-semibold">
-                                    { (widget == 'heart_rate') 
-                                        ? <span>{ (widgetValues?.data?.heart_rate != null) ? ((widgetValues?.data?.heart_rate?.result)?.match(/\d+(\.\d+)?/)[0] + 'BPM') : 'N/A'}</span>
-                                            : (widget == 'liquid_volume') 
-                                            ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? ((widgetValues?.data?.liquid_volumne?.result)?.match(/\d+(\.\d+)?/)[0] + '/L') : 'N/A'}</span> 
-                                                : (widget == 'rbc') 
-                                                ? <span>{ (widgetValues?.data?.rbc != null) ? ((widgetValues?.data?.rbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
-                                                // ? <span>/<span className="micro">μ</span>L</span> 
-                                                    : (widget == 'blood_glucose_level') 
-                                                    ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? ((widgetValues?.data?.blood_glucose_level?.result)?.match(/\d+(\.\d+)?/)[0] + '/mL') : 'N/A'}</span>
-                                                        : (widget == 'wbc') 
-                                                        ? <span>{ (widgetValues?.data?.wbc != null) ? ((widgetValues?.data?.wbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
-                                                        // ? <span>/<span className="micro">μ</span>L</span>  
-                                        : '' }</span>
-                                <span className="bg-body-tertiary">
-                                    <small>Updated&nbsp;
-                                        { (widget == 'heart_rate') 
-                                        ? <span>{ (widgetValues?.data?.heart_rate != null) ? dayjs(widgetValues?.data?.heart_rate?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
-                                            : (widget == 'liquid_volume') 
-                                            ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? dayjs(widgetValues?.data?.liquid_volumne?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span> 
-                                                : (widget == 'rbc') 
-                                                ? <span>{ (widgetValues?.data?.rbc != null) ? dayjs(widgetValues?.data?.rbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
-                                                // ? <span>/<span className="micro">μ</span>L</span> 
-                                                    : (widget == 'blood_glucose_level') 
-                                                    ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? dayjs(widgetValues?.data?.blood_glucose_level?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
-                                                        : (widget == 'wbc') 
-                                                        ? <span>{ (widgetValues?.data?.wbc != null) ? dayjs(widgetValues?.data?.wbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
-                                                        // ? <span>/<span className="micro">μ</span>L</span>  
-                                        : '' }
-                                    </small>
-                                </span>
-                            </article>
-                        )
-                    })) }
-
-                    <div>
-                        <span 
-                            type="button" 
-                            data-bs-toggle="modal" 
-                            data-bs-target={`#widgetOptionsModal`}
-                            className="d-flex flex-column align-items-center justify-content-center gap-2 border-radius-25 border-1 p-2 cursor-pointer" style={{ width: '100px', height: '100px', borderStyle: 'dashed' }}>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-plus-circle-fill"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-                                </svg>
-                            </span>
-                            <span><small>Add Widget</small></span>
-                        </span>
-
-                        <section className="modal fade" id={`widgetOptionsModal`} tabIndex="-1" aria-labelledby={`widgetOptionsModalLabel`}>
-                            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                <div className="modal-content">
-                                    <div className="modal-header d-flex justify-content-end">
-                                        <h3 className="visually-hidden" id={`widgetOptionsModalLabel`}>Widget Options</h3>
-                                        <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                            </svg>
-                                        </button>
                                     </div>
-                                    <section className="modal-body d-flex flex-column gap-2 pt-3">
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Heart Rate</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'heart_rate') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('heart_rate'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('heart_rate'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Liquid Volume</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'liquid_volume') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('liquid_volume'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('liquid_volume'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Red Blood Cells</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'rbc') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('rbc'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('rbc'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">Blood Glucose</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'blood_glucose_level') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('blood_glucose_level'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('blood_glucose_level'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                        <article className="d-flex align-items-center gap-3">
-                                            <h4 className="fs-6 mt-2">White Blood Cells</h4>
-                                            { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'wbc') 
-                                                ? <button 
-                                                    onClick={ async () => {
-                                                        await deleteWidget('wbc'); 
-                                                        await getWidgets(); 
-                                                    } } 
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                                                        </svg>
-                                                    </button> 
-                                                : <button 
-                                                    onClick={ async () => {
-                                                        await createWidget('wbc'); 
-                                                        await getWidgets(); 
-                                                    } }
-                                                    className="bg-transparent border-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
-                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                                        </svg>
-                                                    </button> }
-                                        </article>
-                                    </section>
+                                    {/* { console.log(widgetValues?.data?.length > 0) && widgetValues?.data?.find(foundWidget => foundWidget?.blood_glucose_level?.result)} */}
+                                    <span className="fs-6 fw-semibold">
+                                        { (widget == 'heart_rate') 
+                                            ? <span>{ (widgetValues?.data?.heart_rate != null) ? ((widgetValues?.data?.heart_rate?.result)?.match(/\d+(\.\d+)?/)[0] + 'BPM') : 'N/A'}</span>
+                                                : (widget == 'liquid_volume') 
+                                                ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? ((widgetValues?.data?.liquid_volumne?.result)?.match(/\d+(\.\d+)?/)[0] + '/L') : 'N/A'}</span> 
+                                                    : (widget == 'rbc') 
+                                                    ? <span>{ (widgetValues?.data?.rbc != null) ? ((widgetValues?.data?.rbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
+                                                    // ? <span>/<span className="micro">μ</span>L</span> 
+                                                        : (widget == 'blood_glucose_level') 
+                                                        ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? ((widgetValues?.data?.blood_glucose_level?.result)?.match(/\d+(\.\d+)?/)[0] + '/mL') : 'N/A'}</span>
+                                                            : (widget == 'wbc') 
+                                                            ? <span>{ (widgetValues?.data?.wbc != null) ? ((widgetValues?.data?.wbc?.result)?.match(/\d+(\.\d+)?/)[0] + '/μL') : 'N/A'}</span>
+                                                            // ? <span>/<span className="micro">μ</span>L</span>  
+                                            : '' }</span>
+                                    <span className="bg-body-tertiary">
+                                        <small>Updated&nbsp;
+                                            { (widget == 'heart_rate') 
+                                            ? <span>{ (widgetValues?.data?.heart_rate != null) ? dayjs(widgetValues?.data?.heart_rate?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                : (widget == 'liquid_volume') 
+                                                ? <span>{ (widgetValues?.data?.liquid_volumne != null) ? dayjs(widgetValues?.data?.liquid_volumne?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span> 
+                                                    : (widget == 'rbc') 
+                                                    ? <span>{ (widgetValues?.data?.rbc != null) ? dayjs(widgetValues?.data?.rbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                    // ? <span>/<span className="micro">μ</span>L</span> 
+                                                        : (widget == 'blood_glucose_level') 
+                                                        ? <span>{ (widgetValues?.data?.blood_glucose_level != null) ? dayjs(widgetValues?.data?.blood_glucose_level?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                            : (widget == 'wbc') 
+                                                            ? <span>{ (widgetValues?.data?.wbc != null) ? dayjs(widgetValues?.data?.wbc?.updated_at)?.format('MMM DD, YYYY, HH:mm') : '———'}</span>
+                                                            // ? <span>/<span className="micro">μ</span>L</span>  
+                                            : '' }
+                                        </small>
+                                    </span>
+                                </article>
+                            )
+                        })) }
+
+                        <div>
+                            <span 
+                                type="button" 
+                                data-bs-toggle="modal" 
+                                data-bs-target={`#widgetOptionsModal`}
+                                className="d-flex flex-column align-items-center justify-content-center gap-2 border-radius-25 border-1 p-2 cursor-pointer" style={{ width: '100px', height: '100px', borderStyle: 'dashed' }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-plus-circle-fill"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+                                    </svg>
+                                </span>
+                                <span><small>Add Widget</small></span>
+                            </span>
+
+                            <section className="modal fade" id={`widgetOptionsModal`} tabIndex="-1" aria-labelledby={`widgetOptionsModalLabel`}>
+                                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div className="modal-content">
+                                        <div className="modal-header d-flex justify-content-end">
+                                            <h3 className="visually-hidden" id={`widgetOptionsModalLabel`}>Widget Options</h3>
+                                            <button type="button" data-bs-dismiss="modal" aria-label="Close" className="border-0 bg-transparent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <section className="modal-body d-flex flex-column gap-2 pt-3">
+                                            <article className="d-flex align-items-center gap-3">
+                                                <h4 className="fs-6 mt-2">Heart Rate</h4>
+                                                { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'heart_rate') 
+                                                    ? <button 
+                                                        onClick={ async () => {
+                                                            await deleteWidget('heart_rate'); 
+                                                            await getWidgets(); 
+                                                        } } 
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                            </svg>
+                                                        </button> 
+                                                    : <button 
+                                                        onClick={ async () => {
+                                                            await createWidget('heart_rate'); 
+                                                            await getWidgets(); 
+                                                        } }
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                                            </svg>
+                                                        </button> }
+                                            </article>
+                                            <article className="d-flex align-items-center gap-3">
+                                                <h4 className="fs-6 mt-2">Liquid Volume</h4>
+                                                { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'liquid_volume') 
+                                                    ? <button 
+                                                        onClick={ async () => {
+                                                            await deleteWidget('liquid_volume'); 
+                                                            await getWidgets(); 
+                                                        } } 
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                            </svg>
+                                                        </button> 
+                                                    : <button 
+                                                        onClick={ async () => {
+                                                            await createWidget('liquid_volume'); 
+                                                            await getWidgets(); 
+                                                        } }
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                                            </svg>
+                                                        </button> }
+                                            </article>
+                                            <article className="d-flex align-items-center gap-3">
+                                                <h4 className="fs-6 mt-2">Red Blood Cells</h4>
+                                                { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'rbc') 
+                                                    ? <button 
+                                                        onClick={ async () => {
+                                                            await deleteWidget('rbc'); 
+                                                            await getWidgets(); 
+                                                        } } 
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                            </svg>
+                                                        </button> 
+                                                    : <button 
+                                                        onClick={ async () => {
+                                                            await createWidget('rbc'); 
+                                                            await getWidgets(); 
+                                                        } }
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                                            </svg>
+                                                        </button> }
+                                            </article>
+                                            <article className="d-flex align-items-center gap-3">
+                                                <h4 className="fs-6 mt-2">Blood Glucose</h4>
+                                                { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'blood_glucose_level') 
+                                                    ? <button 
+                                                        onClick={ async () => {
+                                                            await deleteWidget('blood_glucose_level'); 
+                                                            await getWidgets(); 
+                                                        } } 
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                            </svg>
+                                                        </button> 
+                                                    : <button 
+                                                        onClick={ async () => {
+                                                            await createWidget('blood_glucose_level'); 
+                                                            await getWidgets(); 
+                                                        } }
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                                            </svg>
+                                                        </button> }
+                                            </article>
+                                            <article className="d-flex align-items-center gap-3">
+                                                <h4 className="fs-6 mt-2">White Blood Cells</h4>
+                                                { (widgets?.data?.widget?.length > 0) && widgets?.data?.widget?.find(foundWidget => foundWidget == 'wbc') 
+                                                    ? <button 
+                                                        onClick={ async () => {
+                                                            await deleteWidget('wbc'); 
+                                                            await getWidgets(); 
+                                                        } } 
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill text-danger" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                                            </svg>
+                                                        </button> 
+                                                    : <button 
+                                                        onClick={ async () => {
+                                                            await createWidget('wbc'); 
+                                                            await getWidgets(); 
+                                                        } }
+                                                        className="bg-transparent border-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-fill text-info" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                                            </svg>
+                                                        </button> }
+                                            </article>
+                                        </section>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                    </div>
-                </section>
+                            </section>
+                        </div>
+                    </section>
+                ) }
             </section>
 
             <section className="appointments pt-4 gap-3">
