@@ -1,51 +1,52 @@
-import { useEffect, useState } from 'react'; 
-import { Link } from 'react-router-dom'; 
-import { route } from '@/routes'; 
-import swal from 'sweetalert2'; 
-import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx'; 
-import Layout from '@/components/public/Layout.jsx'; 
-import NazimTransparent from '@/assets/images/nazim-transparent.png'; 
-import NazimWide from '@/assets/images/nazim-wide-background.jpg'; 
-import NazimNormal from '@/assets/images/nazim-normal.jpg'; 
-import ServicesImage from '@/assets/images/medicine-services.svg'; 
-
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { route } from '@/routes';
+import swal from 'sweetalert2';
+import { useBlogPublications } from '@/hooks/blog/useBlogPublications.jsx';
+import Layout from '@/components/public/Layout.jsx';
+import NazimTransparent from '@/assets/images/nazim-transparent.png';
+import NazimWide from '@/assets/images/nazim-wide-background.jpg';
+import NazimNormal from '@/assets/images/nazim-normal.jpg';
+import ServicesImage from '@/assets/images/medicine-services.svg';
+import BackgroundImageComponent from '../../components/BgImgContainer';
+import Services from './Services';
 
 export default function Index() {
     const date = new Date();
-    const hour = date.getHours(); 
+    const hour = date.getHours();
 
-    function submitConsultationForm (e) {
-        e.preventDefault(); 
+    function submitConsultationForm(e) {
+        e.preventDefault();
 
         swal.fire({
-            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided as soon as an available slot is booked. Thanks!`, 
-            color: '#f2f2f20', 
-            width: 325, 
-            position: 'top', 
+            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided as soon as an available slot is booked. Thanks!`,
+            color: '#f2f2f20',
+            width: 325,
+            position: 'top',
             showConfirmButton: false
         });
     };
 
-    function submitContactForm (e) {
-        e.preventDefault(); 
+    function submitContactForm(e) {
+        e.preventDefault();
 
         swal.fire({
-            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided.`, 
-            color: '#f2f2f20', 
-            width: 325, 
-            position: 'top', 
+            text: `Request received. You would be contacted shortly via the contact detail(s) you have provided.`,
+            color: '#f2f2f20',
+            width: 325,
+            position: 'top',
             showConfirmButton: false
         });
-    }; 
+    };
 
     const [blogPublicationQuery, setBlogPublicationQuery] = useState({
-        range: 'all', 
-        page: 1, 
-        limit: 4, 
-    }); 
+        range: 'all',
+        page: 1,
+        limit: 4,
+    });
 
-    const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery); 
-    console.log(blogPublications); 
+    const { blogPublications, getBlogPublications, setBlogPublications, loading } = useBlogPublications(blogPublicationQuery);
+    console.log(blogPublications);
 
     const [visible, setVisible] = useState(false);
 
@@ -54,32 +55,41 @@ export default function Index() {
         const images = document.querySelectorAll(".slide-in");
 
         const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-            // Set visible to true when the image is in view
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target); // Stop observing after it enters the viewport
-            }
-        });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Set visible to true when the image is in view
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target); // Stop observing after it enters the viewport
+                }
+            });
         }, { threshold: 0.5 });
 
         images.forEach(image => observer.observe(image));
 
         // Cleanup the observer on component unmount
         return () => {
-        observer.disconnect();
+            observer.disconnect();
         };
     }, []);
 
     return (
         <Layout>
             <>
+<<<<<<< HEAD
+                <BackgroundImageComponent imageUrl={NazimWide} height='650px'>
+                    <section className="hero h-100 px-3 row j d-flex flex-column pt-4 pb-3">
+                        {/* <div className="col-12 col-md-6"> */}
+                        <div className="col-sm-12 col-md-6">
+                            <h2 className="text-center pr-3 pl-3 mt-5 text-md-start fs-1">
+                                {/* <span className="fw-light">Good&nbsp;
+=======
                 <section className="hero row align-items-center pt-5 pb-3 mt-0" style={{ backgroundImage: `url(${NazimWide})`, backgroundRepeat: 'no-repeat', objectFit: 'cover' }}>
                     {/* <div className="col-12 col-md-6"> */}
                     {/* <div className="col-sm-12 col-md-6"> */}
                     <div className="col-12">
                         <h2 className="text-center text-md-start fs-1">
                             {/* <span className="fw-light">Good&nbsp;
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                 { hour < 12 
                                     ? 'morning' 
                                         : hour < 16 
@@ -88,17 +98,35 @@ export default function Index() {
                                             ? 'evening' 
                                                 : '' }
                             !</span>&nbsp; */}
-                            <span>Welcome to Cabinet Medical Clinic.</span>
-                        </h2>
-                        <p className="text-center text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
-                            <span>Ready to enhance your health and wellness?</span>
-                            <span>We can be of help.</span></p>
-                        <p className="text-center text-md-start">
-                            <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
-                        </p>
-                        <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p>
-                    </div>
 
+<<<<<<< HEAD
+                                <span className='brand-text'>Cabinet Medical Clinic.</span>
+                            </h2>
+                            <div className='align-self-center sub-dark-bg  mt-5 white-text card transparent  p-3'>
+                                <p className="text-center  ready-text text-md-start fs-3 fw-semibold d-flex flex-column gap-0">
+                                    <span>Ready to enhance your health and wellness? We help.</span>
+                                    {/* <span>We can be of help.</span> */}
+                                </p>
+                                {/* <p className="text-center text-md-start">
+                                    <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
+                                </p> */}
+
+                                <p className="justify-content-center justify-content-md-start align-items-center d-flex flex-wrap gap-3">
+                                    <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
+                                    <a href="#contact-us" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
+                                </p>
+                                {/* <p>Providing personalized, compassionate and professional care to meet your medical needs. We combine medical expertise with a patient-centered approach to ensure you receive the best care possible, ever step of the way.</p> */}
+                            </div>
+                        </div>
+
+                        {/* <div className="d-none d-md-block col-md-6"> */}
+
+                    </section>
+
+                </BackgroundImageComponent>
+
+                {/* <section className="hero-2 row align-items-center pt-5">
+=======
                     {/* <div className="d-none d-md-block col-md-6"> */}
                     {/* <div className="col-sm-12 col-md-6">
                         <img src={ NazimWide } alt="Dr. Nazim Subrottee" className="img-fluid border-radius-25 slide-in" />
@@ -106,31 +134,43 @@ export default function Index() {
                 </section>
 
                 <section className="hero-2 row align-items-center pt-3">
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                     <div className="col-sm-12 col-md-6">
                         <img src="#" alt="" className="img-fluid" />
                     </div>
                     <div className="col-sm-12 col-md-6">
+
+
+
+
                         <h2 className="text-center text-md-start text-uppercase fs-3">
                             <span className="text-info">Cabinet Medical:&nbsp;</span>
                             <span>Your Health, Our Priority</span>
                         </h2>
                         <p className="text-center text-md-start">Experience compassionate, top-tier care at Cabinet Médical, where your well-being comes first. Under the expert guidance of <a href="#">Dr. Nazim Subrottee</a>, a committed and dynamic General Practitioner, we provide personalized medical services for all
-                        ages. From consultations and home visits to specialized care, we are dedicated to delivering exceptional treatment
-                        tailored to your needs.</p>
+                            ages. From consultations and home visits to specialized care, we are dedicated to delivering exceptional treatment
+                            tailored to your needs.</p>
                         <p className="justify-content-center justify-content-md-start align-items-center d-flex flex-wrap gap-3">
                             <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an appointment</a>
                             <a href="#contact-us" className="btn btn-outline-danger border-radius-35 ms-2">Contact Us</a>
                         </p>
                     </div>
-                </section>
+                </section> */}
 
                 <section className="services pt-4">
-                    <h2>Our Services</h2>
-                    <div className="row align-items-center row-gap-4">
-                        <div className="col-sm-12 col-md-6 px-3">
-                            <img src={ ServicesImage } className="w-100 slide-in" alt="" />
+                <h2 className="text-uppercase text-center mt-3 pb-4 fs-4 fw-bold pt-3">Our Services</h2>
+                    <div className="row  row-gap-4">
+                        <div className="col-sm-12 col-md-4 px-3">
+                            <img src={ServicesImage} className="w-100 slide-in" alt="" />
                         </div>
-                        <ul className="list-unstyled col-sm-12 col-md-6">
+                        <div className='col-sm-12 col-md-8'>
+
+                            <div className="bg-light py-1">
+                                <Services></Services>
+                            </div>
+                        </div>
+                       
+                        {/* <ul className="list-unstyled col-sm-12 col-md-6">
                             <li className="border-bottom border-top pt-3">
                                 <h3 className="fs-5">General Consultation and Follow-Up</h3>
                                 <p>Get comprehensive medical care for all your health concerns. Our general consultations cover a wide range of health issues, from common illnesses to chronic conditions. We offer expert advice and thororugh follow-ups to ensure your health goals are met.</p>
@@ -159,14 +199,14 @@ export default function Index() {
                                 <h3 className="fs-5">Death Certificates</h3>
                                 <p>Compassionate and timely assistance with medical documentation.</p>
                             </li>
-                        </ul>
+                        </ul> */}
                     </div>
                 </section>
 
                 <section id="book-appointment" className="book-consultation py-4 text-center bg-body-tertiary">
                     <div className="card p-3 mx-2 mx-md-3 mx-lg-5">
                         <h2 className="text-uppercase fs-4 fw-bold pt-3">Book Consultation</h2>
-                        <form onSubmit={ submitConsultationForm } className="form pt-3">
+                        <form onSubmit={submitConsultationForm} className="form pt-3">
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">
@@ -240,15 +280,22 @@ export default function Index() {
                     </div>
                 </section>
 
-                <section id="doctors" className="doctors text-center pt-5">
-                    <h2 className="fw-bold">Our Qualified Doctors</h2>
+                <section id="doctors" className="doctors text-center p-5 pt-5">
+                    <h2 className="fw-bold pb-2">Our Qualified Doctors</h2>
                     <div>
                         <span>The aim of medicine is to prevent disease and prolong life; the idea of medicine is to eliminate the need for a physician.</span>
                     </div>
+<<<<<<< HEAD
+                    <section className="nav-scroller mt-2">
+                        <ul className="doctors-list nav justify-content-between gap-6 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                                <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
                     <section className="nav-scroller">
                         <ul className="doctors-list nav justify-content-between gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden' }}>
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -260,8 +307,13 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                                <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -273,8 +325,13 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                                <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -286,8 +343,13 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                                <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -299,8 +361,13 @@ export default function Index() {
                                     </p>
                                 </div>
                             </li>
+<<<<<<< HEAD
+                            <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '310px' }}>
+                                <img src={NazimTransparent} alt="" className="border-radius-15"
+=======
                             <li className="d-flex flex-column align-items-center mb-3 slide-in" style={{ maxWidth: '275px' }}>
                                 <img src={ NazimTransparent } alt="" className="border-radius-15"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                     style={{ minWidth: '150px', maxWidth: '300px', minHeight: '150px', maxHeight: '300px' }} />
                                 <div className="pt-3 d-flex flex-column align-items-center">
                                     <h3 className="fs-5">Dr. Nazim Subrottee</h3>
@@ -316,10 +383,10 @@ export default function Index() {
                     </section>
                 </section>
 
-                <section className="stats pt-4">
-                    <h2 className="text-uppercase fs-6 fw-bold">Fun Facts</h2>
-                    <section className="row align-items-center">
-                        <div className="col-sm-12 col-md-6 text-center text-md-start">
+                <section className="stats pt-4 p-4">
+                    {/* <BackgroundImageComponent imageUrl={NazimWide} height='500px'> */}
+                    <section className="row align-items-center ">
+                        <div className=" col-sm-12 col-md-6 text-center text-md-start">
                             <p>Over 5,100 patients trust us.</p>
                             <p className="">
                                 <a href="#book-appointment" className="btn btn-outline-info border-radius-35">Book an Appointment</a>
@@ -354,64 +421,70 @@ export default function Index() {
                             </div>
                         </div>
                     </section>
+                    {/* </BackgroundImageComponent> */}
                 </section>
 
-                { (blogPublications?.data?.length > 0) && 
+                {(blogPublications?.data?.length > 0) &&
                     <section className="blog text-center pt-4">
                         <h2>Health Tips</h2>
                         <p>Important tips about your health and fitness</p>
 
                         <section className="articles">
                             <ul className="articles-list row justify-content-center align-items-center gap-5 py-3" style={{ width: '100vw', overflowY: 'hidden', paddingInlineStart: '0px' }}>
-                                { (blogPublications?.data?.map((publication, index) => {
+                                {(blogPublications?.data?.map((publication, index) => {
                                     return (
+<<<<<<< HEAD
+                                        <li key={publication?._id} className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
+                                            <img src={publication?.image_path?.url || NazimTransparent} alt="" className="border-radius-15 object-fit-cover"
+=======
                                         <li key={ publication?._id } className="vw-100 col-sm-12 col-lg-4 d-flex flex-column align-items-center mb-3" style={{ maxWidth: '300px' }}>
                                             <img 
                                                 src={ publication?.image_path?.url || NazimTransparent } 
                                                 alt="" 
                                                 className="border-radius-15 object-fit-cover"
+>>>>>>> 4e0351847cfae1c01fb7d8e44f7314aa286f1e72
                                                 style={{ width: '250px', height: '250px' }} />
                                             <div className="pt-3 d-flex flex-column align-items-center">
                                                 <div className="d-flex flex-column-reverse">
-                                                    <h3 className="fs-5 text-wrap">{ publication?.title }</h3>
+                                                    <h3 className="fs-5 text-wrap">{publication?.title}</h3>
                                                     <p className="fw-bold" style={{ fontSize: 'smaller' }}>
                                                         <span className="text-secondary">Jan. 2, 2025&nbsp;
                                                             <span style={{ fontSize: 'x-small' }}>by</span>
                                                         </span>&nbsp;
                                                         <span className="text-info">
-                                                            { ((publication?.user?.role == 'general_practitioner')
-                                                                ? ' Dr.' 
-                                                                    : (publication?.user?.role == 'gynaecologist') 
-                                                                    ? ' Dr.' 
-                                                                        : (publication?.user?.role == 'laboratory_scientist') 
-                                                                        ? ' ' 
-                                                                            : (publication?.user?.role == 'nurse')
-                                                                            ? ' ' 
-                                                                                : '' ) }
+                                                            {((publication?.user?.role == 'general_practitioner')
+                                                                ? ' Dr.'
+                                                                : (publication?.user?.role == 'gynaecologist')
+                                                                    ? ' Dr.'
+                                                                    : (publication?.user?.role == 'laboratory_scientist')
+                                                                        ? ' '
+                                                                        : (publication?.user?.role == 'nurse')
+                                                                            ? ' '
+                                                                            : '')}
                                                             &nbsp;
-                                                            { publication?.user?.first_name + 
-                                                                ' ' + 
-                                                                publication?.user?.last_name }
+                                                            {publication?.user?.first_name +
+                                                                ' ' +
+                                                                publication?.user?.last_name}
                                                         </span>
                                                     </p>
                                                 </div>
-                                                <div 
-                                                    className="preview text-wrap" 
+                                                <div
+                                                    className="preview text-wrap"
                                                     style={{ maxWidth: '310px' }}
-                                                    dangerouslySetInnerHTML={{ __html: (publication?.content?.slice(0, 100)) + (publication?.content?.length > 99 ? '...' : '') }} 
+                                                    dangerouslySetInnerHTML={{ __html: (publication?.content?.slice(0, 100)) + (publication?.content?.length > 99 ? '...' : '') }}
                                                 />
                                                 <p className="">
-                                                    <Link 
-                                                        to={ route('blog.publications.show', { id: publication?._id }) } 
+                                                    <Link
+                                                        to={route('blog.publications.show', { id: publication?._id })}
                                                         className="btn btn-outline-info border-radius-35">Read more</Link>
                                                 </p>
                                             </div>
                                         </li>
                                     )
-                                }) )}
+                                }))}
                             </ul>
                         </section>
-                    </section> 
+                    </section>
                 }
 
                 <section className="testimonials text-center pt-4">
@@ -488,7 +561,7 @@ export default function Index() {
                                 width="100%" height="100%" style={{ border: '0', borderRadius: '25px', minWidth: '300px', minHeight: '275px' }} allowFullScreen="" loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"></iframe>
                         </div>
-                        <form onSubmit={ submitContactForm } className="col-sm-12 col-md-6 order-0 order-md-1 form pt-3">
+                        <form onSubmit={submitContactForm} className="col-sm-12 col-md-6 order-0 order-md-1 form pt-3">
                             <div className="row g-2">
                                 <div className="col-md">
                                     <div className="form-floating mb-3">

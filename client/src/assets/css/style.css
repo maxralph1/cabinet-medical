@@ -53,6 +53,7 @@ a, Link {
     /* background-color: transparent; */
 }
 
+
 /* .swal2-confirm-button {
     border-color: red;
 }
@@ -236,6 +237,40 @@ main {
     display: flex; 
     flex-direction: column;
 } */
+
+.white-text{
+color:  #ffff;
+}
+.transparent{
+    opacity: 0.8;
+}
+.nav-bg{
+/* background-color: #719299; */
+background-color: #207dff;
+}
+
+.ready-text{
+    color: black;
+}
+.brand-text{
+    /* color: #719299;  */
+}
+.sub-light-bg{
+    /* background-color: rgba(255, 255, 255, 0); */
+    background-color: #F4F4F4;
+}
+.sub-dark-bg{
+    /* background-color: #333333; */
+    background-color:#c7c7c9;
+}
+.dynamic-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: var(--bg-image);
+    border-radius: 10px; /* Optional: Add rounded corners */
+  }
+
 .slide-in {
     opacity: 0;
     transform: translateY(100px);
