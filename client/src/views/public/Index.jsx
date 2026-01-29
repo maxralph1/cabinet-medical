@@ -10,6 +10,8 @@ import NazimTransparent from '@/assets/images/nazim-transparent.png';
 import NazimWide from '@/assets/images/nazim-wide-background.jpg'; 
 import NazimNormal from '@/assets/images/nazim-normal.jpg'; 
 import ServicesImage from '@/assets/images/medicine-services.svg'; 
+import ServicesImage1 from '@/assets/images/service_1.jpg'; 
+import ServicesImage2 from '@/assets/images/service_2.jpg'; 
 
 
 export default function Index() {
@@ -136,10 +138,12 @@ export default function Index() {
                     <h2 className="border-bottom d-inline-block pb-2 fw-bold">Our Services</h2>
                     <section className="row align-items-center row-gap-4 pt-4">
                         <div className="col-sm-12 col-md-6 px-3 order-1">
-                            <img src={ ServicesImage } className="w-100 slide-in" alt="" />
+                            {/* <img src={ ServicesImage } className="w-100 slide-in" alt="" /> */}
+                            <img src={ ServicesImage1 } alt="Services Image 1" className="w-100 object-fit-cover border-radius-15 slide-in" style={{ height: '540px' }} />
                         </div>
-                        <div className="d-none d-md-block col-md-6 px-3 order-4">
-                            <img src={ ServicesImage } className="w-100 slide-in" alt="" />
+                        <div className="d-none d-md-block col-md-6 px-3 order-3">
+                            {/* <img src={ ServicesImage } className="w-100 slide-in" alt="" /> */}
+                            <img src={ ServicesImage2 } alt="Services Image 2" className="w-100 object-fit-cover border-radius-15 slide-in" style={{ height: '540px' }} />
                         </div>
                         <div className="col-sm-12 col-md-6 row align-items-center row-gap-4 order-2">
                             <div className="col-6 mb-4">
@@ -171,7 +175,7 @@ export default function Index() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-12 col-md-6 row align-items-center row-gap-4 order-3">
+                        <div className="col-sm-12 col-md-6 row align-items-center row-gap-4 order-4">
                             <div className="col-6 mb-4">
                                 <div className="service-card p-4 shadow-sm">
                                     <div className="service-icon">📄</div>

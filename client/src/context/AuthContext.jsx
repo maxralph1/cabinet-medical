@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
                 // console.log(response); 
                 navigate(route('sign-in')); 
                 setAuthSuccess('Registration successful. An email with a verification link has been sent to you.');
+                SwalAlert('success', '', 'Registration successful. An email with a verification link has been sent to you.');
             })
             .catch(error => { 
                 console.log(error); 
@@ -109,6 +110,7 @@ export const AuthProvider = ({ children }) => {
         await axios.post(`${ Constants.serverURL }/api/v1/auth/passwordless-signin-request`, { username }, { withCredentials: true })
             .then((response) => { 
                 setAuthError(`${response?.data?.success}`);
+                SwalAlert('success', '', 'Email notification with login link was sent to your email.'); 
             })
             .catch(error => {
                 // console.log(error);
