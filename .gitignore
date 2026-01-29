@@ -1,1 +1,4 @@
 .env
+tmp
+logs/*
+logs/access/access.log

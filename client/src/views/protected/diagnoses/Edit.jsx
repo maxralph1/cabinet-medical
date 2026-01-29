@@ -16,10 +16,10 @@ import Layout from '@/components/protected/Layout.jsx';
 export default function Edit() {
     const { user } = useContext(AuthContext); 
     const { id } = useParams(); 
-    const { diagnosis, updateDiagnosis } = useDiagnosis(id); 
-    // console.log('diagnosis:', diagnosis?.data); 
+    const { diagnosis, getDiagnosis, updateDiagnosis } = useDiagnosis(id); 
+    console.log('diagnosis:', diagnosis?.data); 
 
-    const { diagnosisSegment, updateDiagnosisSegment } = useDiagnosisSegment(); 
+    const { updateDiagnosisSegment } = useDiagnosisSegment(); 
 
     const handleUpdate = async e => {
         e.preventDefault(); 
@@ -45,15 +45,7 @@ export default function Edit() {
     const handleDiagnosisSegmentUpdate = async e => {
         e.preventDefault(); 
 
-        // console.log('diagnosisSegment:', diagnosisSegment); 
-
-        if (diagnosisSegment?.data?.result) {
-            const formData = new FormData(); 
-            diagnosisSegment?.data?.result && formData.append('result', diagnosisSegment?.data?.result); 
-
-            await updateDiagnosisSegment(formData); 
-            await diagnosisSegment?.setData({}); 
-        } else {
+        if (!e.target.result.value) {
             swal.fire({
                 text: `Please add a test result.`, 
                 color: '#900000', 
@@ -61,6 +53,20 @@ export default function Edit() {
                 position: 'top', 
                 showConfirmButton: false
             });
+        } else {
+            let test_id = e.target.id.value;
+            let test_result = e.target.result.value;
+
+            // const formData = new FormData(); 
+            // e.target.id.value && formData.append('id', e.target.id.value); 
+            // e.target.result.value && formData.append('result', e.target.result.value); 
+
+            // await updateDiagnosisSegment(formData); 
+            // await diagnosisSegment?.setData({}); 
+
+            console.log(test_id, test_result); 
+            await updateDiagnosisSegment(test_id, test_result); 
+            await getDiagnosis(id);
         }
     }
 
@@ -87,7 +93,7 @@ export default function Edit() {
 
             <section className="diagnosis-segments">
                 <h4 className="fs-6">Diagnosis Examinations</h4>
-                            <form onSubmit={ handleDiagnosisSegmentUpdate }>
+                            
                 <div className="table-responsive">
                     <table className="table">
                         <thead>
@@ -101,35 +107,40 @@ export default function Edit() {
                         <tbody className="table-group-divider">
                             { diagnosis?.data?.diagnosis_segments?.map((diagnosisSegmentItem, index) => (
                                 <tr key={ diagnosisSegmentItem?._id }>
-                                    <td>{ dayjs(diagnosisSegmentItem?.created_at).format('ddd, MMM D, YYYY h:mm A') }</td>
-                                    <td>{ diagnosisSegmentItem?.diagnosis_type?.title }</td>
+                                    <td style={{ minWidth: '150px' }}>{ dayjs(diagnosisSegmentItem?.created_at).format('ddd, MMM D, YYYY h:mm A') }</td>
+                                    <td style={{ minWidth: '150px' }}>{ diagnosisSegmentItem?.diagnosis_type?.title }</td>
+                                    <td style={{ minWidth: '150px' }}>{ diagnosisSegmentItem?.result ?? 'N/A' }</td>
                                     <td>
-                                        <input 
-                                            type="text" 
-                                            id="result" 
-                                            value={ diagnosis?.data?.diagnosis_segments[index]?.result ?? '' } 
-                                            className="form-control"  
-                                            onChange={ e => diagnosis?.setData({
-                                                ...diagnosis?.data?.diagnosis_segments[index],
-                                                result: e.target.value,
-                                            }) }
-                                            placeholder="Negative" />
-                                    </td>
-                                    <td>
-                                        {/* <form onSubmit={ handleDiagnosisSegmentUpdate }> */}
-                                            <button 
-                                                type="submit"  
-                                                className="btn btn-sm btn-outline-secondary border-radius-25">
-                                                    Update
-                                            </button>
-                                        {/* </form> */}
+                                        <div className="result-update-form">
+                                            <form className="d-flex gap-3" onSubmit={ handleDiagnosisSegmentUpdate }>
+                                                <input 
+                                                    type="hidden" 
+                                                    name="id" 
+                                                    id={ diagnosisSegmentItem?._id } 
+                                                    value={ diagnosisSegmentItem?._id } 
+                                                    className="form-control" 
+                                                    placeholder="Update result" />
+                                                <input 
+                                                    type="text" 
+                                                    id="result" 
+                                                    name="result" 
+                                                    className="form-control" 
+                                                    style={{ minWidth: '150px' }}
+                                                    placeholder="Update result" />
+                                                <button 
+                                                    type="submit"  
+                                                    className="btn btn-sm btn-outline-secondary border-radius-25">
+                                                        Update
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             )) }
                         </tbody>
                     </table>
                 </div>
-                            </form>
+                            
             </section>
 
             <section className="pt-3">

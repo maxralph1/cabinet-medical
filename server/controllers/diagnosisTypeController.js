@@ -125,7 +125,7 @@ const restoreDiagnosisType = asyncHandler(async (req, res) => {
 }); 
 
 /**
- * Permanent-delete an Diagnosis Type
+ * Permanent-delete Diagnosis Type
  */
 const destroyDiagnosisType = asyncHandler(async (req, res) => {
     const diagnosisType = await DiagnosisType.findOne({ _id: req?.params?.id, deleted_at: null }); 

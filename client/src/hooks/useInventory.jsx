@@ -35,7 +35,7 @@ export function useInventory(id = null) {
                 navigate(route('home.inventory.index'));
                 swal.fire({
                     text: `Inventory added.`, 
-                    color: '#f2f2f20', 
+                    color: '#000000', 
                     width: 325, 
                     position: 'top', 
                     showConfirmButton: false

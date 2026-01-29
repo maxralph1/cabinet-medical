@@ -1,76 +1,188 @@
 import asyncHandler from 'express-async-handler'; 
+import mongoose from 'mongoose';
 import Chat from '../models/Chat.js'; 
 import ChatUser from '../models/ChatUser.js'; 
 import ChatMessage from '../models/ChatMessage.js'; 
+import Notification from '../models/Notification.js'; 
 
 
 /**
  * Get Chats
  */ 
 const getChats = asyncHandler(async (req, res) => {
-    const current_page = parseInt(req?.query?.page) || 1;
-    const limit = parseInt(req?.query?.limit) || 10; 
-    const skip = (current_page - 1) * limit; 
-
-    // const chats = await Chat.find({ deleted_at: null })
-    const chats = await ChatUser.find({ user: req?.user_id, deleted_at: null })
-                                .sort('-created_at')
-                                .skip(skip)
-                                .limit(limit)
-                                .populate({
-                                    path: 'chat',
-                                })
-                                .lean(); 
-    if (!chats?.length) return res.status(404).json({ message: "No chats found!" }); 
+    const chatUsers = await ChatUser.find({ user: req?.user_id, deleted_at: null })
+                                    .sort('-created_at')
+                                    .populate({
+                                        path: 'chat', 
+                                    })
+                                    .lean(); 
+    if (!chatUsers?.length) return res.status(404).json({ message: "No chats found!" }); 
 
     const total = await ChatUser.countDocuments({ user: req?.user_id, deleted_at: null }); 
 
-    res.json({ 
-                meta: {
-                    current_page, 
-                    limit, 
-                    total_pages: Math.ceil(total / limit), 
-                    total_results: total
-                }, 
-                data: chats 
-            }); 
+    let chatsList = [];
+
+    const chats = await Promise.all(chatUsers.map(async (chatUser) => {
+        let foundChat = await Chat.findOne({ _id: chatUser?.chat?._id, deleted_at: null })
+                                    .populate({
+                                        path: 'user', 
+                                    })
+                                    .lean();
+
+        let foundChatUsers = await ChatUser.find({ chat: foundChat?._id })
+                                            .populate({
+                                                path: 'user', 
+                                            })
+                                            .lean();
+
+        let foundLastChatMessage = await ChatMessage.findOne({ chat: foundChat?._id })
+                                                .sort({ created_at: -1 })
+                                                .lean();
+
+        foundChat['chat_users'] = foundChatUsers;
+        foundChat['last_message'] = foundLastChatMessage;
+        
+        chatsList.push(foundChat);
+    }));
+
+    res.json({ data: chatsList }); 
 }); 
 
 /**
  * Create Chat
  */ 
 const createChat = asyncHandler(async (req, res) => {
-    const { topic, description, message } = req?.body; 
+    const { user_id } = req?.body;
 
-    const chat = new Chat({
-        user: req?.user_id, 
-        topic, 
-        description
-    }); 
+    const hostChats = await ChatUser.find({ user: req?.user_id });
+    const guestChats = await ChatUser.find({ user: user_id });
 
-    const chatUserAlreadyExists = await ChatUser.findOne({ user: req?.user_id, chat: chat?._id });
+    let sharedChat, newChat, newHostChat, newGuestChat;
+    // Check if both host and guest have chats
+    if ((hostChats.length > 0) && (guestChats.length > 0)) {
+        // Find the shared chat by comparing the `chat` field
+        sharedChat = hostChats.find((hostChat) =>
+            guestChats.some((guestChat) => guestChat.chat.toString() === hostChat.chat.toString())
+        );
 
-    let chatUser;
-    if (!chatUserAlreadyExists) {
-        chatUser = await ChatUser.create({
+        if (sharedChat) {
+            // If a shared chat is found, query the `UserChat` collection to find that chat
+            const usersChat = await Chat.findOne({ _id: sharedChat.chat });
+
+            if (usersChat) {
+                console.log('Found matching chat:', usersChat);
+                // Return or process the `usersChat` as needed
+                usersChat.active = true;
+
+                usersChat.save()
+                        .then(() => {
+                            res.status(201).json({ success: `Chat ${usersChat?._id} reactivated` });
+                        })
+                        .catch(error => {
+                            return res.status(400).json({ message: "An error occured", details: `${error}` });
+                        });
+            } else {
+                console.log('No matching chat found in UsersChat');
+                return res.status(500).json({ message: "An error occured" });
+            }
+        } else {
+            console.log('No shared chat found between host and guest');
+
+            newChat = await Chat.create({
+                user: req?.user_id, 
+                type: 'one-on-one'
+            }); 
+
+            newHostChat = await ChatUser.create({
+                user: req?.user_id, 
+                chat: newChat?._id
+            });
+
+            newGuestChat = await ChatUser.create({
+                user: user_id, 
+                chat: newChat?._id
+            });
+
+            newChat.save()
+                    .then(() => {
+                        res.status(201).json({ success: `Chat ${newChat?._id} created` });
+                    })
+                    .catch(error => {
+                        return res.status(400).json({ message: "An error occured", details: `${error}` });
+                    });
+        }
+    } else {
+        console.log('One or both users have no chats');
+
+        newChat = await Chat.create({
             user: req?.user_id, 
-            chat: chat?._id
-        });
-    }
-    
-    let chatMessage = await ChatMessage.create({
-        chat: chat?._id, 
-        user: req?.user_id, 
-        content: message
-    })
+            type: 'one-on-one'
+        }); 
 
-    chat.save()
-        .then(() => {
-            res.status(201).json({ success: `Chat ${chat?._id} created` });
-        })
-        .catch(error => {
-            return res.status(400).json({ message: "An error occured", details: `${error}` });
+        newHostChat = await ChatUser.create({
+            user: req?.user_id, 
+            chat: newChat?._id
         });
+
+        newGuestChat = await ChatUser.create({
+            user: user_id, 
+            chat: newChat?._id
+        });
+
+        newChat.save()
+                .then(() => {
+                    res.status(201).json({ success: `Chat ${newChat?._id} created` });
+                })
+                .catch(error => {
+                    return res.status(400).json({ message: "An error occured", details: `${error}` });
+                });
+    }
+
+
+    // const { message, other_user_id, chat_id } = req?.body; 
+
+    // const chatUserAlreadyExists = await ChatUser.findOne({ user: other_user, chat: chat?._id });
+
+    // let chat; 
+
+    // if (!chat_id) {
+    //     chat = new Chat({
+    //         user: req?.user_id, 
+    //         topic, 
+    //         description
+    //     });
+    // }; 
+
+    // let chatUser;
+    // if (!chatUserAlreadyExists) {
+    //     chatUser = await ChatUser.create({
+    //         user: req?.user_id, 
+    //         chat: chat?._id
+    //     });
+    // } else {
+    //     chatUser = chatUserAlreadyExists;
+    // }; 
+
+    // let chatMessage = await ChatMessage.create({
+    //     chat: chat?._id, 
+    //     user: req?.user_id, 
+    //     content: message
+    // }); 
+
+    // const notification = await Notification.create({
+    //     user: chatUser?._id, 
+    //     chat_message: chatMessage._id,
+    //     read: false,
+    //     type: 'chat-message', 
+    // });
+
+    // chat.save()
+    //     .then(() => {
+    //         res.status(201).json({ success: `Chat ${chat?._id} created` });
+    //     })
+    //     .catch(error => {
+    //         return res.status(400).json({ message: "An error occured", details: `${error}` });
+    //     });
 }); 
 
 /**

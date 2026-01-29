@@ -19,7 +19,7 @@ userRouter.route('/')
                 .get(getUsers,)
                 .post(createUser); 
 
-userRouter.route('/:id')
+userRouter.route('/:username')
                 .get(getUser)
                 .put(updateUser)
                 .patch(deleteUser)

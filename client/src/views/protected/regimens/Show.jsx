@@ -7,12 +7,14 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(relativeTime);
 dayjs.extend(utc); 
 import { useRegimen } from '@/hooks/useRegimen.jsx'; 
+import { useRegimenAdministration } from '@/hooks/useRegimenAdministration.jsx'; 
 import Layout from '@/components/protected/Layout.jsx'; 
 
 
 export default function Show() {
     const { id } = useParams(); 
     const { regimen, getRegimen } = useRegimen(id); 
+    const { deleteRegimenAdministration } = useRegimenAdministration();
     console.log(regimen); 
 
     return (
@@ -47,9 +49,14 @@ export default function Show() {
                     </div>
                 </h3>
 
-                <p className="pt-2 text-secondary">
+                <p className="pt-2 mb-0 text-secondary">
                     <small>added&nbsp;
                         <span>{ dayjs.utc(regimen?.data?.created_at).fromNow() }</span>
+                    </small>
+                </p>
+                <p className="text-secondary">
+                    <small>updated&nbsp;
+                        <span>{ dayjs.utc(regimen?.data?.updated_at).fromNow() }</span>
                     </small>
                 </p>
 
@@ -76,12 +83,14 @@ export default function Show() {
                     <section className="product-units pt-4">
                         <h4 className="fs-5">Schedule:&nbsp;&nbsp;</h4>
                         <ul className="list-unstyled pt-1">
-                            { regimen?.data?.regimen_administrations?.map((item, index) => (
+                            { regimen?.data?.regimen_administrations
+                                            ?.sort((a, b) => new Date(a.proposed_administration_date_time) - new Date(b.proposed_administration_date_time))
+                                            ?.map((item, index) => (
                                 <li key={index} className="product-unit pb-2 d-flex">
                                     <span>{ index+1 }.&nbsp;</span>
 
                                     <div className="d-flex flex-column">
-                                        <span>Administration Date & Time:&nbsp;<span className="fw-semibold">{ dayjs(item?.proposed_administration_date_time).format('ddd, MMM D, YYYY h:mm A') }</span></span>
+                                        <span>Administration Date & Time:&nbsp;<span className="fw-semibold">{ dayjs(item?.proposed_administration_date_time).utc().format('ddd, MMM D, YYYY h:mm A') }</span></span>
                                     </div>
 
                                     <div className="ms-2">

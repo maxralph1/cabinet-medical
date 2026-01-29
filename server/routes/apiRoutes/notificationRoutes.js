@@ -4,9 +4,7 @@ import authenticated from '../../middleware/authenticated.js';
 import roles from '../../config/allowedRoles.js'; 
 import checkRoles from '../../middleware/checkRoles.js'; 
 import { getNotifications, 
-        createNotification, 
         getNotification, 
-        updateNotification, 
         deleteNotification, 
         restoreNotification, 
         destroyNotification
@@ -15,13 +13,10 @@ import { getNotifications,
 
 notificationRouter.use(authenticated); 
 
-notificationRouter.route('/')
-                .get(getNotifications,)
-                .post(createNotification); 
+notificationRouter.get('/', getNotifications); 
 
 notificationRouter.route('/:id')
                 .get(getNotification)
-                .put(updateNotification)
                 .patch(deleteNotification)
                 .delete(destroyNotification); 
 

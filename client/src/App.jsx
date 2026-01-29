@@ -31,6 +31,8 @@ import ProtectedAppointmentEdit from '@/views/protected/appointments/Edit.jsx';
 import ProtectedAppointmentCreate from '@/views/protected/appointments/Create.jsx'; 
 import ProtectedAppointmentsIndex from '@/views/protected/appointments/Index.jsx'; 
 
+import ProtectedAppointmentRequestsIndex from '@/views/protected/appointment-requests/Index.jsx'; 
+
 /** Blog */
 import ProtectedBlogIndex from '@/views/protected/blog/Index.jsx'; 
 
@@ -48,6 +50,8 @@ import ProtectedChatShow from '@/views/protected/chats/Show.jsx';
 import ProtectedChatEdit from '@/views/protected/chats/Edit.jsx'; 
 import ProtectedChatCreate from '@/views/protected/chats/Create.jsx'; 
 import ProtectedChatsIndex from '@/views/protected/chats/Index.jsx'; 
+
+import ProtectedContactUsIndex from '@/views/protected/contact-us/Index.jsx'; 
 
 import ProtectedDiagnosisShow from '@/views/protected/diagnoses/Show.jsx'; 
 import ProtectedDiagnosisEdit from '@/views/protected/diagnoses/Edit.jsx'; 
@@ -174,6 +178,8 @@ function App() {
               <Route path={ route('home.appointments.create') } element={ <ProtectedAppointmentCreate /> } /> 
               <Route path={ route('home.appointments.index') } element={ <ProtectedAppointmentsIndex /> } /> 
 
+              <Route path={ route('home.appointment-requests.index') } element={ <ProtectedAppointmentRequestsIndex /> } />
+
               {/* Blog */}
               <Route path={ route('home.blog.index') } element={ <ProtectedBlogIndex /> } /> 
               <Route path={ route('home.blog.categories.edit') } element={ <ProtectedBlogCategoryEdit /> } /> 
@@ -190,6 +196,8 @@ function App() {
               <Route path={ route('home.chats.edit') } element={ <ProtectedChatEdit /> } />
               <Route path={ route('home.chats.create') } element={ <ProtectedChatCreate /> } />
               <Route path={ route('home.chats.index') } element={ <ProtectedChatsIndex /> } /> 
+
+              <Route path={ route('home.contact-us.index') } element={ <ProtectedContactUsIndex /> } />
 
               <Route path={ route('home.diagnoses.show') } element={ <ProtectedDiagnosisShow /> } />
               <Route path={ route('home.diagnoses.edit') } element={ <ProtectedDiagnosisEdit /> } />

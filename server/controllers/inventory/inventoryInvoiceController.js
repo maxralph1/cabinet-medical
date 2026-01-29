@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import InventoryInvoice from '../../models/inventory/InventoryInvoice.js'; 
 import InventoryProductInvoice from '../../models/inventory/inventoryProductInvoice.js';
 import InventoryProductUnit from '../../models/inventory/InventoryProductUnit.js';
+import Notification from '../../models/Notification.js';
 
 
 /**
@@ -81,12 +82,13 @@ const getInventoryInvoices = asyncHandler(async (req, res) => {
  * Create Inventory Invoice
  */
 const createInventoryInvoice = asyncHandler(async (req, res) => {
-    const { products, notes } = req?.body; 
+    const { products, notes, patient } = req?.body; 
 
     console.log('products:', products);
 
     const inventoryInvoice = new InventoryInvoice({
-        user: req?.user_id,  
+        user: req?.user_id, 
+        patient,
         notes
     }); 
 
@@ -114,6 +116,13 @@ const createInventoryInvoice = asyncHandler(async (req, res) => {
         await Promise.all(productsResolve); 
     }
     /** End of Products */
+
+    const notification = await Notification.create({
+        user: inventoryInvoice?.patient, 
+        inventory_invoice: inventoryInvoice?._id, 
+        read: false,
+        type: 'invoice-new',
+    });
 
     inventoryInvoice.save()
                     .then(() => {

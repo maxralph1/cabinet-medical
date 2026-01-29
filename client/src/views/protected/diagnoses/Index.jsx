@@ -33,16 +33,18 @@ export default function Index() {
         <Layout>
             <div className="d-flex justify-content-between align-items-center">
                 <h2 className="fs-3">Diagnoses</h2>
-                <Link to={ route('home.diagnoses.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
-                    <span className="mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
-                            className="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fillRule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                    </span>
-                    <span>Add</span>
-                </Link>
+                { (user?.user?.role != 'patient') && (
+                    <Link to={ route('home.diagnoses.create') } className="btn btn-sm btn-outline-secondary border-radius-35 fw-semibold d-flex align-items-center py-0">
+                        <span className="mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                className="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
+                        </span>
+                        <span>Add</span>
+                    </Link>
+                ) }
             </div>
 
             <div className="d-flex justify-content-end pt-3">
@@ -138,6 +140,11 @@ export default function Index() {
                                                                                             </button>
                                                                                         </div>
                                                                                         <div className="modal-body">
+                                                                                            <span className="d-flex justify-content-end pb-3">
+                                                                                                <a href={ route('home.diagnoses.show', { id: diagnosis?._id }) }>
+                                                                                                    <small>Go to printable version</small>
+                                                                                                </a>
+                                                                                            </span>
                                                                                             <p>Patient:&nbsp;
                                                                                                 <span className="fw-semibold">
                                                                                                     { diagnosis?.patient ? ((diagnosis?.patient?.first_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.first_name)?.slice(1)) + ' ' + ((diagnosis?.patient?.last_name)?.slice(0,1)?.toUpperCase()+(diagnosis?.patient?.last_name)?.slice(1)) : 'N/A' }
@@ -188,7 +195,7 @@ export default function Index() {
                                                                                             </section>
 
                                                                                             <section className="comments pt-3">
-                                                                                                <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(lab. Scientist):</h3>
+                                                                                                <h3 className="border-bottom fs-6 fst-italic">Comments by Examiner(Lab. Scientist):</h3>
                                                                                                 <p>{ diagnosis?.comments ? diagnosis?.comments : 'N/A' }</p>
                                                                                             </section>
 

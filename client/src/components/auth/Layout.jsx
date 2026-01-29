@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'; 
-import { route } from '@/routes'; 
+import { route } from '@/routes';
+import Logo from '@/assets/images/logo.jpg'; 
 
 
 export default function Layout({ children }) {
@@ -25,7 +26,7 @@ export default function Layout({ children }) {
 
             <main className="main auth">
                 <div className="row">
-                    <section className="auth-side-quotes d-none d-md-block col-md-6 bg-transparent border-radius-25">
+                    <section className="auth-side-quotes d-none d-md-block col-md-6 bg-transparent border-radius-25 position-relative">
                         <div className="slide-section">
                             <h2 className="heading text-uppercase text-secondary">Our Mission</h2>
                             

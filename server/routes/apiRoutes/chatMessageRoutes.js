@@ -15,17 +15,18 @@ import { getChatMessages,
 
 chatMessageRouter.use(authenticated); 
 
-chatMessageRouter.route('/')
+
+chatMessageRouter.route('/:chat/messages')
                 .get(getChatMessages,)
                 .post(createChatMessage); 
 
-chatMessageRouter.route('/:id')
+chatMessageRouter.route('/:chat/messages/:id')
                 .get(getChatMessage)
                 .put(updateChatMessage)
                 .patch(deleteChatMessage)
                 .delete(destroyChatMessage); 
 
-chatMessageRouter.patch('/:id/restore', restoreChatMessage); 
+chatMessageRouter.patch('/:chat/messages/:id/restore', restoreChatMessage); 
 
 
 export default chatMessageRouter; 
